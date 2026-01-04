@@ -1,0 +1,135 @@
+.container {
+    padding: 30px;
+}
+
+/* ===== Header ===== */
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    color: #111827;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.page-header p {
+    color: #6b7280;
+    margin-top: 6px;
+}
+
+/* ===== Profile Card ===== */
+.profile-card {
+    max-width: 700px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 15px 40px rgba(17, 24, 39, 0.12);
+    border-top: 6px solid #111827;
+    text-align: center;
+}
+
+/* ===== Avatar ===== */
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #111827;
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+/* ===== Info ===== */
+.info h2 {
+    color: #111827;
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.email {
+    color: #6b7280;
+    margin-bottom: 18px;
+}
+
+/* ===== Meta ===== */
+.meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Roles */
+.role-admin {
+    background: #111827;
+    color: #ffffff;
+}
+
+.role-employee {
+    background: #1f2937;
+    color: #ffffff;
+}
+
+.role-seeker {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.role-provider {
+    background: #d1d5db;
+    color: #111827;
+}
+
+.date {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* ===== Actions ===== */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn-primary {
+    background: #111827;
+    color: #ffffff;
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #1f2937;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #111827;
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}

@@ -1,0 +1,132 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f6f8;
+}
+
+/* ===== Layout ===== */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    direction: rtl;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 260px;
+    background: #111827;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.sidebar-header {
+    padding: 24px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #1f2937;
+}
+
+/* Nav */
+.sidebar-nav {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidebar-nav a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Icon */
+.sidebar-nav .icon {
+    font-size: 18px;
+}
+
+/* Hover */
+.sidebar-nav a:hover {
+    background: #232936;
+    color: #ffffff;
+}
+
+/* Active (يبقى ثابت) */
+.sidebar-nav a.active {
+    background: #c1cfea;
+    color: #000000;
+    font-weight: 600;
+}
+
+/* Active indicator line */
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 4px;
+    height: 60%;
+    background: #3c4659;
+    border-radius: 6px;
+    transform: translateY(-50%);
+}
+
+.logout form input {
+    cursor: pointer;
+    background: transparent;
+    border:none ;
+    color:white
+}
+
+.logout:hover  {
+    background: #dc2626 !important;
+    color: #ffffff;
+}
+
+
+/* ===== Content ===== */
+.dashboard-content {
+    flex: 1;
+    padding: 35px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+    .sidebar {
+        width: 220px;
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+    }
+
+    .sidebar-nav a {
+        white-space: nowrap;
+    }
+}

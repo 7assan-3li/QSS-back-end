@@ -1,0 +1,162 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 15px;
+}
+
+/* Header */
+.page-header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    color: #111827;
+}
+
+.page-header p {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* Main Card */
+.show-card {
+    display: flex;
+    gap: 30px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+}
+
+.show-image {
+    width: 250px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 14px;
+}
+
+.show-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.show-content h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.show-content p {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.show-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* Actions */
+.show-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Children */
+.children-title {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #111827;
+}
+
+.children-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.child-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.child-card h3 {
+    font-size: 16px;
+    color: #111827;
+}
+
+.child-card p {
+    font-size: 13px;
+    color: #6b7280;
+    flex-grow: 1;
+}
+
+.btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: #1e40af;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .show-card {
+        flex-direction: column;
+    }
+
+    .show-image {
+        width: 100%;
+        height: 200px;
+    }
+}
