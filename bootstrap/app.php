@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
+        $middleware->alias([
+            'seeker.policy' => \App\Http\Middleware\CheckSeekerPolicy::class,
+        ]);
     })
     ->withExceptions(function ($exceptions) {
         //

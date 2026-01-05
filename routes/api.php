@@ -66,7 +66,7 @@ Route::post('/logout', [UserController::class, 'apiLogout'])->middleware('auth:s
 
 
 // Protected routes
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function () {
 
     Route::get('/profile', fn(Request $request) => $request->user());
 
