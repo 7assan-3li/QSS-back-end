@@ -22,6 +22,7 @@ class ProviderRequestController extends Controller
 
         return response()->json($providerRequests);
     }
+    
     public function store(Request $request)
     {
         $this->authorize('create', ProviderRequest::class);

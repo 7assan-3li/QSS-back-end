@@ -32,6 +32,18 @@ class RequestController extends Controller
             'sup_services.*.quantity' => 'integer|min:1',
         ]);
 
+        // التحقق من تكرار الخدمات الفرعية
+        if (!empty($data['sup_services'])) {
+            $subServiceIds = collect($data['sup_services'])->pluck('id');
+
+            if ($subServiceIds->count() !== $subServiceIds->unique()->count()) {
+                return response()->json([
+                    'message' => 'إحدى الخدمات الفرعية مكررة'
+                ], 422);
+            }
+        }
+
+
         $mainService = Service::findOrFail($data['service_id']);
         // if (!empty($data['sup_services'])) {
         //     $validSubServiceIds = $mainService->children()->pluck('id')->toArray();
