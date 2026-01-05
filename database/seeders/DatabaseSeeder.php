@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Hassan',
             'email' => 'h@gmail.com',
             'password' => Hash::make('12345678'),
-            'role' => 'admin'
+            'role' => 'admin',
+            'seeker_policy' => true,
+            'email_verified_at' => now()
         ]);
 
         Category::factory()->create([
