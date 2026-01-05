@@ -19,6 +19,12 @@ return new class extends Migration
             $table->string('password');
             $table->string('role')->default('seeker');
             $table->decimal('rating_avg', 3, 2)->default(0);
+            $table->boolean('no_commission')->default(false);
+            $table->decimal('commission')->default(0);
+            $table->boolean('seeker_policy')->default(false);
+            $table->boolean('provider_policy')->default(false);
+            $table->boolean('verification_provider')->default(false);
+            $table->timestamp('provider_verified_until')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
