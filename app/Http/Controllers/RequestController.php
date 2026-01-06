@@ -229,6 +229,8 @@ class RequestController extends Controller
             'status' => $newStatus,
         ]);
 
+        // حساب عمولة مزود الخدمة واضافتها الى العمولة السابقة
+
         // 🔥 إعادة جلب الطلب من قاعدة البيانات مع العلاقات
         $requestModel = RequestModel::with([
             'user',
