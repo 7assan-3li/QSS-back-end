@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProviderRequestController;
 use App\Http\Controllers\RequestBondController;
+use App\Http\Controllers\RequestComplaintController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
@@ -96,4 +97,7 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
     Route::get('/provider-requests', [ProviderRequestController::class, 'index']);
     Route::post('/provider-requests', [ProviderRequestController::class, 'store']);
     Route::patch('/provider-requests/{providerRequest}/status', [ProviderRequestController::class, 'updateStatus']);
+
+    //requestComplaint routes
+    Route::post('/request-complaints',[RequestComplaintController::class, 'store']);
 });
