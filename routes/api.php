@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\ProviderRequestController;
 use App\Http\Controllers\RequestBondController;
 use App\Http\Controllers\RequestComplaintController;
@@ -100,4 +101,6 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
 
     //requestComplaint routes
     Route::post('/request-complaints',[RequestComplaintController::class, 'store']);
+
+    
 });

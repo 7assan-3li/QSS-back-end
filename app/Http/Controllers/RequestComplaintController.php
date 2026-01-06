@@ -7,6 +7,7 @@ use App\Models\RequestComplaint;
 use App\Models\Request as RequestModel;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RequestComplaintController extends Controller
 {
@@ -19,7 +20,7 @@ class RequestComplaintController extends Controller
     //         $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
     public function store(Request $request)
     {
-        $validate  = $request->validate([
+        $validated  = $request->validate([
             'title' => 'required|string|max:200',
             'type' => 'required|string|max:200',
             'content' => 'required|string|max:2000',
@@ -28,6 +29,12 @@ class RequestComplaintController extends Controller
 
         $requestModel = RequestModel::findOrFail($request->request_id);
         $requestStatus = $requestModel->status;
+
+        if ($requestModel->user_id !== Auth::id()) {
+            return response()->json([
+                'message' => 'ليس لديك الصلاحية لارسال بلاغ على هذا الطلب'
+            ], 422);
+        }
 
         if($requestStatus === RequestStatus::COMPLETED){
             return response()->json([

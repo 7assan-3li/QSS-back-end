@@ -1,0 +1,154 @@
+:root {
+    --primary: #111827;
+    --gray: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+}
+
+/* Page */
+.banks-page {
+    padding: 30px;
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    color: var(--primary);
+    font-size: 26px;
+}
+
+.page-header p {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+.btn-add {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Alert */
+.success-alert {
+    background: #dcfce7;
+    color: #166534;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+
+/* Grid */
+.banks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+/* Card */
+.bank-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Image */
+.bank-image {
+    height: 160px;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bank-image img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.no-image {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+/* Body */
+.bank-body {
+    padding: 16px;
+    flex: 1;
+}
+
+.bank-body h3 {
+    color: var(--primary);
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.bank-body p {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+/* Actions */
+.bank-actions {
+    display: flex;
+    gap: 6px;
+    padding: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.bank-actions a,
+.bank-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+}
+
+.btn-view {
+    background: #e5e7eb;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.btn-edit {
+    background: #2563eb;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: #fff;
+}
+
+/* Empty */
+.empty {
+    grid-column: 1/-1;
+    text-align: center;
+    color: var(--gray);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}

@@ -7,6 +7,7 @@ use App\Models\Request as ModelsRequest;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -20,6 +21,13 @@ class ReviewController extends Controller
         ]);
 
         $requestModel = ModelsRequest::findOrFail($request->request_id);
+
+        if ($requestModel->user_id !== Auth::id()) {
+            return response()->json([
+                'message' => 'ليس لديك الصلاحية لتقييم والتعليق على هذا الطلب'
+            ], 422);
+        }
+
         if ($requestModel->status !== RequestStatus::COMPLETED) {
             return response()->json([
                 'message' => 'الطلب لم يكتمل بعد!'
