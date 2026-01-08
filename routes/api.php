@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProviderRequestController;
 use App\Http\Controllers\RequestBondController;
 use App\Http\Controllers\RequestComplaintController;
@@ -66,6 +67,10 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 Route::post('/logout', [UserController::class, 'apiLogout'])->middleware('auth:sanctum');
+
+//unprotected routes
+Route::get('/categories',[CategoryController::class, 'displayMain']);
+Route::get('/categories/{category}',[CategoryController::class, 'showCategory']);
 
 
 // Protected routes

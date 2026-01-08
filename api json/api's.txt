@@ -1,6 +1,9 @@
 //service
 curl --location --request POST 'http://127.0.0.1:8000/api/register?name=mohammed&email=m%40gmail.com&password=12345678&password_confirmation=12345678'
 
+//category api's
+http://127.0.0.1:8000/api/categories  //get main categories
+http://127.0.0.1:8000/api/categories/{id}  //get category with its sup_categories and services
 
 
 // providerRequest
