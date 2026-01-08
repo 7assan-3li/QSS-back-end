@@ -1,32 +1,3 @@
-//service
-curl --location --request POST 'http://127.0.0.1:8000/api/register?name=mohammed&email=m%40gmail.com&password=12345678&password_confirmation=12345678'
-
 //category api's
 http://127.0.0.1:8000/api/categories  //get main categories
 http://127.0.0.1:8000/api/categories/{id}  //get category with its sup_categories and services
-
-
-// providerRequest
-// store 'post'
-curl --location 'http://127.0.0.1:8000/api/provider-requests' \
---header 'Authorization: Bearer 4|gNl0KBA8weeYBrYxq1my7jN91czVyTWQIQh6qrg4862479ab' \
---form 'name="Hassan ali"' \
---form 'id_card=@"c:\\Users\\HICOM\\Desktop\\images\\142280_451797_HH1202-F.jpg"' \
---form 'requestContent="انا سباك محترف اريد ان اعرض خدماتي على منصتكم ان اكون مزود خدمة"'
-
-//request
-
-// store request 'post'
-curl --location 'http://127.0.0.1:8000/api/requests' \
---header 'Authorization: Bearer 6|v8ixkIp7zI4Glk9nA4jumlsxuLSP6MvAbbt1WEizce796c08' \
---header 'Content-Type: application/json' \
---data '{
-  "service_id": 1,
-  "message": "طلب تنظيف شامل",
-  "latitude": 15.355,
-  "longitude": 44.208,
-  "sup_services": [
-
-  ]
-}
-'
