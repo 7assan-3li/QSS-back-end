@@ -53,6 +53,7 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
 //     ]);
 // })->middleware([ 'signed'])
 //     ->name('verification.verify');
+
 // Resend Verification Email
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
@@ -102,5 +103,5 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
     //requestComplaint routes
     Route::post('/request-complaints',[RequestComplaintController::class, 'store']);
 
-    
+
 });

@@ -60,4 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Service::class, 'provider_id')
         ->whereNull('parent_service_id');
     }
+
+    public function banks()
+    {
+        return $this->belongsToMany(Request::class, 'user_bank', 'bank_id', 'bank_id')
+            ->withPivot(['bank_account'])
+            ->withTimestamps();
+    }
 }

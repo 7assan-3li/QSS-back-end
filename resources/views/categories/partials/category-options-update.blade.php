@@ -1,20 +1,18 @@
 @php
     $prefix = $prefix ?? '';
-    $selected_id = $cat->category_id ?? null; // القيمة المحددة
 @endphp
 
-@foreach ($categories as $category)
-
+@foreach ($categories as $item)
     {{-- منع اختيار نفس التصنيف أو أحد أبنائه --}}
-    @if ($category->id !== $cat->id && !in_array($category->id, $cat->childrenRecursive->pluck('id')->toArray()))
-        <option value="{{ $category->id }}" {{ $selected_id == $category->id ? 'selected' : '' }}>
-            {{ $prefix }}{{ $category->name }}
+    @if ($item->id !== $cat->id && !in_array($item->id, $cat->childrenRecursive->pluck('id')->toArray()))
+        <option value="{{ $item->id }}" @selected(old('category_id', $cat->category_id) == $item->id)>
+            {{ $prefix }}{{ $item->name }}
         </option>
     @endif
 
-    @if ($category->childrenRecursive->isNotEmpty())
+    @if ($item->childrenRecursive && $item->childrenRecursive->count())
         @include('categories.partials.category-options-update', [
-            'categories' => $category->childrenRecursive,
+            'categories' => $item->childrenRecursive,
             'prefix' => $prefix . '— ',
             'cat' => $cat,
         ])

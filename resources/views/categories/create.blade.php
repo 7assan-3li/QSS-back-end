@@ -1,72 +1,94 @@
 @extends('layouts.app')
 
+@section('title', 'إضافة تصنيف')
+
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/categories/create.css') }}">
+<link rel="stylesheet" href="{{ asset('css/categories/create.css') }}">
 
-    <div class="container">
+<div class="container">
 
-        <div class="page-header">
-            <h1>إضافة تصنيف جديد</h1>
-            <p>قم بإدخال بيانات التصنيف</p>
-        </div>
+    <!-- Breadcrumb -->
+    <div style="margin-bottom:20px;font-size:14px;color:#6b7280">
+        لوحة التحكم / التصنيفات / <strong>إضافة تصنيف</strong>
+    </div>
 
-        <div class="form-card">
+    <div class="page-header">
+        <h1>إضافة تصنيف جديد</h1>
+        <p>إنشاء تصنيف جديد وربطه بالتصنيفات الأخرى بسهولة</p>
+    </div>
 
-            <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+    <div class="form-card">
 
-                <!-- Name -->
+        <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <!-- Basic Info -->
+            <div class="form-section">
+                <h3>📌 المعلومات الأساسية</h3>
+
                 <div class="form-group">
-                    <label for="name">اسم التصنيف</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}"
-                        placeholder="مثال: تصميم، برمجة..." required>
-                    @error('name')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
+                    <label>اسم التصنيف</label>
+                    <input type="text" name="name" value="{{ old('name') }}" required>
+                    @error('name') <span class="error-text">{{ $message }}</span> @enderror
                 </div>
 
-                <!-- Parent Category -->
                 <div class="form-group">
-                    <label for="parent_id">التصنيف الأب</label>
-
-                    <select name="category_id" id="parent_id">
+                    <label>التصنيف الأب</label>
+                    <select name="category_id">
                         <option value="">— تصنيف رئيسي —</option>
-
                         @include('categories.partials.category-options', [
                             'categories' => $categories,
                             'prefix' => '',
                         ])
                     </select>
-
                 </div>
+            </div>
 
+            <!-- Description -->
+            <div class="form-section">
+                <h3>📝 الوصف</h3>
 
-                <!-- Description -->
                 <div class="form-group">
-                    <label for="description">الوصف</label>
-                    <textarea name="description" id="description" rows="4" placeholder="وصف مختصر للتصنيف">{{ old('description') }}</textarea>
+                    <textarea name="description" rows="4"
+                        placeholder="وصف مختصر للتصنيف">{{ old('description') }}</textarea>
                 </div>
+            </div>
 
-                <!-- Image -->
-                {{-- <div class="form-group">
-                    <label for="image">صورة التصنيف</label>
-                    <input type="file" name="image" id="image" accept="image/*">
-                </div> --}}
+            <!-- Image -->
+            <div class="form-section">
+                <h3>🖼 صورة التصنيف</h3>
 
-                <!-- Buttons -->
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">
-                        حفظ التصنيف
-                    </button>
+                <label class="file-upload">
+                    <input type="file" name="image_path" accept="image/*" onchange="previewImage(event)">
+                    <span>اضغط لاختيار صورة</span>
+                </label>
 
-                    <a href="{{ route('categories.index') }}" class="btn-secondary">
-                        رجوع
-                    </a>
-                </div>
+                <img id="preview" class="image-preview">
 
-            </form>
+                @error('image_path')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
+            </div>
 
-        </div>
+            <!-- Actions -->
+            <div class="form-actions">
+                <button class="btn-primary">حفظ التصنيف</button>
+                <a href="{{ route('categories.index') }}" class="btn-secondary">إلغاء</a>
+            </div>
+
+        </form>
 
     </div>
+
+</div>
+@endsection
+
+@section('js')
+<script>
+function previewImage(event) {
+    const preview = document.getElementById('preview');
+    preview.src = URL.createObjectURL(event.target.files[0]);
+    preview.style.display = 'block';
+}
+</script>
 @endsection

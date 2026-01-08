@@ -33,23 +33,29 @@
                     <span class="text">التصنيفات</span>
                 </a>
 
-                <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users*') ? 'active' : '' }}">
+                <a href="{{ route('services.index') }}" class="{{ request()->is('services*') ? 'active' : '' }}">
+                    <span class="icon">🛠️</span>
+                    <span class="text">الخدمات</span>
+                </a>
+
+                <a href="{{ route('banks.index') }}" class="{{ request()->is('banks*') ? 'active' : '' }}">
+                    <span class="icon">🏦</span>
+                    <span class="text">البنوك</span>
+                </a>
+
+                <a href="{{ route('users.index') }}" class="{{ request()->is('users*') ? 'active' : '' }}">
                     <span class="icon">👤</span>
                     <span class="text">المستخدمين</span>
                 </a>
 
-                <a href="{{ route('services.index') }}" class="{{ request()->routeIs('service*') ? 'active' : '' }}">
-                    <span class="icon">👤</span>
-                    <span class="text">الخدمات</span>
-                </a>
-
                 <a href="{{ route('provider-requests.index') }}"
-                    class="{{ request()->routeIs('provider-requests*') ? 'active' : '' }}">
+                    class="{{ request()->is('provider-requests*') ? 'active' : '' }}">
                     <span class="icon">📈</span>
                     <span class="text">طلبات مزودي الخدمات</span>
                 </a>
+
                 <a href="#" class="{{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
-                    <span class="icon">📈</span>
+                    <span class="icon">📑</span>
                     <span class="text">التقارير</span>
                 </a>
 
@@ -58,17 +64,18 @@
                     <span class="text">الإعدادات</span>
                 </a>
 
-
-                <a class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }} logout">
+                <!-- Logout -->
+                <a class="logout">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <span class="icon"></span>
+                        <span class="icon">🚪</span>
                         <input type="submit" class="text" value="تسجيل خروج">
                     </form>
                 </a>
 
             </nav>
         </aside>
+
 
         <!-- Main Content -->
         <main class="dashboard-content">

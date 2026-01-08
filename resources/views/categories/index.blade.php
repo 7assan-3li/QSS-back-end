@@ -1,48 +1,67 @@
 @extends('layouts.app')
+
+@section('title', 'التصنيفات')
+
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/categories/index.css') }}">
 
-    <div class="container">
-        <div class="page-header">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
             <h1>التصنيفات</h1>
-            @can('create', App\Models\Category::class)
-            <a href="{{ route('categories.create') }}">إضافة تصنيف</a>
-            @endcan
-            <p>استعرض جميع التصنيفات المتاحة</p>
+            <p>إدارة جميع التصنيفات في النظام</p>
         </div>
 
-        <div class="cards-grid">
+        <a href="{{ route('categories.create') }}" class="btn-add">
+            ➕ إضافة تصنيف
+        </a>
+    </div>
 
-            @forelse($categories as $category)
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>إجمالي التصنيفات</h3>
+            <span>{{ $categories->count() }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>التصنيفات الرئيسية</h3>
+            <span>{{ $categories->whereNull('category_id')->count() }}</span>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    @if ($categories->count())
+        <div class="categories-grid">
+            @foreach ($categories->whereNull('category_id') as $category)
                 <div class="category-card">
 
-                    {{-- <div class="card-image">
-                        <img src="{{ $category->image ?? asset('images/default-category.png') }}" alt="{{ $category->name }}">
-                    </div> --}}
+                    @if ($category->image_path)
+                        <img src="{{ asset('storage/' . $category->image_path) }}">
+                    @endif
 
-                    <div class="card-body">
-                        <h2>{{ $category->name }}</h2>
+                    <h3>{{ $category->name }}</h3>
 
-                        <p>
-                            {{ $category->description ?? 'لا يوجد وصف لهذا التصنيف' }}
-                        </p>
+                    <p>
+                        {{ Str::limit($category->description, 80) ?? 'لا يوجد وصف' }}
+                    </p>
 
-                        <a href="{{ route('categories.show', $category->id) }}" class="details-btn">
-                            عرض التفاصيل →
+                    <div class="card-actions">
+                        <a href="{{ route('categories.show', $category->id) }}" class="btn-view">
+                            عرض
                         </a>
-                        @can('update', $category)
-                        <a href="{{ route('categories.edit', $category->id) }}" class="btn">
+
+                        <a href="{{ route('categories.edit', $category->id) }}" class="btn-edit">
                             تعديل
                         </a>
-                        @endcan
-
                     </div>
 
                 </div>
-            @empty
-                <p class="empty-text">لا توجد تصنيفات حاليًا</p>
-            @endforelse
-
+            @endforeach
         </div>
-    </div>
+    @else
+        <div class="empty-state">
+            لا يوجد تصنيفات حتى الآن
+        </div>
+    @endif
 @endsection
