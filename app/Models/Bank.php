@@ -10,7 +10,7 @@ class Bank extends Model
 
     public function users()
     {
-        return $this->belongsToMany(Request::class, 'user_bank', 'bank_id', 'bank_id')
+        return $this->belongsToMany(User::class, 'user_bank', 'user_id', 'bank_id')
             ->withPivot(['bank_account'])
             ->withTimestamps();
     }

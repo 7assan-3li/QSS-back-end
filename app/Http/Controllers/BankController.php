@@ -90,4 +90,11 @@ class BankController extends Controller
             ->route('banks.index')
             ->with('success', 'تم حذف البنك بنجاح');
     }
+
+    //api functions
+    public function getAllBanks()
+    {
+        $banks = Bank::all();
+        return response()->json(['banks' => $banks]);
+    }
 }

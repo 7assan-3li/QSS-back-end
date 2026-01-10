@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="bank-body">
-                    <h3>{{ $bank->bank_name }}</h3>
+                    <h3>{{ $bank->id }}: {{ $bank->bank_name }}</h3>
                     <p>{{ Str::limit($bank->description, 90) }}</p>
                 </div>
 

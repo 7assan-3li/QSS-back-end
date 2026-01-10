@@ -7,6 +7,7 @@ use App\Http\Controllers\RequestBondController;
 use App\Http\Controllers\RequestComplaintController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\UserBankController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -107,6 +108,16 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
 
     //requestComplaint routes
     Route::post('/request-complaints',[RequestComplaintController::class, 'store']);
+
+    //bank routes
+    Route::get('/banks',[BankController::class, 'getAllBanks']);
+
+    //user bank account routes
+    Route::get('/user-bank',[UserBankController::class, 'index']);
+    Route::post('/user-bank',[UserBankController::class, 'store']);
+    Route::get('/user-bank/{userBank}',[UserBankController::class,'show']);
+    Route::put('/user-bank/{userBank}', [UserBankController::class, 'update']);
+
 
 
 });
