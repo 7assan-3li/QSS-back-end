@@ -13,6 +13,7 @@ class ProviderRequest extends Model
         'status',
         'requestContent',
         'id_card',
+        'location',
     ];
 
     public function user()

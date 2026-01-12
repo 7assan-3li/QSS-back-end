@@ -1,3 +1,39 @@
 //category api's
 http://127.0.0.1:8000/api/categories  //get main categories
 http://127.0.0.1:8000/api/categories/{id}  //get category with its sup_categories and services
+
+//provider requests
+http://127.0.0.1:8000/api/provider-requests // "post" to send new provider request
+{
+    "name": "hassan",
+    "id_card": , // صورة الهوية
+    "requestContent": "iojkdskfljsd", // نص الطلب
+    "location": "" // الموقع
+
+}
+
+//services
+http://127.0.0.1:8000/api/services // "post" to add new service
+{
+  "name": "service1", // string
+  "price": 1000, // double
+  "category_id": 2,
+  "image_path":  , // image
+  "distance_based_price": 1, // nullable,boolean
+  "price_per_km": 12 // nullable,integer
+}
+
+http://127.0.0.1:8000/api/services // "get" user services
+
+
+//child services
+http://127.0.0.1:8000/api/services // 'post' new child service
+{
+  "name": "service3",
+  "price": 1000,
+  "category_id": 1,
+  "service_id": 1 // required
+}
+
+
+

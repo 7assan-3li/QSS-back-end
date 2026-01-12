@@ -65,6 +65,7 @@ class CategoryController extends Controller
     }
     public function update(Request $request, Category $category)
     {
+        $this->authorize('update', $category);
         // التحقق من البيانات
         $validated = $request->validate([
             'name' => 'required|string|max:255',

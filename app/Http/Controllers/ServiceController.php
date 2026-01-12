@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ServiceController extends Controller
 {
     use AuthorizesRequests;
-    public function index(Request $request)
+    public function index()
     {
         $user = Auth::user();
         $services = $user->services()
@@ -30,7 +30,7 @@ class ServiceController extends Controller
             'category_id' => 'required|exists:categories,id',
             'parent_service_id' => 'nullable|exists:services,id',
             'status' => 'nullable|string|in:available,unavailable',
-            'image_path' => 'nullable|string|max:255',
+            'image_path' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
             'is_available' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'distance_based_price' => 'nullable|boolean',
@@ -39,6 +39,11 @@ class ServiceController extends Controller
 
         // إضافة provider_id تلقائيًا من المستخدم الحالي
         $validated['provider_id'] = Auth::user()->id;
+
+        if ($request->hasFile('image_path')) {
+            $validated['image_path'] = $request->file('image_path')
+                ->store('services', 'public');
+        }
 
         // إنشاء الخدمة
         $service = Service::create($validated);

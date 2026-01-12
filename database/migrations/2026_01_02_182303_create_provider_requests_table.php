@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->text('requestContent');
             $table->string('id_card');
+            $table->string('location');
             $table->timestamps();
         });
     }

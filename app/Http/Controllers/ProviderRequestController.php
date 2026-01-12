@@ -22,7 +22,7 @@ class ProviderRequestController extends Controller
 
         return response()->json($providerRequests);
     }
-    
+
     public function store(Request $request)
     {
         $this->authorize('create', ProviderRequest::class);
@@ -40,6 +40,7 @@ class ProviderRequestController extends Controller
 
         $validated = $request->validate([
             'name'    => 'required|string|max:150',
+            'location'    => 'required|string|max:150',
             'requestContent' => 'required|string|max:2000',
             'id_card' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);

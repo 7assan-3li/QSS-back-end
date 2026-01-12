@@ -135,6 +135,8 @@ class UserBankController extends Controller
                 ]);
         });
 
+        
+
         return response()->json([
             'message' => 'تم تحديث الحساب البنكي بنجاح'
         ], 200);

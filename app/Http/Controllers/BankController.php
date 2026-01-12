@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BankController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
         $banks = Bank::latest()->get();
@@ -16,11 +18,13 @@ class BankController extends Controller
     }
     public function create()
     {
+        $this->authorize('create', Bank::class);
         return view('banks.create');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', Bank::class);
         $validated = $request->validate([
             'bank_name'   => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -47,13 +51,14 @@ class BankController extends Controller
     public function edit($id)
     {
         $bank = Bank::findOrFail($id);
+        $this->authorize('update', $bank);
         return view('banks.edit', compact('bank'));
     }
 
     public function update(Request $request, $id)
     {
         $bank = Bank::findOrFail($id);
-
+        $this->authorize('update', $bank);
         $validated = $request->validate([
             'bank_name'   => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -79,6 +84,7 @@ class BankController extends Controller
     public function destroy($id)
     {
         $bank = Bank::findOrFail($id);
+        $this->authorize('delete', $bank);
 
         if ($bank->image_path && Storage::disk('public')->exists($bank->image_path)) {
             Storage::disk('public')->delete($bank->image_path);
