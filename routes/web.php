@@ -19,7 +19,7 @@ Route::middleware('guest')->group(function () {
 });
 
 
-Route::middleware(['auth',])->group(function () {
+Route::middleware(['auth','is_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 

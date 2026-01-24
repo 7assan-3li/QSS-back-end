@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'seeker.policy' => \App\Http\Middleware\CheckSeekerPolicy::class,
+            'is_admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
     })
     ->withExceptions(function ($exceptions) {
