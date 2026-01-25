@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\constant\RequestStatus;
 use App\constant\Role;
 use App\Models\Request;
 use App\Models\User;
@@ -77,5 +78,10 @@ class RequestPolicy
     public function updateStatusProvider(User $user, Request $request): bool
     {
         return $user->id === $request->serviceProvider->id || $user->role === Role::ADMIN ;
+    }
+
+    public function markPaid(User $user, Request $request): bool
+    {
+        return ($user->role === Role::ADMIN || $user->role === Role::PROVIDER) && ($request->status === RequestStatus::COMPLETED || $request->status === RequestStatus::ACCEPTED_FULL_PAID || $request->status === RequestStatus::ACCEPTED_PARTIAL_PAID);
     }
 }

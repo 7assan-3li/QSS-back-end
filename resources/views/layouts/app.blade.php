@@ -53,6 +53,11 @@
                     <span class="icon">📈</span>
                     <span class="text">طلبات مزودي الخدمات</span>
                 </a>
+                <a href="{{ route('requests.index') }}"
+                    class="{{ request()->is('requests*') ? 'active' : '' }}">
+                    <span class="icon">📈</span>
+                    <span class="text">طلبات الخدمات</span>
+                </a>
 
                 <a href="#" class="{{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
                     <span class="icon">📑</span>

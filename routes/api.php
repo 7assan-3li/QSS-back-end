@@ -4,6 +4,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProviderRequestController;
 use App\Http\Controllers\RequestBondController;
+use App\Http\Controllers\RequestCommissionBondController;
 use App\Http\Controllers\RequestComplaintController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
@@ -117,6 +118,10 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
     Route::post('/user-bank',[UserBankController::class, 'store']);
     Route::get('/user-bank/{userBank}',[UserBankController::class,'show']);
     Route::put('/user-bank/{userBank}', [UserBankController::class, 'update']);
+
+    //request commission bonds routes
+    Route::get('/request-commission-bonds', [RequestCommissionBondController::class, 'index']);
+    Route::post('/request-commission-bonds', [RequestCommissionBondController::class, 'store']);
 
 
 

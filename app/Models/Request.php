@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Request extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     // public function service()
     // {
@@ -56,5 +56,10 @@ class Request extends Model
     public function review()
     {
         return $this->hasOne(Review::class);
+    }
+
+    public function commissionBonds()
+    {
+        return $this->hasMany(RequestCommissionBond::class, 'request_id');
     }
 }

@@ -4,8 +4,11 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProviderRequestController;
+use App\Http\Controllers\RequestCommissionBondController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
+use App\Models\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,11 +18,11 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [UserController::class, 'loginPage'])->name('login');
-    Route::post('/login', [UserController::class, 'login'])->name('login.store');
+    Route::post('/login', [UserController::class, 'login'])->name('login.store')->middleware('throttle:6,1');
 });
 
 
-Route::middleware(['auth','is_admin'])->group(function () {
+Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
@@ -65,4 +68,19 @@ Route::middleware(['auth','is_admin'])->group(function () {
     Route::get('/banks/{bank}/edit', [BankController::class, 'edit'])->name('banks.edit');
     Route::put('/banks/{bank}', [BankController::class, 'update'])->name('banks.update');
     Route::delete('/banks/{bank}', [BankController::class, 'destroy'])->name('banks.destroy');
+
+    //service request routes
+    Route::get('/requests', [RequestController::class, 'indexAdmin'])->name('requests.index');
+    Route::get('/requests/{request}', [RequestController::class, 'showAdmin'])->name('requests.show');
+    Route::patch('/requests/{request}/status', [RequestController::class, 'updateStatusAdmin'])->name('requests.update.status');
+    Route::post('/requests', [RequestController::class, 'storeAdmin'])->name('requests.store');
+    Route::patch('/requests/{request}/mark-paid', [RequestController::class, 'markPaid'])
+        ->name('requests.markPaid');
+
+    //request commission bonds
+    Route::patch('/request-commission-bonds/{bond}/approve', [RequestCommissionBondController::class, 'approve'])
+        ->name('commission-bonds.approve');
+
+    Route::patch('/request-commission-bonds/{bond}/reject', [RequestCommissionBondController::class, 'reject'])
+        ->name('commission-bonds.reject');
 });

@@ -6,6 +6,7 @@ use App\constant\RequestStatus;
 use App\Models\Request as RequestModel;
 use App\Models\Service;
 use App\Rules\SubServiceBelongsToMain;
+use App\Services\RequestService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -243,5 +244,59 @@ class RequestController extends Controller
             'message' => 'تم تحديث حالة الطلب بنجاح',
             'request' => $requestModel,
         ]);
+    }
+
+
+    //web functions
+    public function indexAdmin(Request $httpRequest)
+    {
+        $query = RequestModel::with(['user', 'services']);
+
+        // فلترة حسب الحالة
+        if ($httpRequest->status) {
+            $query->where('status', $httpRequest->status);
+        }
+
+        // فلترة العمولة
+        if ($httpRequest->commission === 'paid') {
+            $query->where('commission_paid', true);
+        }
+
+        if ($httpRequest->commission === 'unpaid') {
+            $query->where('commission_paid', false);
+        }
+
+        $requests = $query->latest()->paginate(9);
+
+        // التقارير
+        $stats = [
+            'total'      => \App\Models\Request::count(),
+            'pending'    => \App\Models\Request::where('status', 'pending')->count(),
+            'completed'  => \App\Models\Request::where('status', 'completed')->count(),
+            'unpaid'     => \App\Models\Request::where('commission_paid', false)->count(),
+        ];
+
+        return view('requests.index', compact('requests', 'stats'));
+    }
+
+    public function showAdmin($id)
+    {
+        $request = \App\Models\Request::with([
+            'user',
+            'services',
+            'commissionBonds'
+        ])->findOrFail($id);
+
+        $commission = $request->total_price * 0.10;
+
+        return view('requests.show', ['request' => $request, 'commission' => $commission]);
+    }
+
+    public function markPaid($request_id,RequestService $service)
+    {
+        $requestModel = RequestModel::findOrFail($request_id);
+        $this->authorize('markPaid', $requestModel);
+        $service->markPaid($requestModel);
+        return back()->with('success', 'تم تحديد الطلب كمدفوع');
     }
 }
