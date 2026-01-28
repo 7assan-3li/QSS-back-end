@@ -42,7 +42,7 @@ class ProviderRequestController extends Controller
             'name'    => 'required|string|max:150',
             'location'    => 'required|string|max:150',
             'requestContent' => 'required|string|max:2000',
-            'id_card' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'id_card' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $validated['user_id'] = Auth::id();
