@@ -1,3 +1,6 @@
+//email verification api's
+http://127.0.0.1:8000/api/email/verification-notification //'post' resend verification email
+
 //category api's
 http://127.0.0.1:8000/api/categories  //get main categories
 http://127.0.0.1:8000/api/categories/{id}  //get category with its sup_categories and services
