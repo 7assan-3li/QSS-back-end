@@ -116,6 +116,12 @@ class ServiceController extends Controller
         ], 201);
     }
 
+    public function showAll()
+    {
+        $services = Service::with('provider')->get();
+        return response()->json($services, 200);
+    }
+
 
     //web functions
     public function adminIndex()

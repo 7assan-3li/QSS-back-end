@@ -15,7 +15,6 @@ class RequestCommissionBondController extends Controller
     {
         $commissionBond = $service->create($request->validated());
         return response()->json($commissionBond, 201);
-
     }
 
 

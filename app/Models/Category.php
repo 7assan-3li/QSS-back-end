@@ -10,6 +10,7 @@ class Category extends Model
     use HasFactory;
     protected $fillable = ['name', 'description', 'category_id','image_path'];
 
+
     public function parent()
     {
         return $this->belongsTo(Category::class, 'category_id');

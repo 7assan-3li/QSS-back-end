@@ -246,37 +246,11 @@ class RequestController extends Controller
         ]);
     }
 
-
     //web functions
-    public function indexAdmin(Request $httpRequest)
+    public function indexAdmin(Request $httpRequest,RequestService $service)
     {
-        $query = RequestModel::with(['user', 'services']);
-
-        // فلترة حسب الحالة
-        if ($httpRequest->status) {
-            $query->where('status', $httpRequest->status);
-        }
-
-        // فلترة العمولة
-        if ($httpRequest->commission === 'paid') {
-            $query->where('commission_paid', true);
-        }
-
-        if ($httpRequest->commission === 'unpaid') {
-            $query->where('commission_paid', false);
-        }
-
-        $requests = $query->latest()->paginate(9);
-
-        // التقارير
-        $stats = [
-            'total'      => \App\Models\Request::count(),
-            'pending'    => \App\Models\Request::where('status', 'pending')->count(),
-            'completed'  => \App\Models\Request::where('status', 'completed')->count(),
-            'unpaid'     => \App\Models\Request::where('commission_paid', false)->count(),
-        ];
-
-        return view('requests.index', compact('requests', 'stats'));
+        $data = $service->getAllRequests($httpRequest);
+        return view('requests.index', ['requests'=> $data['requests'], 'stats'=>$data['stats']]);
     }
 
     public function showAdmin($id)
@@ -295,6 +269,9 @@ class RequestController extends Controller
     public function markPaid($request_id,RequestService $service)
     {
         $requestModel = RequestModel::findOrFail($request_id);
+        if ($requestModel->status !== RequestStatus::COMPLETED && $requestModel->status !== RequestStatus::ACCEPTED_FULL_PAID && $requestModel->status !== RequestStatus::ACCEPTED_PARTIAL_PAID)
+            return back()->withErrors('لا يمكن اتمام هذه العملية لان الطلب لم يتم الدفع له');
+
         $this->authorize('markPaid', $requestModel);
         $service->markPaid($requestModel);
         return back()->with('success', 'تم تحديد الطلب كمدفوع');

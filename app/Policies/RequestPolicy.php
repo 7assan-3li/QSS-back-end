@@ -82,6 +82,7 @@ class RequestPolicy
 
     public function markPaid(User $user, Request $request): bool
     {
-        return ($user->role === Role::ADMIN || $user->role === Role::PROVIDER) && ($request->status === RequestStatus::COMPLETED || $request->status === RequestStatus::ACCEPTED_FULL_PAID || $request->status === RequestStatus::ACCEPTED_PARTIAL_PAID);
+        return ($user->role === Role::ADMIN || $user->role === Role::PROVIDER);
+        // return ($user->role === Role::ADMIN || $user->role === Role::PROVIDER) && ($request->status === RequestStatus::COMPLETED || $request->status === RequestStatus::ACCEPTED_FULL_PAID || $request->status === RequestStatus::ACCEPTED_PARTIAL_PAID);
     }
 }
