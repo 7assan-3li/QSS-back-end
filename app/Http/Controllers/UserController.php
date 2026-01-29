@@ -283,9 +283,10 @@ class UserController extends Controller
         // 🔢 توليد كود جديد
         $code = random_int(100000, 999999);
 
-        $user->update([
-            'email_verification_code' => $code,
-            'email_verification_expires_at' => Carbon::now()->addMinutes(10),
+        EmailVerificationCode::updateOrCreate([
+            'user_id' => $user->id,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(10)
         ]);
 
         // 📬 إرسال الإيميل عبر Queue
