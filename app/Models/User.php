@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\VerifyEmailForMobile;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -25,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'email_verified_at',
-        'seeker_policy'
+        'seeker_policy',
     ];
 
     /**
@@ -67,5 +68,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Bank::class, 'user_bank', 'user_id', 'bank_id')
             ->withPivot(['bank_account'])
             ->withTimestamps();
+    }
+
+    public function providerRequests()
+    {
+        return $this->hasMany(ProviderRequest::class, 'user_id');
+    }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class, 'user_id');
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailForMobile());
     }
 }

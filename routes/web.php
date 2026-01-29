@@ -9,12 +9,18 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use App\Models\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return response()->view('auth.email-verified');
+})->middleware(['signed'])->name('verification.verify');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [UserController::class, 'loginPage'])->name('login');

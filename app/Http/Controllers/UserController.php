@@ -3,15 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\constant\Role;
+use App\Jobs\SendEmailVerificationJob;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\SendEmailVerificationCode;
+use App\Models\EmailVerificationCode;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\RateLimiter;
 
 class UserController extends Controller
 {
     use AuthorizesRequests;
+
+    // public function apiRegister(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'required|email|unique:users,email',
+    //         'password' => 'required|min:6|confirmed',
+    //         'seeker_policy' => 'required|accepted'
+    //     ]);
+
+    //     $user = User::create([
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'password' => Hash::make($request->password),
+    //         'seeker_policy' => true,
+    //     ]);
+
+    //     // إنشاء توكن مباشرة بعد التسجيل
+    //     $token = $user->createToken('api-token')->plainTextToken;
+
+    //     // أرسل الإيميل عبر Queue
+    //     SendEmailVerificationJob::dispatch($user);
+
+    //     return response()->json([
+    //         'message' => 'Account created successfully',
+    //         'token' => $token,
+    //         'user' => $user,
+    //         'email_verified' => $user->hasVerifiedEmail()
+    //     ], 201);
+    // }
 
     public function apiRegister(Request $request)
     {
@@ -29,15 +64,23 @@ class UserController extends Controller
             'seeker_policy' => true,
         ]);
 
+        $code = random_int(100000, 999999);
+        EmailVerificationCode::create([
+            'user_id' => $user->id,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(10)
+        ]);
 
-        // إنشاء توكن مباشرة بعد التسجيل
+        SendEmailVerificationCode::dispatch($user, $code);
+
         $token = $user->createToken('api-token')->plainTextToken;
-        $user->sendEmailVerificationNotification();
+
+        // $user->sendEmailVerificationNotification();
         return response()->json([
-            'message' => 'Account created successfully',
+            'message' => 'تم إنشاء الحساب، تحقق من بريدك الإلكتروني',
             'token' => $token,
             'user' => $user,
-            'email_verified' => $user->hasVerifiedEmail()
+            'email_verified' => false
         ], 201);
     }
     public function apiLogin(Request $request)
@@ -115,16 +158,46 @@ class UserController extends Controller
         return to_route('users.index')->with('success', 'تم تحديث كلمة المرور بنجاح');
     }
 
-    public function verifyEmail(User $user)
-    {
-        $this->authorize('update', $user);
-        if ($user->hasVerifiedEmail()) {
-            return to_route('users.index')->with('info', 'البريد الإلكتروني موثق بالفعل');
-        }
-        $user->email_verified_at = now();
-        $user->save();
+    // public function verifyEmail(User $user)
+    // {
+    //     $this->authorize('update', $user);
+    //     if ($user->hasVerifiedEmail()) {
+    //         return to_route('users.index')->with('info', 'البريد الإلكتروني موثق بالفعل');
+    //     }
+    //     $user->email_verified_at = now();
+    //     $user->save();
 
-        return to_route('users.index')->with('success', 'تم توثيق البريد الإلكتروني بنجاح');
+    //     return to_route('users.index')->with('success', 'تم توثيق البريد الإلكتروني بنجاح');
+    // }
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'المستخدم غير موجود'], 404);
+        }
+
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'الإيميل موثق مسبقًا']);
+        }
+
+        if ($user->email_verification_code !== $request->code) {
+            return response()->json(['message' => 'كود التحقق غير صحيح'], 422);
+        }
+
+        $user->update([
+            'email_verified_at' => now(),
+            'email_verification_code' => null,
+        ]);
+
+        return response()->json([
+            'message' => 'تم توثيق البريد الإلكتروني بنجاح',
+        ]);
     }
 
     public function destroy(User $user)
@@ -180,6 +253,80 @@ class UserController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
+
+    public function resendCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        // 🛑 منع الإزعاج (محاولة كل دقيقة)
+        $key = 'resend-code:' . $request->email;
+
+        if (RateLimiter::tooManyAttempts($key, 1)) {
+            return response()->json([
+                'message' => 'يرجى الانتظار دقيقة قبل إعادة الإرسال'
+            ], 429);
+        }
+
+        RateLimiter::hit($key, 60);
+
+        $user = User::where('email', $request->email)->first();
+
+        // لو الحساب مفعّل
+        if ($user->email_verified_at) {
+            return response()->json([
+                'message' => 'الحساب مفعّل بالفعل'
+            ], 400);
+        }
+
+        // 🔢 توليد كود جديد
+        $code = random_int(100000, 999999);
+
+        $user->update([
+            'email_verification_code' => $code,
+            'email_verification_expires_at' => Carbon::now()->addMinutes(10),
+        ]);
+
+        // 📬 إرسال الإيميل عبر Queue
+        SendEmailVerificationCode::dispatch($user, $code);
+
+        return response()->json([
+            'message' => 'تم إرسال رمز التحقق مرة أخرى'
+        ]);
+    }
+
+    public function verifyEmailCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required'
+        ]);
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        $record = EmailVerificationCode::where('user_id', $user->id)
+            ->where('code', $request->code)
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$record) {
+            return response()->json([
+                'message' => 'الكود غير صحيح أو منتهي'
+            ], 422);
+        }
+
+        $user->update([
+            'email_verified_at' => now()
+        ]);
+
+        $record->delete();
+
+        return response()->json([
+            'message' => 'تم توثيق البريد الإلكتروني بنجاح'
+        ]);
+    }
+
 
     public function logout()
     {

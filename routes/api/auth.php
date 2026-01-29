@@ -43,6 +43,12 @@ Route::post('/email/verification-notification', function (Request $request) {
     ]);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
 
+Route::post('register', [UserController::class, 'apiRegister']);
+Route::post('verify-email', [UserController::class, 'verifyEmail']);
 
+Route::post('/verify-email-code', [UserController::class, 'verifyEmailCode'])
+    ->middleware('throttle:5,1');
+
+Route::post('/resend-verification-code', [UserController::class, 'resendCode']);
 
 Route::post('/logout', [UserController::class, 'apiLogout'])->middleware('auth:sanctum');

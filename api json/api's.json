@@ -1,0 +1,301 @@
+{
+  "info": {
+    "name": "QSS API Documentation",
+    "base_url": "http://your-domain.com/api"
+  },
+  "routes": [
+    {
+      "group": "Authentication",
+      "endpoints": [
+        {
+          "name": "Register",
+          "method": "POST",
+          "uri": "/register",
+          "body": {
+            "name": "string (required)",
+            "email": "string (required, email, unique)",
+            "password": "string (required, min:6, confirmed)",
+            "password_confirmation": "string (required)",
+            "seeker_policy": "boolean (required, accepted)"
+          }
+        },
+        {
+          "name": "Login",
+          "method": "POST",
+          "uri": "/login",
+          "body": {
+            "email": "string (required, email)",
+            "password": "string (required, min:8)"
+          }
+        },
+        {
+          "name": "Logout",
+          "method": "POST",
+          "uri": "/logout",
+          "headers": { "Authorization": "Bearer {token}" }
+        },
+        {
+          "name": "resend verification code",
+          "method": "POST",
+          "uri": "/resend-verification-code",
+          "body": {
+            "email": "string (required, email)"
+          }
+
+        }
+      ]
+    },
+    {
+      "group": "General (Public)",
+      "endpoints": [
+        {
+          "name": "Get Main Categories",
+          "method": "GET",
+          "uri": "/categories/main"
+        },
+        {
+          "name": "Get Category Details",
+          "method": "GET",
+          "uri": "/categories/{category_id}"
+        },
+        {
+          "name": "Get All Banks",
+          "method": "GET",
+          "uri": "/banks"
+        },
+        {
+          "name": "Get All Services (Public)",
+          "method": "GET",
+          "uri": "/services/all"
+        }
+      ]
+    },
+    {
+      "group": "User Bank Accounts",
+      "headers": { "Authorization": "Bearer {token}" },
+      "endpoints": [
+        {
+          "name": "List User Banks",
+          "method": "GET",
+          "uri": "/user-banks"
+        },
+        {
+          "name": "Add User Bank",
+          "method": "POST",
+          "uri": "/user-banks",
+          "body": {
+            "bank_id": "integer (required, exists:banks)",
+            "bank_account": "integer (required, unique per user)"
+          }
+        },
+        {
+          "name": "Show User Bank",
+          "method": "GET",
+          "uri": "/user-banks/{id}"
+        },
+        {
+          "name": "Update User Bank",
+          "method": "PUT",
+          "uri": "/user-banks/{id}",
+          "body": {
+            "bank_id": "integer (required)",
+            "bank_account": "integer (required)",
+            "is_active": "boolean (required)"
+          }
+        }
+      ]
+    },
+    {
+      "group": "Provider Requests",
+      "headers": { "Authorization": "Bearer {token}" },
+      "endpoints": [
+        {
+          "name": "List My Provider Requests",
+          "method": "GET",
+          "uri": "/provider-requests"
+        },
+        {
+          "name": "Submit Provider Request",
+          "method": "POST",
+          "uri": "/provider-requests",
+          "content_type": "multipart/form-data",
+          "body": {
+            "name": "string (required)",
+            "location": "string (required)",
+            "requestContent": "string (required)",
+            "id_card": "file (required, image)"
+          }
+        },
+        {
+          "name": "Show Provider Request",
+          "method": "GET",
+          "uri": "/provider-requests/{id}"
+        },
+        {
+          "name": "Delete Provider Request",
+          "method": "DELETE",
+          "uri": "/provider-requests/{id}"
+        }
+      ]
+    },
+    {
+      "group": "Services (For Providers)",
+      "headers": { "Authorization": "Bearer {token}" },
+      "endpoints": [
+        {
+          "name": "List My Services",
+          "method": "GET",
+          "uri": "/services"
+        },
+        {
+          "name": "Create Main Service",
+          "method": "POST",
+          "uri": "/services",
+          "content_type": "multipart/form-data",
+          "body": {
+            "name": "string (required)",
+            "description": "string (nullable)",
+            "price": "numeric (required)",
+            "category_id": "integer (required)",
+            "image_path": "file (nullable, image)",
+            "status": "string (in:available,unavailable)",
+            "is_available": "boolean",
+            "is_active": "boolean",
+            "distance_based_price": "boolean",
+            "price_per_km": "numeric"
+          }
+        },
+        {
+          "name": "Create Child Service",
+          "method": "POST",
+          "uri": "/services/child",
+          "body": {
+            "parent_service_id": "integer (required)",
+            "name": "string (required)",
+            "price": "numeric (required)",
+            "description": "string (nullable)"
+          }
+        },
+        {
+          "name": "Show Service",
+          "method": "GET",
+          "uri": "/services/{id}"
+        },
+        {
+          "name": "Update Service",
+          "method": "PUT",
+          "uri": "/services/{id}",
+          "body": {
+            "name": "string",
+            "price": "numeric",
+            "status": "string",
+            "..." : "Any other field from create"
+          }
+        },
+        {
+          "name": "Delete Service",
+          "method": "DELETE",
+          "uri": "/services/{id}"
+        }
+      ]
+    },
+    {
+      "group": "Requests (Orders)",
+      "headers": { "Authorization": "Bearer {token}" },
+      "endpoints": [
+        {
+          "name": "List Requests",
+          "method": "GET",
+          "uri": "/requests"
+        },
+        {
+          "name": "Create Request",
+          "method": "POST",
+          "uri": "/requests",
+          "body": {
+            "service_id": "integer (required)",
+            "message": "string (nullable)",
+            "latitude": "numeric (nullable)",
+            "longitude": "numeric (nullable)",
+            "sup_services": [
+              {
+                "id": "integer (required)",
+                "quantity": "integer (min:1)"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Show Request",
+          "method": "GET",
+          "uri": "/requests/{id}"
+        },
+        {
+          "name": "Get Request Status",
+          "method": "GET",
+          "uri": "/requests/{id}/status"
+        },
+        {
+          "name": "Update Request Status",
+          "method": "PUT",
+          "uri": "/requests/{id}/status",
+          "body": {
+            "status": "string (required, e.g., cancelled, rejected, accepted_initial, etc.)"
+          }
+        }
+      ]
+    },
+    {
+      "group": "Other Operations",
+      "headers": { "Authorization": "Bearer {token}" },
+      "endpoints": [
+        {
+          "name": "Upload Request Bond (سند)",
+          "method": "POST",
+          "uri": "/request-bonds",
+          "content_type": "multipart/form-data",
+          "body": {
+            "request_id": "integer (required)",
+            "image_path": "file (required, image)",
+            "bond_number": "integer (nullable)",
+            "description": "string (nullable)"
+          }
+        },
+        {
+          "name": "List Request Bonds",
+          "method": "GET",
+          "uri": "/request-bonds"
+        },
+        {
+          "name": "Upload Commission Bond",
+          "method": "POST",
+          "uri": "/commission-bonds",
+          "body": {
+            "note": "Check RequestCommissionBondRequest for exact fields, usually request_id and image"
+          }
+        },
+        {
+          "name": "Submit Complaint",
+          "method": "POST",
+          "uri": "/complaints",
+          "body": {
+            "title": "string (required)",
+            "type": "string (required)",
+            "content": "string (required)",
+            "request_id": "integer (required)"
+          }
+        },
+        {
+          "name": "Submit Review",
+          "method": "POST",
+          "uri": "/reviews",
+          "body": {
+            "request_id": "integer (required)",
+            "rating": "numeric (required, 1-5)",
+            "comment": "string (nullable)"
+          }
+        }
+      ]
+    }
+  ]
+}
