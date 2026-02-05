@@ -5,10 +5,10 @@
 
     <div class="container">
 
-        <!-- Page Header -->
+        <!-- Header -->
         <div class="page-header">
             <h1>إدارة المستخدمين</h1>
-            <p>عرض وإدارة جميع المستخدمين المسجلين</p>
+            <p>لوحة تحكم وتقارير إحصائية</p>
         </div>
 
         <!-- Stats -->
@@ -19,25 +19,34 @@
             </div>
 
             <div class="stat-card">
-                <h3>{{ $users->where('role', \App\constant\Role::ADMIN)->count() }}</h3>
-                <span>المشرفون</span>
+                <h3>{{ $todayUsers }}</h3>
+                <span>مستخدمون اليوم</span>
             </div>
 
             <div class="stat-card">
-                <h3>{{ $users->where('role', \App\constant\Role::EMPLOYEE)->count() }}</h3>
-                <span>الموظفين</span>
+                <h3>{{ $weekUsers }}</h3>
+                <span>هذا الأسبوع</span>
             </div>
+
             <div class="stat-card">
-                <h3>{{ $users->where('role', \App\constant\Role::PROVIDER)->count() }}</h3>
-                <span>المزودين</span>
-            </div>
-            <div class="stat-card">
-                <h3>{{ $users->where('role', \App\constant\Role::SEEKER)->count() }}</h3>
-                <span>طالبي الخدمة</span>
+                <h3>{{ $growth }}%</h3>
+                <span>نسبة النمو الشهري</span>
             </div>
         </div>
 
-        {{-- @can('create', App\Models\User::class) --}}
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>تسجيل المستخدمين خلال السنة</h3>
+                <canvas id="usersChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>توزيع المستخدمين حسب الدور</h3>
+                <canvas id="rolesChart"></canvas>
+            </div>
+        </div>
+
         <!-- Table -->
         <div class="table-card">
             <table>
@@ -45,12 +54,13 @@
                     <tr>
                         <th>#</th>
                         <th>الاسم</th>
-                        <th>البريد الإلكتروني</th>
+                        <th>البريد</th>
                         <th>الدور</th>
                         <th>تاريخ التسجيل</th>
                         <th>التحكم</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse ($users as $user)
                         <tr>
@@ -63,12 +73,19 @@
                                 </span>
                             </td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>
+
+                            <!-- Actions -->
                             <td class="actions">
                                 @can('view', $user)
-                                    <a href="{{ route('users.show', $user->id) }}" class="btn view">عرض</a>
+                                    <a href="{{ route('users.show', $user->id) }}" class="btn view">
+                                        عرض
+                                    </a>
                                 @endcan
+
                                 @can('update', $user)
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn edit">تعديل</a>
+                                    <a href="{{ route('users.edit', $user->id) }}" class="btn edit">
+                                        تعديل
+                                    </a>
                                 @endcan
                             </td>
                         </tr>
@@ -78,9 +95,55 @@
                         </tr>
                     @endforelse
                 </tbody>
+
             </table>
-            {{-- @endcan --}}
         </div>
 
     </div>
+@endsection
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        /* Users per month */
+        new Chart(document.getElementById('usersChart'), {
+            type: 'line',
+            data: {
+                labels: @json($usersChart->keys()),
+                datasets: [{
+                    label: 'عدد المستخدمين',
+                    data: @json($usersChart->values()),
+                    fill: true,
+                    tension: 0.4,
+                    backgroundColor: 'rgba(17,24,39,0.1)',
+                    borderColor: '#111827',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+
+        /* Roles distribution */
+        new Chart(document.getElementById('rolesChart'), {
+            type: 'doughnut',
+            data: {
+                labels: @json($rolesChart->keys()),
+                datasets: [{
+                    data: @json($rolesChart->values()),
+                    backgroundColor: ['#111827', '#374151', '#6b7280', '#9ca3af']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
 @endsection

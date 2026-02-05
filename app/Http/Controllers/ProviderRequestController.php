@@ -9,6 +9,9 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class ProviderRequestController extends Controller
 {
@@ -39,8 +42,8 @@ class ProviderRequestController extends Controller
         }
 
         $validated = $request->validate([
-            'name'    => 'required|string|max:150',
-            'location'    => 'required|string|max:150',
+            'name' => 'required|string|max:150',
+            'location' => 'required|string|max:150',
             'requestContent' => 'required|string|max:2000',
             'id_card' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
@@ -80,13 +83,24 @@ class ProviderRequestController extends Controller
     }
 
     //admin functions
-    public function adminIndex()
+
+
+    public function adminIndex(Request $request)
     {
         $this->authorize('adminViewAny', ProviderRequest::class);
+
+        $days = $request->get('days', 7);
+        $status = $request->get('status'); // <-- الفلتر
+
+        /* ===== Requests with filters ===== */
         $requests = ProviderRequest::with(['user', 'admin'])
+            ->when($status, function ($q) use ($status) {
+                $q->where('status', $status);
+            })
             ->latest()
             ->get();
 
+        /* ===== Stats (بدون فلترة حتى تبقى عامة) ===== */
         $stats = [
             'total' => ProviderRequest::count(),
             'pending' => ProviderRequest::where('status', providerRequestStatus::PENDING)->count(),
@@ -94,11 +108,41 @@ class ProviderRequestController extends Controller
             'rejected' => ProviderRequest::where('status', providerRequestStatus::REJECTED)->count(),
         ];
 
-        return view('providerRequests.index', [
-            'requests' => $requests,
-            'stats' => $stats,
-        ]);
+        /* ===== Daily chart ===== */
+        $daily = ProviderRequest::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('created_at', '>=', Carbon::now()->subDays($days - 1))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        $labels = [];
+        $data = [];
+
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $formatted = $date->format('Y-m-d');
+
+            $labels[] = $date->format('d M'); // <-- تاريخ حقيقي
+            $data[] = $daily[$formatted]->count ?? 0;
+        }
+
+        return view('providerRequests.index', compact(
+            'requests',
+            'stats',
+            'labels',
+            'data',
+            'days',
+            'status',
+            
+        ));
     }
+
+
+
 
     public function adminShow(ProviderRequest $providerRequest)
     {

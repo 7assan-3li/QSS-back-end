@@ -112,9 +112,9 @@
                     تم توثيق البريد الإلكتروني لهذا المستخدم بالفعل.
                 </div>
             @else
-            <form action="{{ route('users.verify.email', $user->id) }}" method="POST">
+            <form action="{{ route('verify.email.admin', $user->id) }}" method="POST">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 <!-- Actions -->
                 <div class="form-actions">
                     <button type="submit" class="btn-primary">توثيق البريد الإلكتروني</button>

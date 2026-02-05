@@ -1,25 +1,21 @@
-/* ===== Container ===== */
 .container {
     padding: 30px;
 }
 
-/* ===== Header ===== */
 .page-header {
     margin-bottom: 30px;
 }
 
 .page-header h1 {
-    color: #111827;
     font-size: 28px;
     font-weight: 700;
 }
 
 .page-header p {
     color: #6b7280;
-    margin-top: 6px;
 }
 
-/* ===== Stats ===== */
+/* Stats */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -28,30 +24,37 @@
 }
 
 .stat-card {
-    background: #ffffff;
-    border-radius: 16px;
+    background: #fff;
     padding: 25px;
-    box-shadow: 0 10px 30px rgba(17, 24, 39, 0.1);
-    border-left: 5px solid #111827;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .stat-card h3 {
     font-size: 28px;
-    color: #111827;
     margin-bottom: 5px;
 }
 
-.stat-card span {
-    color: #6b7280;
-    font-size: 14px;
+/* Charts */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
 }
 
-/* ===== Table ===== */
-.table-card {
-    background: #ffffff;
+.chart-card {
+    background: #fff;
+    padding: 25px;
     border-radius: 18px;
-    box-shadow: 0 15px 40px rgba(17, 24, 39, 0.1);
-    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Table */
+.table-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 table {
@@ -61,55 +64,45 @@ table {
 
 thead {
     background: #111827;
-    color: #ffffff;
+    color: #fff;
 }
 
-th, td {
+th,
+td {
     padding: 15px;
     text-align: center;
-    font-size: 14px;
-}
-
-tbody tr {
-    border-bottom: 1px solid #e5e7eb;
 }
 
 tbody tr:hover {
     background: #f9fafb;
 }
 
-/* ===== Role Badge ===== */
 .role-badge {
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
-}
-
-.role-badge.admin {
-    background: #111827;
-    color: #ffffff;
-}
-
-.role-badge.user {
     background: #e5e7eb;
-    color: #111827;
 }
 
-/* ===== Actions ===== */
+.empty {
+    padding: 30px;
+    color: #6b7280;
+}
+
 .actions {
     display: flex;
-    gap: 8px;
     justify-content: center;
+    gap: 8px;
 }
 
 .btn {
-    padding: 8px 14px;
+    padding: 7px 14px;
     border-radius: 8px;
     font-size: 13px;
-    text-decoration: none;
     font-weight: 600;
-    transition: 0.3s;
+    text-decoration: none;
+    transition: 0.3s ease;
 }
 
 .btn.view {
@@ -124,10 +117,5 @@ tbody tr:hover {
 
 .btn:hover {
     opacity: 0.85;
-}
-
-/* ===== Empty ===== */
-.empty {
-    padding: 30px;
-    color: #6b7280;
+    transform: translateY(-1px);
 }

@@ -52,3 +52,5 @@ Route::post('/verify-email-code', [UserController::class, 'verifyEmailCode'])
 Route::post('/resend-verification-code', [UserController::class, 'resendCode']);
 
 Route::post('/logout', [UserController::class, 'apiLogout'])->middleware('auth:sanctum');
+
+Route::patch('/verify-email-admin/{id}', [UserController::class, 'verifyEmailAdmin'])->name('verify.email.admin')->middleware('auth');

@@ -13,7 +13,6 @@ use App\Jobs\SendEmailVerificationCode;
 use App\Models\EmailVerificationCode;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\RateLimiter;
-
 class UserController extends Controller
 {
     use AuthorizesRequests;
@@ -116,12 +115,54 @@ class UserController extends Controller
 
     // wep functions ...
 
-    public function index()
-    {
-        $this->authorize('viewAny', User::class);
-        $users = User::all();
-        return view('users.index', ['users' => $users]);
-    }
+public function index()
+{
+    $this->authorize('viewAny', User::class);
+
+    $users = User::all();
+
+    // تسجيل المستخدمين حسب الشهور
+    $usersChart = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+        ->whereYear('created_at', Carbon::now()->year)
+        ->groupBy('month')
+        ->orderBy('month')
+        ->pluck('count', 'month')
+        ->mapWithKeys(function ($count, $month) {
+            return [
+                Carbon::create()->month($month)->translatedFormat('F') => $count
+            ];
+        });
+
+    // توزيع المستخدمين حسب الدور
+    $rolesChart = User::selectRaw('role, COUNT(*) as count')
+        ->groupBy('role')
+        ->pluck('count', 'role');
+
+    // تقارير ذكية
+    $todayUsers = User::whereDate('created_at', today())->count();
+
+    $weekUsers = User::whereBetween('created_at', [
+        now()->startOfWeek(),
+        now()->endOfWeek()
+    ])->count();
+
+    $currentMonth = User::whereMonth('created_at', now()->month)->count();
+    $lastMonth = User::whereMonth('created_at', now()->subMonth()->month)->count();
+
+    $growth = $lastMonth > 0
+        ? round((($currentMonth - $lastMonth) / $lastMonth) * 100, 1)
+        : 100;
+
+    return view('users.index', compact(
+        'users',
+        'usersChart',
+        'rolesChart',
+        'todayUsers',
+        'weekUsers',
+        'growth'
+    ));
+}
+
 
     public function show(User $user)
     {
@@ -236,6 +277,8 @@ class UserController extends Controller
             );
         }
 
+
+
         // التحقق من توثيق الإيميل
         // if (!$user->hasVerifiedEmail()) {
         //     return back()->withErrors([
@@ -254,6 +297,24 @@ class UserController extends Controller
         ])->onlyInput('email');
     }
 
+    public function verifyEmailAdmin( $id)
+    {
+        $user = User::findOrFail($id);
+
+        if (!$user) {
+            return back()->with('error', 'المستخدم غير موجود');
+        }
+        if($user->email_verified_at){
+            return back()->with('info', 'المستخدم موثق بالفعل');
+        }
+        $user->update([
+            'email_verified_at' => now()
+        ]);
+        return back()->with('success', 'تم توثيق البريد الإلكتروني بنجاح');
+    }
+
+
+    //api functions
     public function resendCode(Request $request)
     {
         $request->validate([

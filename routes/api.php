@@ -17,3 +17,5 @@ require __DIR__.'/api/request_complaints.php';
 require __DIR__.'/api/banks.php';
 require __DIR__.'/api/user_banks.php';
 require __DIR__.'/api/request_commission_bonds.php';
+require __DIR__.'/api/profiles.php';
+require __DIR__.'/api/profile_phones.php';
