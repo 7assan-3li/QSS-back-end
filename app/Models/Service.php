@@ -36,5 +36,11 @@ class Service extends Model
                     ->withPivot(['quantity','is_main'])
                     ->withTimestamps();
     }
+
+    public function main_service(){
+        return $this->belongsToMany(Request::class, 'request_service', 'service_id', 'request_id')
+                    ->wherePivot('is_main', true)
+                    ->withTimestamps();
+    }
     
 }

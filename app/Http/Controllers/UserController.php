@@ -74,6 +74,9 @@ class UserController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
+        $user->profile()->create([
+        ]);
+
         // $user->sendEmailVerificationNotification();
         return response()->json([
             'message' => 'تم إنشاء الحساب، تحقق من بريدك الإلكتروني',

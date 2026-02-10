@@ -59,9 +59,9 @@
                     <span class="text">طلبات الخدمات</span>
                 </a>
 
-                <a href="#" class="{{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
+                <a href="{{ route('verification-requests.index') }}" class="{{ request()->routeIs('verification-requests*') ? 'active' : '' }}">
                     <span class="icon">📑</span>
-                    <span class="text">التقارير</span>
+                    <span class="text">طلبات التوثيق</span>
                 </a>
 
                 <a href="#" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">

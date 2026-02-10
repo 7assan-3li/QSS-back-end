@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('previous_works', function (Blueprint $table) {
+        Schema::create('system_complaints', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_id')->constrained('profiles')->onDelete('cascade');
-            $table->string('image_path');
-            $table->string('title');
-            $table->string('description')->nullable();
+            $table->string('title'); 
+            $table->Text('content');
+            $table->string('type');
+            $table->string('status')->default('pending');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('previous_works');
+        Schema::dropIfExists('system_complaints');
     }
 };

@@ -1,0 +1,111 @@
+.complaint-show {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.header-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    margin-bottom: 25px;
+}
+
+.badge {
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.badge.pending { background: #fef9c3; color: #92400e; }
+.badge.in_progress { background: #dbeafe; color: #1e40af; }
+.badge.completed { background: #dcfce7; color: #166534; }
+
+.stepper-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+}
+
+.stepper li {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    color: #9ca3af;
+}
+
+.stepper li::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -50%;
+    width: 100%;
+    height: 3px;
+    background: #e5e7eb;
+    z-index: -1;
+}
+
+.stepper li:last-child::after {
+    display: none;
+}
+
+.stepper li.active,
+.stepper li.completed {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.stepper li.completed::after {
+    background: #2563eb;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.info-card,
+.action-card,
+.chart-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.action-card select,
+.action-card button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.action-card button {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.alert.success {
+    background: #dcfce7;
+    color: #166534;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}

@@ -72,4 +72,20 @@ class ReviewController extends Controller
             'review'  => $review,
         ], 201);
     }
+
+    // hidden or display review
+    public function update(Request $request, $id)
+    {
+        $review = Review::findOrFail($id);
+        $request->validate([
+            'is_hidden' => 'required|boolean',
+        ]);
+        $review->update([
+            'is_hidden' => $request->is_hidden,
+        ]);
+        return response()->json([
+            'message' => 'تم تحديث التقييم بنجاح',
+            'review'  => $review,
+        ], 200);
+    }
 }

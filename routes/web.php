@@ -7,14 +7,16 @@ use App\Http\Controllers\ProviderRequestController;
 use App\Http\Controllers\RequestCommissionBondController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SystemComplaintController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationRequestController;
 use App\Models\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('auth.login');
+})->middleware('guest');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -89,4 +91,18 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     Route::patch('/request-commission-bonds/{bond}/reject', [RequestCommissionBondController::class, 'reject'])
         ->name('commission-bonds.reject');
+
+    //verification request routes
+    Route::get('/verification-requests', [VerificationRequestController::class, 'indexAdmin'])->name('verification-requests.index');
+    Route::get('/verification-requests/{verificationRequest}', [VerificationRequestController::class, 'showAdmin'])->name('verification-requests.show');
+    Route::patch('/verification-requests/{verificationRequest}/status', [VerificationRequestController::class, 'updateStatusAdmin'])->name('verification-requests.update.status');
+    Route::post('/verification-requests/{id}/accept', [VerificationRequestController::class, 'acceptAdmin'])->name('verification-requests.accept');
+    Route::post('/verification-requests/{id}/reject', [VerificationRequestController::class, 'rejectAdmin'])->name('verification-requests.reject');
 });
+
+Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');
+Route::get('/system-complaints/{systemComplaint}', [SystemComplaintController::class, 'showAdmin'])
+    ->name('system-complaints.show');
+
+Route::patch('/system-complaints/{systemComplaint}/status', [SystemComplaintController::class, 'updateStatus'])
+    ->name('system-complaints.update-status');

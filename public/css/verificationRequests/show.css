@@ -1,0 +1,83 @@
+.page-container {
+    padding: 20px;
+    font-family: 'Cairo', sans-serif;
+}
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.stat-box span {
+    display: block;
+    font-size: 28px;
+    margin-top: 10px;
+}
+
+.stat-box.success {
+    border-left: 5px solid #22c55e;
+}
+
+.stat-box.danger {
+    border-left: 5px solid #ef4444;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.badge.success {
+    background: #22c55e;
+}
+
+.badge.warning {
+    background: #f59e0b;
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.btn.success {
+    background: #16a34a;
+    color: #fff;
+}
+
+.btn.danger {
+    background: #dc2626;
+    color: #fff;
+}

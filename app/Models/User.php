@@ -81,11 +81,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function profile()
     {
-        return $this->hasOne(Request::class, 'user_id');
+        return $this->hasOne(Profile::class, 'user_id');
+    }
+
+    public function verificationRequests()
+    {
+        return $this->hasMany(VerificationRequest::class, 'user_id');
     }
 
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmailForMobile());
     }
+
+
 }
