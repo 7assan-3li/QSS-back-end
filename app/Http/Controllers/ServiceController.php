@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\constant\ServiceType;
 use App\Models\Service;
 use App\Models\User;
+use App\Services\ServiceService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,7 @@ class ServiceController extends Controller
     {
         $user = Auth::user();
         $services = $user->services()
-            ->with(['category', 'children'])
+            ->with(['category', 'children'])->where('type', ServiceType::MAIN)->where('parent_service_id', null)
             ->get();
         return response()->json($services);
     }
@@ -118,9 +120,11 @@ class ServiceController extends Controller
 
     public function showAll()
     {
-        $services = Service::with('provider')->get();
+        $services = Service::where('type','')->with('provider')->get();
         return response()->json($services, 200);
     }
+
+    
 
 
     //web functions
@@ -134,6 +138,8 @@ class ServiceController extends Controller
             'available' => Service::where('is_available', true)->where('parent_service_id', null)->count(),
             'unavailable' => Service::where('is_available', false)->where('parent_service_id', null)->count(),
             'active' => Service::where('is_active', true)->where('parent_service_id', null)->count(),
+            'meeting_service' => Service::where('type', ServiceType::MEETING)->count(),
+            'custom_service' => Service::where('type', ServiceType::CUSTOM)->count(),
         ];
 
         return view('services.index', compact('services', 'stats'));

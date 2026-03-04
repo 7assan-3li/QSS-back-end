@@ -22,6 +22,7 @@ return new class extends Migration
                 ->constrained('categories')
                 ->onDelete('set null');
             $table->foreignId('parent_service_id')->nullable()->constrained('services')->onDelete('cascade');
+            $table->string('type')->default('main');
             $table->string('status')->default('available');
             $table->string('image_path')->nullable();
             $table->boolean('is_available')->default(true);

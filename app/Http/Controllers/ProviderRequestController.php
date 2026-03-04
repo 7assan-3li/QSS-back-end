@@ -6,6 +6,7 @@ use App\constant\providerRequestStatus;
 use App\constant\Role;
 use App\Models\ProviderRequest;
 use App\Models\User;
+use App\Services\ServiceService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -137,7 +138,7 @@ class ProviderRequestController extends Controller
             'data',
             'days',
             'status',
-            
+
         ));
     }
 
@@ -155,7 +156,7 @@ class ProviderRequestController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, ProviderRequest $providerRequest)
+    public function updateStatus(Request $request, ProviderRequest $providerRequest, ServiceService $serviceService)
     {
         $this->authorize('updateStatus', $providerRequest);
 
@@ -186,8 +187,12 @@ class ProviderRequestController extends Controller
 
         if ($newStatus === ProviderRequestStatus::ACCEPTED) {
             $user = User::findOrFail($providerRequest->user_id);
+            if ($user->role === Role::PROVIDER) {
+                return back()->withErrors('لا يمكن تغيير الحالة من هذه الحالة.');
+            }
             $user->role = Role::PROVIDER;
             $user->save();
+            $serviceService->createMeetingCustomSerivce($user->id);
         }
 
         return to_route('provider-requests.show', $providerRequest->id)->with('success', 'تم تحديث حالة الطلب بنجاح');

@@ -33,6 +33,16 @@
             <h3>{{ $stats['unpaid'] }}</h3>
             <p>عمولة غير مدفوعة</p>
         </a>
+
+        <a href="{{ route('requests.index', ['type' => 'custom']) }}" class="stat-card primary">
+            <h3>{{ $stats['custom'] }}</h3>
+            <p>طلبات مخصصة</p>
+        </a>
+
+        <a href="{{ route('requests.index', ['type' => 'meeting']) }}" class="stat-card primary">
+            <h3>{{ $stats['meeting'] }}</h3>
+            <p>طلبات اجتماعات</p>
+        </a>
     </div>
 
     {{-- Cards --}}

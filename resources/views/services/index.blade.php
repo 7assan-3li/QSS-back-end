@@ -28,6 +28,16 @@
             <span>{{ $stats['active'] }}</span>
         </div>
 
+        <div class="stat-card primary">
+            <h4>خدمات الاجتماعات</h4>
+            <span>{{ $stats['meeting_service'] }}</span>
+        </div>
+
+        <div class="stat-card primary">
+            <h4>خدمات مخصصة</h4>
+            <span>{{ $stats['custom_service'] }}</span>
+        </div>
+
     </div>
 
     <!-- ===== Table ===== -->
