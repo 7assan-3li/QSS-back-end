@@ -66,19 +66,34 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $this->authorize('update', $service);
-        $validated = $request->validate([
+
+        $rules = [
             'name' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|nullable|string',
             'price' => 'sometimes|required|numeric|min:0',
             'category_id' => 'sometimes|required|exists:categories,id',
             'parent_service_id' => 'sometimes|nullable|exists:services,id',
             'status' => 'sometimes|nullable|string|in:available,unavailable',
-            'image_path' => 'sometimes|nullable|string|max:255',
             'is_available' => 'sometimes|nullable|boolean',
             'is_active' => 'sometimes|nullable|boolean',
             'distance_based_price' => 'sometimes|nullable|boolean',
             'price_per_km' => 'sometimes|nullable|numeric|min:0',
-        ]);
+        ];
+
+        if ($request->hasFile('image_path')) {
+            $rules['image_path'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        } else {
+            $rules['image_path'] = 'sometimes|nullable|string|max:255';
+        }
+
+        $validated = $request->validate($rules);
+
+        if ($request->hasFile('image_path')) {
+            if ($service->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($service->image_path);
+            }
+            $validated['image_path'] = $request->file('image_path')->store('services', 'public');
+        }
 
         $service->update($validated);
 
@@ -90,7 +105,13 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $this->authorize('delete', $service);
+
+        if ($service->image_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($service->image_path);
+        }
+
         $service->delete();
+
         return response()->json([
             'message' => 'Service deleted successfully'
         ]);
@@ -106,8 +127,13 @@ class ServiceController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        // إضافة provider_id تلقائيًا من المستخدم الحالي
+        $parentService = Service::findOrFail($validated['parent_service_id']);
+
+        // إضافة provider_id, category_id, و type تلقائيًا من الخدمة الأب أو المستخدم
         $validated['provider_id'] = Auth::user()->id;
+        $validated['category_id'] = $parentService->category_id;
+        $validated['type'] = ServiceType::CHILD;
+
 
         // إنشاء الخدمة الفرعية
         $childService = Service::create($validated);
@@ -118,13 +144,59 @@ class ServiceController extends Controller
         ], 201);
     }
 
+    public function updateChild(Request $request, Service $childService)
+    {
+        $this->authorize('update', $childService);
+
+        // Ensure the service is actually a child service
+        if ($childService->type !== ServiceType::CHILD) {
+            return response()->json(['message' => 'This service is not a child service'], 400);
+        }
+
+        $rules = [
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|nullable|string',
+            'price' => 'sometimes|required|numeric|min:0',
+        ];
+
+
+
+        $validated = $request->validate($rules);
+
+
+
+        $childService->update($validated);
+
+        return response()->json([
+            'message' => 'Child service updated successfully',
+            'data' => $childService
+        ]);
+    }
+
+    public function deleteChild(Service $childService)
+    {
+        $this->authorize('delete', $childService);
+
+        // Ensure the service is actually a child service
+        if ($childService->type !== ServiceType::CHILD) {
+            return response()->json(['message' => 'This service is not a child service'], 400);
+        }
+
+
+        $childService->delete();
+
+        return response()->json([
+            'message' => 'Child service deleted successfully'
+        ]);
+    }
+
     public function showAll()
     {
-        $services = Service::where('type','')->with('provider')->get();
+        $services = Service::where('type', '')->with('provider')->get();
         return response()->json($services, 200);
     }
 
-    
+
 
 
     //web functions

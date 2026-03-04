@@ -5,6 +5,7 @@ class ServiceType
     public const MAIN = 'main';
     public const MEETING = 'meeting';
     public const CUSTOM = 'custom';
+    public const CHILD = 'child';
 
 
     public function all()
@@ -12,7 +13,8 @@ class ServiceType
         return [
             self::MAIN,
             self::MEETING,
-            self::CUSTOM
+            self::CUSTOM,
+            self::CHILD
         ];
     }
 }
