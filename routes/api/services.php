@@ -12,4 +12,6 @@ Route::get('/services/{service}', [ServiceController::class, 'show']);
 Route::put('/services/{service}', [ServiceController::class, 'update']);
 Route::delete('/services/{service}', [ServiceController::class, 'destroy']);
 Route::post('/services/children', [ServiceController::class, 'storeChild']);
+Route::put('/services/children/{childService}', [ServiceController::class, 'updateChild']);
+Route::delete('/services/children/{childService}', [ServiceController::class, 'deleteChild']);
 });
