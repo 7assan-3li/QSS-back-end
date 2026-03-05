@@ -153,7 +153,7 @@ class CategoryController extends Controller
 
     public function displayMain()
     {
-        $categories = Category::with('children')->whereNull('category_id')->get();
+        $categories = Category::with(['children','services'])->whereNull('category_id')->get();
 
         return response()->json(['categories' => $categories], 200);
     }
