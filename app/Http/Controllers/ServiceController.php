@@ -41,6 +41,7 @@ class ServiceController extends Controller
 
         // إضافة provider_id تلقائيًا من المستخدم الحالي
         $validated['provider_id'] = Auth::user()->id;
+        $validated['type'] = ServiceType::MAIN;
 
         if ($request->hasFile('image_path')) {
             $validated['image_path'] = $request->file('image_path')
@@ -59,8 +60,10 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         $this->authorize('view', $service);
-
-        return response()->json($service);
+        return response()->json([
+            'message' => 'Service retrieved successfully',
+            'data' => $service->load('category', 'children')->where('type', ServiceType::MAIN)
+        ]);
     }
 
     public function update(Request $request, Service $service)
@@ -187,6 +190,55 @@ class ServiceController extends Controller
 
         return response()->json([
             'message' => 'Child service deleted successfully'
+        ]);
+    }
+
+    public function updateByType(Request $request, $type)
+    {
+        if (!in_array($type, [ServiceType::CUSTOM, ServiceType::MEETING])) {
+            return response()->json(['message' => 'Invalid service type'], 400);
+        }
+
+        $service = Auth::user()->services()->where('type', $type)->first();
+
+        if (!$service) {
+            return response()->json(['message' => 'Service not found'], 404);
+        }
+
+        $this->authorize('update', $service);
+
+        $rules = [
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|nullable|string',
+            'price' => 'sometimes|required|numeric|min:0',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'status' => 'sometimes|nullable|string|in:available,unavailable',
+            'is_available' => 'sometimes|nullable|boolean',
+            'is_active' => 'sometimes|nullable|boolean',
+            'distance_based_price' => 'sometimes|nullable|boolean',
+            'price_per_km' => 'sometimes|nullable|numeric|min:0',
+        ];
+
+        // if ($request->hasFile('image_path')) {
+        //     $rules['image_path'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+        // } else {
+        //     $rules['image_path'] = 'sometimes|nullable|string|max:255';
+        // }
+
+        $validated = $request->validate($rules);
+
+        // if ($request->hasFile('image_path')) {
+        //     if ($service->image_path) {
+        //         \Illuminate\Support\Facades\Storage::disk('public')->delete($service->image_path);
+        //     }
+        //     $validated['image_path'] = $request->file('image_path')->store('services', 'public');
+        // }
+
+        $service->update($validated);
+
+        return response()->json([
+            'message' => ucfirst($type) . ' service updated successfully',
+            'data' => $service
         ]);
     }
 
