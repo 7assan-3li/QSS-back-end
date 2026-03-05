@@ -153,13 +153,13 @@ class CategoryController extends Controller
 
     public function displayMain()
     {
-        $categories = Category::with(['children','services'])->whereNull('category_id')->get();
+        $categories = Category::with('children')->whereNull('category_id')->get();
 
         return response()->json(['categories' => $categories], 200);
     }
 
     public function showCategory($category_id){
-        $category = Category::with(['children','services'])->findOr($category_id);
+        $category = Category::with(['children','services'])->findOrFail($category_id);
                 return response()->json(['category' => $category], 200);
 
     }
