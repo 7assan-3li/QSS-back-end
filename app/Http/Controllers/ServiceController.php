@@ -62,7 +62,7 @@ class ServiceController extends Controller
         $this->authorize('view', $service);
         return response()->json([
             'message' => 'Service retrieved successfully',
-            'data' => $service->load('category', 'children')->where('type', ServiceType::MAIN)
+            'data' => $service->load('category', 'children')
         ]);
     }
 
