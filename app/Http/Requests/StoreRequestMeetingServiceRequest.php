@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProfileRequest extends FormRequest
+class StoreRequestMeetingServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,10 @@ class StoreProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio' => 'nullable|string|max:10000',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+            'provider_id' => 'required|exists:users,id',
+            'message' => 'nullable|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ];
     }
 }

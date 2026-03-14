@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MeetingAndCustomServiceController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +16,7 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
     Route::put('/services/children/{childService}', [ServiceController::class, 'updateChild']);
     Route::delete('/services/children/{childService}', [ServiceController::class, 'deleteChild']);
     Route::put('/services/type/{type}', [ServiceController::class, 'updateByType']);
+
+    Route::put('/services-meeting', [MeetingAndCustomServiceController::class, 'updateMeetingService']);
+    Route::put('/services-custom', [MeetingAndCustomServiceController::class, 'updateCustomService']);
 });

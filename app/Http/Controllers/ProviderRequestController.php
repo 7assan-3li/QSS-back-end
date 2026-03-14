@@ -192,7 +192,19 @@ class ProviderRequestController extends Controller
             }
             $user->role = Role::PROVIDER;
             $user->save();
-            $serviceService->createMeetingCustomSerivce($user->id);
+
+            // التحقق من وجود خدمة مقابلة وخدمة مخصصة بالفعل
+            $hasMeeting = \App\Models\Service::where('provider_id', $user->id)
+                ->where('type', \App\constant\ServiceType::MEETING)
+                ->exists();
+
+            $hasCustom = \App\Models\Service::where('provider_id', $user->id)
+                ->where('type', \App\constant\ServiceType::CUSTOM)
+                ->exists();
+
+            if (!$hasMeeting || !$hasCustom) {
+                $serviceService->createMeetingCustomSerivce($user->id);
+            }
         }
 
         return to_route('provider-requests.show', $providerRequest->id)->with('success', 'تم تحديث حالة الطلب بنجاح');

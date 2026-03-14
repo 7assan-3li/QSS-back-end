@@ -59,7 +59,7 @@ class ServiceController extends Controller
 
     public function show(Service $service)
     {
-        $this->authorize('view', $service);
+        // $this->authorize('view', $service);
         return response()->json([
             'message' => 'Service retrieved successfully',
             'data' => $service->load('category', 'children')

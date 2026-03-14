@@ -22,8 +22,10 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio'   => 'nullable|string|max:10000',
-            'image'   => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'bio' => 'nullable|string|max:10000',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ];
     }
 }

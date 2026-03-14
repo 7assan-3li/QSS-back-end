@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Request as RequestModel;
+use App\Models\Service;
+use App\constant\ServiceType;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Exception;
+
+class RequestMeetingServiceService
+{
+    public function store($data)
+    {
+        // Find the active Meeting Service for the given provider
+        $meetingService = Service::where('provider_id', $data['provider_id'])
+            ->where('type', ServiceType::MEETING)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$meetingService) {
+            throw new Exception('لا توجد خدمة اجتماع مفعلة لهذا المزود.', 404);
+        }
+
+        $request_id = null;
+
+        // Eager load the profile to get the provider's latitude and longitude
+        $provider = User::with('profile')->find($data['provider_id']);
+
+        $totalPrice = $meetingService->price;
+
+        // Calculate distance price if applicable
+        if ($meetingService->distance_based_price && isset($data['latitude'], $data['longitude'])) {
+            $providerLat = $provider->profile->latitude ?? null;
+            $providerLng = $provider->profile->longitude ?? null;
+
+            if ($providerLat && $providerLng) {
+                $earthRadiusKm = 6371;
+
+                $lat1 = deg2rad($providerLat);
+                $lon1 = deg2rad($providerLng);
+                $lat2 = deg2rad($data['latitude']);
+                $lon2 = deg2rad($data['longitude']);
+
+                $latDiff = $lat2 - $lat1;
+                $lonDiff = $lon2 - $lon1;
+
+                $a = sin($latDiff / 2) * sin($latDiff / 2) +
+                    cos($lat1) * cos($lat2) *
+                    sin($lonDiff / 2) * sin($lonDiff / 2);
+
+                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+                $distanceKm = $earthRadiusKm * $c;
+
+                $totalPrice += ($distanceKm * $meetingService->price_per_km);
+            }
+        }
+
+        DB::transaction(function () use ($data, $meetingService, &$request_id, $totalPrice) {
+            $requestModel = RequestModel::create([
+                'user_id' => Auth::user()->id,
+                'message' => $data['message'] ?? null,
+                'latitude' => $data['latitude'] ?? null,
+                'longitude' => $data['longitude'] ?? null,
+                'total_price' => $totalPrice,
+            ]);
+
+            $request_id = $requestModel->id;
+
+            // Attach the meeting service to the request
+            $requestModel->services()->attach($meetingService->id, [
+                'quantity' => 1,
+                'is_main' => true
+            ]);
+        });
+
+        return ['request_id' => $request_id];
+    }
+}
