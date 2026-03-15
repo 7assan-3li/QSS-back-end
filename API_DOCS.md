@@ -166,7 +166,7 @@ Add a new phone number.
 
 ### 4.1 `POST /api/requests`
 
-Create a new service request.
+Create a new main service request.
 
 - **Body (`application/json`)**
 
@@ -187,12 +187,53 @@ Create a new service request.
 
 - **Validations**:
     - `service_id`: Required, Exists in `services`.
-    - `message`, `latitude`, `longitude`: Optional.
+    - `message`, `latitude`, `longitude`: Optional (latitude/longitude are needed if distance-based pricing applies).
     - `sup_services`: Optional, Array.
     - `sup_services.*.id`: Required if array provided, Exists in `services`.
     - `sup_services.*.quantity`: Integer, Min: 1.
 
-### 4.2 `PATCH /api/requests/{request_id}/status`
+### 4.2 `POST /api/requests/meeting`
+
+Create a new meeting service request.
+
+- **Body (`application/json`)**
+```json
+{
+    "provider_id": 1,
+    "message": "Let's set up a meeting.",
+    "latitude": 24.7136,
+    "longitude": 46.6753
+}
+```
+- **Validations**:
+    - `provider_id`: Required, Exists in `users`.
+    - `message`: Optional, String.
+    - `latitude`: Optional, Numeric (Needed for distance cost calc if enabled).
+    - `longitude`: Optional, Numeric (Needed for distance cost calc if enabled).
+
+### 4.3 `POST /api/requests/custom`
+
+Create a new custom service request.
+
+- **Body (`application/json`)**
+```json
+{
+    "provider_id": 1,
+    "message": "Custom request details...",
+    "latitude": 24.7136,
+    "longitude": 46.6753
+}
+```
+- **Validations**:
+    - `provider_id`: Required, Exists in `users`.
+    - `message`: Required, String.
+    - `latitude`, `longitude`: Optional, Numeric.
+
+### 4.4 `GET /api/requests`
+
+Get all current main requests.
+
+### 4.5 `PATCH /api/requests/{request_id}/status`
 
 Update status of a request.
 

@@ -12,6 +12,28 @@ use Exception;
 
 class RequestMeetingServiceService
 {
+    public function indexProvider($data)
+    {
+        $requests = RequestModel::with('user', 'main_service')
+            ->whereHas('main_service', function ($query) use ($data) {
+                $query->where('provider_id', $data['provider_id'])
+                      ->where('type', ServiceType::MEETING);
+            })->get();
+
+        return ['requests' => $requests];
+    }
+
+    public function indexSeeker($data)
+    {
+        $requests = RequestModel::with('main_service')
+            ->where('user_id', $data['seeker_id'])
+            ->whereHas('main_service', function ($query) {
+                $query->where('type', ServiceType::MEETING);
+            })->get();
+
+        return ['requests' => $requests];
+    }
+
     public function store($data)
     {
         // Find the active Meeting Service for the given provider
