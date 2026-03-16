@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Request as RequestModel;
 use App\Models\Service;
 use App\constant\ServiceType;
+use App\constant\RequestStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -31,7 +32,7 @@ class RequestCustomServiceService
                 'message' => $data['message'],
                 'latitude' => $data['latitude'] ?? null,
                 'longitude' => $data['longitude'] ?? null,
-                'total_price' => $customService->price, // Default price, might be 0 until negotiated
+                'total_price' => 0, // Default price is 0 until negotiated by provider
             ]);
 
             $request_id = $requestModel->id;
@@ -44,5 +45,34 @@ class RequestCustomServiceService
         });
 
         return ['request_id' => $request_id];
+    }
+
+    public function setPrice(int $requestId, float $price)
+    {
+        $requestModel = RequestModel::findOrFail($requestId);
+
+        // Ensure the request belongs to a custom service
+        $customService = $requestModel->services()->wherePivot('is_main', true)->where('type', ServiceType::CUSTOM)->first();
+        if (!$customService) {
+            throw new Exception('الطلب لا ينتمي لخدمة مخصصة.', 400);
+        }
+
+        // Verify the logged-in user is the provider of this request
+        if ($customService->provider_id !== Auth::id()) {
+            throw new Exception('غير مصرح لك بتحديد السعر لهذا الطلب.', 403);
+        }
+
+        // Verify the status is pending
+        if ($requestModel->status !== RequestStatus::PENDING) {
+            throw new Exception('لا يمكن تحديد السعر، حالة الطلب الحالية لا تسمح بذلك.', 400);
+        }
+
+        // Update the request
+        $requestModel->update([
+            'total_price' => $price,
+            'status' => RequestStatus::ACCEPTED_INITIAL,
+        ]);
+
+        return $requestModel;
     }
 }

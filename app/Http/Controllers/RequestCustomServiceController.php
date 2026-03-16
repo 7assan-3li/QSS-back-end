@@ -40,4 +40,31 @@ class RequestCustomServiceController extends Controller
             ], $statusCode);
         }
     }
+
+    public function setPrice(Request $request, $id)
+    {
+        $data = $request->validate([
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        try {
+            $this->requestCustomServiceService->setPrice((int)$id, $data['price']);
+
+            return response()->json([
+                'message' => 'تم تحديد السعر وتحديث حالة الطلب بنجاح',
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'الطلب غير موجود'
+            ], 404);
+        } catch (\Exception $e) {
+            $statusCode = $e->getCode() ?: 500;
+            if ($statusCode < 100 || $statusCode > 599) {
+                $statusCode = 500;
+            }
+            return response()->json([
+                'message' => $e->getMessage()
+            ], $statusCode);
+        }
+    }
 }
