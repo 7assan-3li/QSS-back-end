@@ -22,5 +22,7 @@ require __DIR__ . '/api/profile_phones.php';
 require __DIR__ . '/api/previousWork.php';
 require __DIR__ . '/api/review.php';
 require __DIR__ . '/api/verification_requests.php';
+require __DIR__ . '/api/verification_packages.php';
+require __DIR__ . '/api/user_verification_packages.php';
 require __DIR__ . '/api/system_complaints.php';
 

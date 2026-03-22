@@ -1,0 +1,16 @@
+<?php
+
+use App\Http\Controllers\UserVerificationPackagesController;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/user-verification-packages', [UserVerificationPackagesController::class, 'index']);
+    Route::post('/user-verification-packages', [UserVerificationPackagesController::class, 'store']);
+    Route::get('/user-verification-packages/{id}', [UserVerificationPackagesController::class, 'show']);
+
+    Route::middleware(['is_admin'])->group(function () {
+        Route::get('/admin/user-verification-packages', [UserVerificationPackagesController::class, 'indexAdmin']);
+        Route::patch('/user-verification-packages/{id}/approve', [UserVerificationPackagesController::class, 'approve']);
+        Route::patch('/user-verification-packages/{id}/reject', [UserVerificationPackagesController::class, 'reject']);
+    });
+});

@@ -9,6 +9,7 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SystemComplaintController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationPackagesController;
 use App\Http\Controllers\VerificationRequestController;
 use App\Models\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -98,6 +99,15 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('/verification-requests/{verificationRequest}/status', [VerificationRequestController::class, 'updateStatusAdmin'])->name('verification-requests.update.status');
     Route::post('/verification-requests/{id}/accept', [VerificationRequestController::class, 'acceptAdmin'])->name('verification-requests.accept');
     Route::post('/verification-requests/{id}/reject', [VerificationRequestController::class, 'rejectAdmin'])->name('verification-requests.reject');
+
+    //verification packages routes
+    Route::get('/verification-packages', [VerificationPackagesController::class, 'indexAdmin'])->name('verification-packages.index');
+    Route::get('/verification-packages/create', [VerificationPackagesController::class, 'create'])->name('verification-packages.create');
+    Route::post('/verification-packages', [VerificationPackagesController::class, 'store'])->name('verification-packages.store');
+    Route::get('/verification-packages/{verificationPackage}', [VerificationPackagesController::class, 'showAdmin'])->name('verification-packages.show');
+    Route::get('/verification-packages/{verificationPackage}/edit', [VerificationPackagesController::class, 'edit'])->name('verification-packages.edit');
+    Route::put('/verification-packages/{verificationPackage}', [VerificationPackagesController::class, 'update'])->name('verification-packages.update');
+    Route::delete('/verification-packages/{verificationPackage}', [VerificationPackagesController::class, 'destroy'])->name('verification-packages.destroy');
 });
 
 Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');

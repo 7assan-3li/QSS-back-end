@@ -64,6 +64,11 @@
                     <span class="text">طلبات التوثيق</span>
                 </a>
 
+                <a href="{{ route('verification-packages.index') }}" class="{{ request()->is('verification-packages*') ? 'active' : '' }}">
+                    <span class="icon">📦</span>
+                    <span class="text">باقات التحقق</span>
+                </a>
+
                 <a href="#" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                     <span class="icon">⚙️</span>
                     <span class="text">الإعدادات</span>

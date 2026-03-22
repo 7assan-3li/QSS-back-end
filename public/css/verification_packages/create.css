@@ -1,0 +1,137 @@
+/* Page Wrapper */
+.page-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.page-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Form Card */
+.form-card {
+    max-width: 650px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+}
+
+/* Section title */
+.form-section {
+    margin-bottom: 25px;
+}
+
+.form-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 25px;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 13px 15px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    background: #f9fafb;
+    transition: all 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Switch Checkbox */
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #374151;
+}
+
+.switch-label input {
+    width: auto;
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+/* Error */
+.error-text {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #dc2626;
+}
+
+/* Actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn-primary {
+    flex: 1;
+    background: #111827;
+    color: #ffffff;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #1f2937;
+}
+
+.btn-secondary {
+    flex: 1;
+    background: #f3f4f6;
+    color: #111827;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
