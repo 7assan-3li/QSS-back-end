@@ -108,6 +108,11 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/verification-packages/{verificationPackage}/edit', [VerificationPackagesController::class, 'edit'])->name('verification-packages.edit');
     Route::put('/verification-packages/{verificationPackage}', [VerificationPackagesController::class, 'update'])->name('verification-packages.update');
     Route::delete('/verification-packages/{verificationPackage}', [VerificationPackagesController::class, 'destroy'])->name('verification-packages.destroy');
+    //user verification packages routes
+    Route::get('/user-verification-packages', [\App\Http\Controllers\UserVerificationPackagesController::class, 'indexWebAdmin'])->name('user-verification-packages.index');
+    Route::get('/user-verification-packages/{id}', [\App\Http\Controllers\UserVerificationPackagesController::class, 'showWebAdmin'])->name('user-verification-packages.show');
+    Route::patch('/user-verification-packages/{id}/approve', [\App\Http\Controllers\UserVerificationPackagesController::class, 'approveWebAdmin'])->name('user-verification-packages.approve');
+    Route::patch('/user-verification-packages/{id}/reject', [\App\Http\Controllers\UserVerificationPackagesController::class, 'rejectWebAdmin'])->name('user-verification-packages.reject');
 });
 
 Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');

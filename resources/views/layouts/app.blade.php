@@ -69,6 +69,11 @@
                     <span class="text">باقات التحقق</span>
                 </a>
 
+                <a href="{{ route('user-verification-packages.index') }}" class="{{ request()->is('user-verification-packages*') ? 'active' : '' }}">
+                    <span class="icon">💳</span>
+                    <span class="text">طلبات اشتراك الباقات</span>
+                </a>
+
                 <a href="#" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                     <span class="icon">⚙️</span>
                     <span class="text">الإعدادات</span>

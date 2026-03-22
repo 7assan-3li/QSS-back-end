@@ -2,48 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserVerificationPackages;
 use App\Http\Requests\StoreUserVerificationPackageRequest;
-use App\constant\BondStatus;
+use App\Services\UserVerificationPackagesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class UserVerificationPackagesController extends Controller
 {
+    protected $verificationPackageService;
+
+    public function __construct(UserVerificationPackagesService $verificationPackageService)
+    {
+        $this->verificationPackageService = $verificationPackageService;
+    }
+
     public function index()
     {
-        $userPackages = UserVerificationPackages::with('verificationPackage')
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
+        $userPackages = $this->verificationPackageService->getUserPackages(Auth::id());
         return response()->json(['user_packages' => $userPackages]);
     }
 
     public function indexAdmin()
     {
-        $userPackages = UserVerificationPackages::with(['user', 'verificationPackage', 'admin'])
-            ->latest()
-            ->get();
+        $userPackages = $this->verificationPackageService->getAllPackages();
         return response()->json(['user_packages' => $userPackages]);
     }
 
     public function store(StoreUserVerificationPackageRequest $request)
     {
         $validated = $request->validated();
-        
-        if ($request->hasFile('image_bond')) {
-            $validated['image_bond'] = $request->file('image_bond')
-                ->store('verification_bonds', 'public');
-        }
+        $imageFile = $request->hasFile('image_bond') ? $request->file('image_bond') : null;
 
-        $userPackage = UserVerificationPackages::create([
-            'user_id' => Auth::id(),
-            'verification_package_id' => $validated['verification_package_id'],
-            'image_bond' => $validated['image_bond'],
-            'number_bond' => $validated['number_bond'],
-            'status' => BondStatus::PENDING,
-        ]);
+        $userPackage = $this->verificationPackageService->storePackage(Auth::id(), $validated, $imageFile);
 
         return response()->json([
             'message' => 'تم إرسال طلب الاشتراك بنجاح، بانتظار موافقة المسؤول',
@@ -53,11 +43,7 @@ class UserVerificationPackagesController extends Controller
 
     public function approve($id)
     {
-        $userPackage = UserVerificationPackages::findOrFail($id);
-        $userPackage->update([
-            'status' => BondStatus::APPROVED,
-            'admin_id' => Auth::id(),
-        ]);
+        $userPackage = $this->verificationPackageService->approvePackage($id, Auth::id());
 
         return response()->json([
             'message' => 'تم الموافقة على الطلب بنجاح',
@@ -67,11 +53,7 @@ class UserVerificationPackagesController extends Controller
 
     public function reject($id)
     {
-        $userPackage = UserVerificationPackages::findOrFail($id);
-        $userPackage->update([
-            'status' => BondStatus::REJECTED,
-            'admin_id' => Auth::id(),
-        ]);
+        $userPackage = $this->verificationPackageService->rejectPackage($id, Auth::id());
 
         return response()->json([
             'message' => 'تم رفض الطلب',
@@ -81,8 +63,32 @@ class UserVerificationPackagesController extends Controller
 
     public function show($id)
     {
-        $userPackage = UserVerificationPackages::with(['user', 'verificationPackage', 'admin'])
-            ->findOrFail($id);
+        $userPackage = $this->verificationPackageService->getPackageDetails($id);
         return response()->json(['user_package' => $userPackage]);
+    }
+
+    // Web Admin Methods
+    public function indexWebAdmin()
+    {
+        $userPackages = $this->verificationPackageService->getAllPackages();
+        return view('user_verification_packages.index', compact('userPackages'));
+    }
+
+    public function showWebAdmin($id)
+    {
+        $userPackage = $this->verificationPackageService->getPackageDetails($id);
+        return view('user_verification_packages.show', compact('userPackage'));
+    }
+
+    public function approveWebAdmin($id)
+    {
+        $this->verificationPackageService->approvePackage($id, Auth::id());
+        return redirect()->back()->with('success', 'تم الموافقة على الطلب بنجاح');
+    }
+
+    public function rejectWebAdmin($id)
+    {
+        $this->verificationPackageService->rejectPackage($id, Auth::id());
+        return redirect()->back()->with('success', 'تم رفض الطلب');
     }
 }
