@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Request extends Model
 {
     protected $guarded = ['id'];
+    
+    protected $casts = [
+        'bonus_points_awarded' => 'boolean',
+    ];
 
     // public function service()
     // {
@@ -43,7 +47,7 @@ class Request extends Model
 
     public function serviceProvider()
     {
-        return $this->main_service()->first()->provider();
+        return $this->main_service()->first()?->provider;
     }
 
 

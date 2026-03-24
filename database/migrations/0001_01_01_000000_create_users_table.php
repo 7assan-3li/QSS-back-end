@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -25,6 +24,8 @@ return new class extends Migration
             $table->boolean('provider_policy')->default(false);
             $table->boolean('verification_provider')->default(false);
             $table->timestamp('provider_verified_until')->nullable();
+            $table->decimal('bonus_points', 10, 2)->default(0);
+            $table->decimal('paid_points', 10, 2)->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -9,7 +9,6 @@ class UserVerificationPackages extends Model
     protected $fillable = [
         'user_id',
         'verification_package_id',
-        'image_bond',
         'number_bond',
         'status',
         'admin_id',
@@ -28,5 +27,10 @@ class UserVerificationPackages extends Model
     public function admin()
     {
         return $this->belongsTo(User::class, 'admin_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(UserVerificationPackagesImage::class, 'package_id');
     }
 }

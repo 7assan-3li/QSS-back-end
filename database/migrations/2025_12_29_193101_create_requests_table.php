@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->decimal('total_price', 10, 2)->unsigned();
+            $table->decimal('money_paid', 10, 2)->nullable();
             $table->boolean('commission_paid')->default(false);
             $table->string('status')->default('pending');
             $table->text('message')->nullable();

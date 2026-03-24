@@ -12,7 +12,7 @@ class UserVerificationPackagesService
      */
     public function getUserPackages($userId)
     {
-        return UserVerificationPackages::with('verificationPackage')
+        return UserVerificationPackages::with(['verificationPackage', 'images'])
             ->where('user_id', $userId)
             ->latest()
             ->get();
@@ -23,7 +23,7 @@ class UserVerificationPackagesService
      */
     public function getAllPackages()
     {
-        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin'])
+        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin', 'images'])
             ->latest()
             ->get();
     }
@@ -31,19 +31,21 @@ class UserVerificationPackagesService
     /**
      * Store a new user verification package request
      */
-    public function storePackage($userId, array $data, $imageFile = null)
+    public function storePackage($userId, array $data, $imageFiles = [])
     {
-        if ($imageFile) {
-            $data['image_bond'] = $imageFile->store('verification_bonds', 'public');
-        }
-
-        return UserVerificationPackages::create([
+        $userPackage = UserVerificationPackages::create([
             'user_id' => $userId,
             'verification_package_id' => $data['verification_package_id'],
-            'image_bond' => $data['image_bond'] ?? null,
             'number_bond' => $data['number_bond'],
             'status' => BondStatus::PENDING,
         ]);
+
+        if (!empty($imageFiles)) {
+            $imageService = new UserVerificationPackagesImageService();
+            $imageService->uploadImages($userId, $userPackage->id, $imageFiles);
+        }
+
+        return $userPackage->load('images');
     }
 
     /**
@@ -89,7 +91,7 @@ class UserVerificationPackagesService
      */
     public function getPackageDetails($packageId)
     {
-        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin'])
+        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin', 'images'])
             ->findOrFail($packageId);
     }
 }

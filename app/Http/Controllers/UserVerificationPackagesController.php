@@ -31,9 +31,9 @@ class UserVerificationPackagesController extends Controller
     public function store(StoreUserVerificationPackageRequest $request)
     {
         $validated = $request->validated();
-        $imageFile = $request->hasFile('image_bond') ? $request->file('image_bond') : null;
+        $imageFiles = $request->hasFile('image_bonds') ? $request->file('image_bonds') : [];
 
-        $userPackage = $this->verificationPackageService->storePackage(Auth::id(), $validated, $imageFile);
+        $userPackage = $this->verificationPackageService->storePackage(Auth::id(), $validated, $imageFiles);
 
         return response()->json([
             'message' => 'تم إرسال طلب الاشتراك بنجاح، بانتظار موافقة المسؤول',

@@ -6,6 +6,7 @@ use App\constant\RequestStatus;
 use App\Models\Request as RequestModel;
 use App\Models\Service;
 use App\Rules\SubServiceBelongsToMain;
+use App\Services\PointsService;
 use App\Services\RequestService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -15,6 +16,11 @@ use Illuminate\Support\Facades\DB;
 class RequestController extends Controller
 {
     use AuthorizesRequests;
+
+    //constructor
+    public function __construct(private PointsService $pointsService)
+    {
+    }
     public function index()
     {
         $requests = RequestModel::with(['user', 'main_service', 'sub_services'])->get();
@@ -225,14 +231,16 @@ class RequestController extends Controller
             ], 422);
         }
 
-        // تحديث الحالة
-        $requestModel->update([
-            'status' => $newStatus,
-        ]);
+        // تحديث الحالة ونقاط المكافأة بشكل ذري
+        DB::transaction(function () use ($requestModel, $newStatus) {
+            $requestModel->update([
+                'status' => $newStatus,
+            ]);
 
-        // حساب عمولة مزود الخدمة واضافتها الى العمولة السابقة
-
-        // 🔥 إعادة جلب الطلب من قاعدة البيانات مع العلاقات
+            if ($newStatus == RequestStatus::COMPLETED) {
+                $this->pointsService->addBonusPoints($requestModel->user_id, $requestModel->id);
+            }
+        });
         $requestModel = RequestModel::with([
             'user',
             'main_service',
@@ -244,6 +252,35 @@ class RequestController extends Controller
             'message' => 'تم تحديث حالة الطلب بنجاح',
             'request' => $requestModel,
         ]);
+    }
+
+    public function payByPoints(Request $request, $request_id)
+    {
+        $data = $request->validate([
+            'transferred_points' => 'required|numeric|min:0.01',
+        ]);
+
+        $requestModel = RequestModel::findOrFail($request_id);
+
+        if ($requestModel->user_id !== Auth::id()) {
+            return response()->json(['message' => 'غير مصرح للقيام بعملية الدفع لهذا الطلب'], 403);
+        }
+
+        try {
+            $this->pointsService->payRequest($request_id, $data['transferred_points']);
+            
+            // إعادة جلب الطلب للحصول على القيم المحدثة
+            $requestModel->refresh();
+
+            return response()->json([
+                'message' => 'تم الدفع بنجاح',
+                'request' => $requestModel
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     //web functions
