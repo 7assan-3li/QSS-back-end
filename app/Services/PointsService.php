@@ -19,12 +19,21 @@ class PointsService
             }
 
             $user = User::lockForUpdate()->findOrFail($userId);
-            $user->bonus_points += $this->calculateBonusPoints($request);
+            $bonusAmount = $this->calculateBonusPoints($request);
+            $user->bonus_points += $bonusAmount;
             
             $request->bonus_points_awarded = true;
             
             $request->save();
             $user->save();
+
+            \App\Models\PointTransaction::create([
+                'seeker_id' => $userId,
+                'provider_id' => null, // Bonus from system
+                'request_id' => $requestId,
+                'amount' => $bonusAmount,
+                'type' => 'bonus',
+            ]);
         });
     }
 
@@ -71,6 +80,14 @@ class PointsService
             $request->save();
             $provider->save();
             $seeker->save();
+
+            \App\Models\PointTransaction::create([
+                'seeker_id' => $seeker->id,
+                'provider_id' => $provider->id,
+                'request_id' => $requestId,
+                'amount' => $transferred_points,
+                'type' => 'payment',
+            ]);
 
             return true;
         });
