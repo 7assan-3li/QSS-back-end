@@ -6,12 +6,15 @@ use App\constant\BondStatus;
 use App\constant\RequestStatus;
 use App\Models\RequestBond;
 use App\Models\Request as RequestModel;
-use App\Models\User;
+use App\Services\RequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RequestBondController extends Controller
 {
+    public function __construct(private RequestService $requestService)
+    {
+    }
     public function index()
     {
         $bonds = RequestBond::with('request')
@@ -77,13 +80,10 @@ class RequestBondController extends Controller
             }
 
             $bond->update(['status' => BondStatus::APPROVED]);
+            // تحديث المبلغ المدفوع
+            $requestModel = $this->requestService->addToMoneyPaid($requestModel->id, $bond->amount);
 
-            $newMoneyPaid = ($requestModel->money_paid ?? 0) + $bond->amount;
-            
-            $requestModel->money_paid = $newMoneyPaid;
-
-            // تحديث حالة الطلب بناءً على المبلغ المدفوع
-            if ($newMoneyPaid >= $requestModel->total_price) {
+            if ($requestModel->money_paid >= $requestModel->total_price) {
                 $requestModel->status = RequestStatus::ACCEPTED_FULL_PAID;
             } else {
                 $requestModel->status = RequestStatus::ACCEPTED_PARTIAL_PAID;

@@ -68,4 +68,33 @@ class RequestService
         ]);
     }
 
+    public function addToMoneyPaid($requestId,$addedAmount){
+        $request = RequestModel::lockForUpdate()->findOrFail($requestId);
+        if($request->status != RequestStatus::ACCEPTED_INITIAL && $request->status != RequestStatus::ACCEPTED_PARTIAL_PAID){
+            throw new \Exception("حالة الطلب لا تسمح بعملية الدفع");
+        }
+        if($request->money_paid + $addedAmount > $request->total_price){
+            throw new \Exception("المبلغ المدفوع يتجاوز التكلفة الإجمالية للطلب");
+        }
+        if($addedAmount <= 0)
+            throw new \Exception("المبلغ المدفوع يجب أن يكون أكبر من الصفر");
+        $request->money_paid += $addedAmount;
+        $request->save();
+
+        // تحديث حالة الطلب
+        $this->updateRequestStatus($requestId);
+        return $request;
+    }
+
+    // تحديث حالة الطلب بعد فحص المبلغ المدفوع
+    public function updateRequestStatus($requestId){
+        $request = RequestModel::lockForUpdate()->findOrFail($requestId);
+        if($request->money_paid >= $request->total_price){
+            $request->status = RequestStatus::ACCEPTED_FULL_PAID;
+        }else{
+            $request->status = RequestStatus::ACCEPTED_PARTIAL_PAID;
+        }
+        $request->save();
+    }
+
 }
