@@ -19,38 +19,38 @@ class ProfileService
 
         // 👤 إنشاء الملف الشخصي
         return Profile::create([
-            'user_id'    => Auth::user()->id,
-            'bio'        => $data['bio'] ?? null,
+            'user_id' => Auth::user()->id,
+            'bio' => $data['bio'] ?? null,
             'image_path' => $imagePath,
         ]);
     }
-    
 
-public function update($data, $request, $profile_id): Profile
-{
-    $profile = Profile::findOrFail($profile_id);
 
-    // 🖼️ في حال تم إرسال صورة جديدة
-    if ($request->hasFile('image')) {
+    public function update($data, $request, $profile_id): Profile
+    {
+        $profile = Profile::findOrFail($profile_id);
 
-        // 🗑️ حذف الصورة القديمة إن وُجدت
-        if (
-            $profile->image_path &&
-            Storage::disk('public')->exists($profile->image_path)
-        ) {
-            Storage::disk('public')->delete($profile->image_path);
+        // 🖼️ في حال تم إرسال صورة جديدة
+        if ($request->hasFile('image')) {
+
+            // 🗑️ حذف الصورة القديمة إن وُجدت
+            if (
+                $profile->image_path &&
+                Storage::disk('public')->exists($profile->image_path)
+            ) {
+                Storage::disk('public')->delete($profile->image_path);
+            }
+
+            // 💾 حفظ الصورة الجديدة
+            $profile->image_path = $request->file('image')
+                ->store('profiles', 'public');
         }
 
-        // 💾 حفظ الصورة الجديدة
-        $profile->image_path = $request->file('image')
-            ->store('profiles', 'public');
+        // ✏️ تحديث البيانات الأخرى
+        $profile->update([
+            'bio' => $data['bio'] ?? $profile->bio,
+        ]);
+
+        return $profile;
     }
-
-    // ✏️ تحديث البيانات الأخرى
-    $profile->update([
-        'bio' => $data['bio'] ?? $profile->bio,
-    ]);
-
-    return $profile;
-}
 }

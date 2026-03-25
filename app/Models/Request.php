@@ -50,6 +50,12 @@ class Request extends Model
         return $this->main_service()->first()?->provider;
     }
 
+    public function getRequiredPartialAmount()
+    {
+        $percentage = $this->main_service()->first()?->required_partial_percentage ?? 0;
+        return $this->total_price * ($percentage / 100);
+    }
+
 
 
     public function bonds()

@@ -20,4 +20,5 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
     Route::get('/requests/{request}/status', [RequestController::class, 'getRequestStatus']);
     Route::patch('/requests/{request}/status', [RequestController::class, 'updateStatus']);
     Route::post('/requests/{request}/payByPoints', [RequestController::class, 'payByPoints']);
+    Route::post('/requests/{request}/addAmountToMoneyPaid', [RequestController::class, 'addAmountToMoneyPaid']);
 });

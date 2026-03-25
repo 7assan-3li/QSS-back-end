@@ -25,7 +25,7 @@ class StoreProfilePhoneRequest extends FormRequest
             "phone"=> "required|string|max:255",
             "country_code"=> "required|string|max:255",
             "profile_id"=> "required|exists:profiles,id",
-            "type"=> "required|string|in:mobile,landline,whatsapp",
+            "type"=> "required|string|in:mobile,whatsapp,both",
             "is_primary"=> "required|boolean",
             "is_active"=> "required|boolean",
         ];

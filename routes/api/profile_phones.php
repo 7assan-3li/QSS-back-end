@@ -9,4 +9,5 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
     Route::post('/profile-phones',[ProfilePhoneController::class, 'store']);
     Route::get('/profile-phones/{id}',[ProfilePhoneController::class, 'show']);
     Route::put('/profile-phones/{id}',[ProfilePhoneController::class, 'update']);
+    Route::delete('/profile-phones/{id}',[ProfilePhoneController::class, 'destroy']);
 });

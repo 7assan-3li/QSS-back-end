@@ -24,7 +24,7 @@ class UpdateProfilePhoneRequest extends FormRequest
         return [
             "phone"=> "sometimes|string|max:255",
             "country_code"=> "sometimes|string|max:255",
-            "type"=> "sometimes|string|in:mobile,landline,whatsapp",
+            "type"=> "sometimes|string|in:mobile,whatsapp,both",
             "is_primary"=> "sometimes|boolean",
             "is_active"=> "sometimes|boolean",
         ];

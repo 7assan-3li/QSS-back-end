@@ -18,7 +18,7 @@ class RequestController extends Controller
     use AuthorizesRequests;
 
     //constructor
-    public function __construct(private PointsService $pointsService)
+    public function __construct(private PointsService $pointsService,private RequestService $requestService)
     {
     }
     public function index()
@@ -267,14 +267,37 @@ class RequestController extends Controller
         }
 
         try {
-            $this->pointsService->payRequest($request_id, $data['transferred_points']);
-            
-            // إعادة جلب الطلب للحصول على القيم المحدثة
-            $requestModel->refresh();
+            $updatedRequest = $this->pointsService->payRequest($request_id, $data['transferred_points']);
 
             return response()->json([
                 'message' => 'تم الدفع بنجاح',
-                'request' => $requestModel
+                'request' => $updatedRequest
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function addAmountToMoneyPaid(Request $request, $request_id)
+    {
+        $data = $request->validate([
+            'added_amount' => 'required|numeric|min:1',
+        ]);
+
+        $requestModel = RequestModel::findOrFail($request_id);
+
+        if ($requestModel->user_id !== Auth::id()) {
+            return response()->json(['message' => 'غير مصرح للقيام بعملية الدفع لهذا الطلب'], 403);
+        }
+
+        try {
+            $updatedRequest = $this->requestService->addToMoneyPaid($request_id, $data['added_amount']);
+
+            return response()->json([
+                'message' => 'تم الدفع بنجاح',
+                'request' => $updatedRequest
             ]);
         } catch (\Exception $e) {
             return response()->json([

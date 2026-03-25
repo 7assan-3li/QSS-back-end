@@ -11,6 +11,9 @@ use App\Http\Controllers\SystemComplaintController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationPackagesController;
 use App\Http\Controllers\VerificationRequestController;
+use App\Http\Controllers\PointsPackageController;
+use App\Http\Controllers\UserPointsPackageController;
+use App\Http\Controllers\WithdrawRequestController;
 use App\Models\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
@@ -113,6 +116,26 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/user-verification-packages/{id}', [\App\Http\Controllers\UserVerificationPackagesController::class, 'showWebAdmin'])->name('user-verification-packages.show');
     Route::patch('/user-verification-packages/{id}/approve', [\App\Http\Controllers\UserVerificationPackagesController::class, 'approveWebAdmin'])->name('user-verification-packages.approve');
     Route::patch('/user-verification-packages/{id}/reject', [\App\Http\Controllers\UserVerificationPackagesController::class, 'rejectWebAdmin'])->name('user-verification-packages.reject');
+
+    // Points Packages Routes
+    Route::get('/admin/points-packages', [PointsPackageController::class, 'indexWeb'])->name('admin.points-packages.index');
+    Route::get('/admin/points-packages/create', [PointsPackageController::class, 'create'])->name('admin.points-packages.create');
+    Route::post('/admin/points-packages', [PointsPackageController::class, 'storeWeb'])->name('admin.points-packages.store');
+    Route::get('/admin/points-packages/{id}/edit', [PointsPackageController::class, 'edit'])->name('admin.points-packages.edit');
+    Route::put('/admin/points-packages/{id}', [PointsPackageController::class, 'updateWeb'])->name('admin.points-packages.update');
+    Route::delete('/admin/points-packages/{id}', [PointsPackageController::class, 'destroyWeb'])->name('admin.points-packages.destroy');
+
+    // User Points Packages (Subscriptions)
+    Route::get('/admin/user-points-packages', [UserPointsPackageController::class, 'indexWeb'])->name('admin.user-points-packages.index');
+    Route::get('/admin/user-points-packages/{id}', [UserPointsPackageController::class, 'showWeb'])->name('admin.user-points-packages.show');
+    Route::patch('/admin/user-points-packages/{id}/approve', [UserPointsPackageController::class, 'approveWeb'])->name('admin.user-points-packages.approve');
+    Route::patch('/admin/user-points-packages/{id}/reject', [UserPointsPackageController::class, 'rejectWeb'])->name('admin.user-points-packages.reject');
+
+    // Withdrawals (Admin)
+    Route::get('/admin/withdrawals', [WithdrawRequestController::class, 'indexWebAdmin'])->name('admin.withdrawals.index');
+    Route::get('/admin/withdrawals/{id}', [WithdrawRequestController::class, 'showWebAdmin'])->name('admin.withdrawals.show');
+    Route::patch('/admin/withdrawals/{id}/approve', [WithdrawRequestController::class, 'approveWebAdmin'])->name('admin.withdrawals.approve');
+    Route::patch('/admin/withdrawals/{id}/reject', [WithdrawRequestController::class, 'rejectWebAdmin'])->name('admin.withdrawals.reject');
 });
 
 Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');

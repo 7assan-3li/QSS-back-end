@@ -37,6 +37,7 @@ class ServiceController extends Controller
             'is_active' => 'nullable|boolean',
             'distance_based_price' => 'nullable|boolean',
             'price_per_km' => 'nullable|numeric|min:0',
+            'required_partial_percentage' => 'nullable|integer|min:0|max:100',
         ]);
 
         // إضافة provider_id تلقائيًا من المستخدم الحالي
@@ -81,6 +82,7 @@ class ServiceController extends Controller
             'is_active' => 'sometimes|nullable|boolean',
             'distance_based_price' => 'sometimes|nullable|boolean',
             'price_per_km' => 'sometimes|nullable|numeric|min:0',
+            'required_partial_percentage' => 'sometimes|nullable|integer|min:0|max:100',
         ];
 
         if ($request->hasFile('image_path')) {

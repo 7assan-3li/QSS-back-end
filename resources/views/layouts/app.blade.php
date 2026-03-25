@@ -74,6 +74,21 @@
                     <span class="text">طلبات اشتراك الباقات</span>
                 </a>
 
+                <a href="{{ route('admin.points-packages.index') }}" class="{{ request()->is('admin/points-packages*') ? 'active' : '' }}">
+                    <span class="icon">💎</span>
+                    <span class="text">باقات النقاط</span>
+                </a>
+
+                <a href="{{ route('admin.user-points-packages.index') }}" class="{{ request()->is('admin/user-points-packages*') ? 'active' : '' }}">
+                    <span class="icon">💰</span>
+                    <span class="text">طلبات شحن النقاط</span>
+                </a>
+
+                <a href="{{ route('admin.withdrawals.index') }}" class="{{ request()->is('admin/withdrawals*') ? 'active' : '' }}">
+                    <span class="icon">💸</span>
+                    <span class="text">طلبات السحب</span>
+                </a>
+
                 <a href="#" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                     <span class="icon">⚙️</span>
                     <span class="text">الإعدادات</span>

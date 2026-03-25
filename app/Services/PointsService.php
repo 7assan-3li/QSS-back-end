@@ -70,10 +70,10 @@ class PointsService
             $seeker->bonus_points -= $transferred_points;
             $request->money_paid = $current_money_paid + $transferred_points;
             
-            // update request status to accepted full paid or accepted partial paid
+            // تحديث حالة الطلب بناءً على النسبة المطلوبة
             if ($request->money_paid >= $request->total_price) {
                 $request->status = RequestStatus::ACCEPTED_FULL_PAID; 
-            } else {
+            } elseif ($request->money_paid >= $request->getRequiredPartialAmount()) {
                 $request->status = RequestStatus::ACCEPTED_PARTIAL_PAID;
             }
 
@@ -89,7 +89,7 @@ class PointsService
                 'type' => 'payment',
             ]);
 
-            return true;
+            return $request;
         });
     }
 
@@ -102,4 +102,6 @@ class PointsService
     {
         return $request->status == RequestStatus::ACCEPTED_INITIAL || $request->status == RequestStatus::ACCEPTED_PARTIAL_PAID;
     }
+
+    
 }
