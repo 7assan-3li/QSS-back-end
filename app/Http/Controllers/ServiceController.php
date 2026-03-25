@@ -37,7 +37,7 @@ class ServiceController extends Controller
             'is_active' => 'nullable|boolean',
             'distance_based_price' => 'nullable|boolean',
             'price_per_km' => 'nullable|numeric|min:0',
-            'required_partial_percentage' => 'nullable|integer|min:0|max:100',
+            'required_partial_percentage' => 'required|integer|min:0|max:100',
         ]);
 
         // إضافة provider_id تلقائيًا من المستخدم الحالي
@@ -61,6 +61,8 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         // $this->authorize('view', $service);
+        $requiredPartialAmount = $service->getRequiredPartialAmount();
+        $service->required_partial_amount = $requiredPartialAmount;
         return response()->json([
             'message' => 'Service retrieved successfully',
             'data' => $service->load('category', 'children')

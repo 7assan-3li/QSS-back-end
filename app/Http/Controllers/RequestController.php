@@ -152,6 +152,8 @@ class RequestController extends Controller
     public function show(Request $request, $request_id)
     {
         $requestModel = RequestModel::with(['user', 'main_service.provider', 'sub_services', 'bonds'])->findOrFail($request_id);
+        $requiredPartialAmount = $requestModel->getRequiredPartialAmount();
+        $requestModel->required_partial_amount = $requiredPartialAmount;
 
         return response()->json($requestModel);
     }
