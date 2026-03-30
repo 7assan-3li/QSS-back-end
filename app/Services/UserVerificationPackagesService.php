@@ -4,15 +4,18 @@ namespace App\Services;
 
 use App\Models\UserVerificationPackages;
 use App\constant\BondStatus;
+use Illuminate\Support\Facades\DB;
 
 class UserVerificationPackagesService
 {
+    public function __construct(private BondRegistryService $bondRegistryService) {}
+
     /**
      * Get all packages for a specific user
      */
     public function getUserPackages($userId)
     {
-        return UserVerificationPackages::with(['verificationPackage', 'images'])
+        return UserVerificationPackages::with(['verificationPackage'])
             ->where('user_id', $userId)
             ->latest()
             ->get();
@@ -23,7 +26,7 @@ class UserVerificationPackagesService
      */
     public function getAllPackages()
     {
-        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin', 'images'])
+        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin'])
             ->latest()
             ->get();
     }
@@ -31,21 +34,32 @@ class UserVerificationPackagesService
     /**
      * Store a new user verification package request
      */
-    public function storePackage($userId, array $data, $imageFiles = [])
+    public function storePackage($userId, array $data, $imageFile)
     {
-        $userPackage = UserVerificationPackages::create([
-            'user_id' => $userId,
-            'verification_package_id' => $data['verification_package_id'],
-            'number_bond' => $data['number_bond'],
-            'status' => BondStatus::PENDING,
-        ]);
+        return DB::transaction(function () use ($userId, $data, $imageFile) {
+            $path = $imageFile->store('user_verification_images', 'public');
 
-        if (!empty($imageFiles)) {
-            $imageService = new UserVerificationPackagesImageService();
-            $imageService->uploadImages($userId, $userPackage->id, $imageFiles);
-        }
+            $userPackage = UserVerificationPackages::create([
+                'user_id' => $userId,
+                'verification_package_id' => $data['verification_package_id'],
+                'image_bond' => $path,
+                'number_bond' => $data['number_bond'],
+                'status' => BondStatus::PENDING,
+            ]);
 
-        return $userPackage->load('images');
+            // تسجيل في السجل المركزي
+            $this->bondRegistryService->register(
+                $userId,
+                $data['number_bond'],
+                null, // Bank name
+                null,
+                'verification',
+                $userPackage->id,
+                $path
+            );
+
+            return $userPackage;
+        });
     }
 
     /**
@@ -53,22 +67,27 @@ class UserVerificationPackagesService
      */
     public function approvePackage($packageId, $adminId)
     {
-        $userPackage = UserVerificationPackages::findOrFail($packageId);
-        
-        $userPackage->update([
-            'status' => BondStatus::APPROVED,
-            'admin_id' => $adminId,
-        ]);
+        return DB::transaction(function () use ($packageId, $adminId) {
+            $userPackage = UserVerificationPackages::findOrFail($packageId);
+            
+            $userPackage->update([
+                'status' => BondStatus::APPROVED,
+                'admin_id' => $adminId,
+            ]);
 
-        $currentDate = $userPackage->user->provider_verified_until ? \Carbon\Carbon::parse($userPackage->user->provider_verified_until) : null;
-        $startDate = ($currentDate && $currentDate->isFuture()) ? $currentDate : now();
-        $newDate = $startDate->addDays($userPackage->verificationPackage->duration_days);
+            $currentDate = $userPackage->user->provider_verified_until ? \Carbon\Carbon::parse($userPackage->user->provider_verified_until) : null;
+            $startDate = ($currentDate && $currentDate->isFuture()) ? $currentDate : now();
+            $newDate = $startDate->addDays($userPackage->verificationPackage->duration_days);
 
-        $userPackage->user->update([
-            'provider_verified_until' => $newDate
-        ]);
+            $userPackage->user->update([
+                'provider_verified_until' => $newDate
+            ]);
 
-        return $userPackage;
+            // تحديث السجل المركزي
+            $this->bondRegistryService->approve('verification', $userPackage->id);
+
+            return $userPackage;
+        });
     }
 
     /**
@@ -76,14 +95,19 @@ class UserVerificationPackagesService
      */
     public function rejectPackage($packageId, $adminId)
     {
-        $userPackage = UserVerificationPackages::findOrFail($packageId);
-        
-        $userPackage->update([
-            'status' => BondStatus::REJECTED,
-            'admin_id' => $adminId,
-        ]);
+        return DB::transaction(function () use ($packageId, $adminId) {
+            $userPackage = UserVerificationPackages::findOrFail($packageId);
+            
+            $userPackage->update([
+                'status' => BondStatus::REJECTED,
+                'admin_id' => $adminId,
+            ]);
 
-        return $userPackage;
+            // إزالة من السجل المركزي
+            $this->bondRegistryService->reject('verification', $userPackage->id);
+
+            return $userPackage;
+        });
     }
 
     /**
@@ -91,7 +115,7 @@ class UserVerificationPackagesService
      */
     public function getPackageDetails($packageId)
     {
-        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin', 'images'])
+        return UserVerificationPackages::with(['user', 'verificationPackage', 'admin'])
             ->findOrFail($packageId);
     }
 }

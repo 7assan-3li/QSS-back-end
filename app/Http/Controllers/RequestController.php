@@ -18,7 +18,7 @@ class RequestController extends Controller
     use AuthorizesRequests;
 
     //constructor
-    public function __construct(private PointsService $pointsService,private RequestService $requestService)
+    public function __construct(private PointsService $pointsService, private RequestService $requestService)
     {
     }
     public function index()
@@ -94,6 +94,17 @@ class RequestController extends Controller
         //     }
         // }
 
+        // وضح موقع طالب الخدمة اذا كان موقع الطلب فارغ
+        if ($mainService->distance_based_price) {
+            if (empty($data['latitude']) || empty($data['longitude'])) {
+                $userProfile = Auth::user()->profile;
+                if ($userProfile) {
+                    $data['latitude'] = $userProfile->latitude;
+                    $data['longitude'] = $userProfile->longitude;
+                }
+            }
+        }
+
         $request_id = null;
         DB::transaction(function () use ($data, $mainService, &$request_id) {
             $requestModel = RequestModel::create([
@@ -133,6 +144,23 @@ class RequestController extends Controller
             // }
             $totalPrice = $mainService->price; // الخدمة الرئيسية دائمًا 1
 
+            // حساب التكلفة بناءً على المسافة إذا كانت مفعلة
+            if ($mainService->distance_based_price && isset($data['latitude'], $data['longitude'])) {
+                $provider = $mainService->provider;
+                $providerLat = $provider->profile->latitude ?? null;
+                $providerLng = $provider->profile->longitude ?? null;
+
+                if ($providerLat && $providerLng) {
+                    $distance = \App\Helpers\LocationHelper::calculateDistance(
+                        $providerLat,
+                        $providerLng,
+                        $data['latitude'],
+                        $data['longitude']
+                    );
+                    $totalPrice += ($distance * $mainService->price_per_km);
+                }
+            }
+
             if (!empty($data['sup_services'])) {
                 foreach ($data['sup_services'] as $supService) {
                     $service = Service::find($supService['id']);
@@ -166,7 +194,7 @@ class RequestController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request,  $request_id)
+    public function updateStatus(Request $request, $request_id)
     {
         $data = $request->validate([
             'status' => 'required|in:' . implode(',', RequestStatus::all()),
@@ -309,10 +337,10 @@ class RequestController extends Controller
     }
 
     //web functions
-    public function indexAdmin(Request $httpRequest,RequestService $service)
+    public function indexAdmin(Request $httpRequest, RequestService $service)
     {
         $data = $service->getAllRequests($httpRequest);
-        return view('requests.index', ['requests'=> $data['requests'], 'stats'=>$data['stats']]);
+        return view('requests.index', ['requests' => $data['requests'], 'stats' => $data['stats']]);
     }
 
     public function showAdmin($id)
@@ -328,7 +356,7 @@ class RequestController extends Controller
         return view('requests.show', ['request' => $request, 'commission' => $commission]);
     }
 
-    public function markPaid($request_id,RequestService $service)
+    public function markPaid($request_id, RequestService $service)
     {
         $requestModel = RequestModel::findOrFail($request_id);
         if ($requestModel->status !== RequestStatus::COMPLETED && $requestModel->status !== RequestStatus::ACCEPTED_FULL_PAID && $requestModel->status !== RequestStatus::ACCEPTED_PARTIAL_PAID)

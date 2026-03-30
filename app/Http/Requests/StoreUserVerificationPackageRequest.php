@@ -15,8 +15,7 @@ class StoreUserVerificationPackageRequest extends FormRequest
     {
         return [
             'verification_package_id' => 'required|exists:verification_packages,id',
-            'image_bonds'             => 'required|array|min:1',
-            'image_bonds.*'           => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image_bond'              => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'number_bond'             => 'required|string|max:255',
         ];
     }

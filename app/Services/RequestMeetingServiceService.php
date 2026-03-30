@@ -51,6 +51,17 @@ class RequestMeetingServiceService
         // Eager load the profile to get the provider's latitude and longitude
         $provider = User::with('profile')->find($data['provider_id']);
 
+        // وضح موقع طالب الخدمة اذا كان موقع الطلب فارغ وكان الخدمة تعتمد على المسافة
+        if ($meetingService->distance_based_price) {
+            if (empty($data['latitude']) || empty($data['longitude'])) {
+                $userProfile = Auth::user()->profile;
+                if ($userProfile) {
+                    $data['latitude'] = $userProfile->latitude;
+                    $data['longitude'] = $userProfile->longitude;
+                }
+            }
+        }
+
         $totalPrice = $meetingService->price;
 
         // Calculate distance price if applicable
@@ -59,22 +70,12 @@ class RequestMeetingServiceService
             $providerLng = $provider->profile->longitude ?? null;
 
             if ($providerLat && $providerLng) {
-                $earthRadiusKm = 6371;
-
-                $lat1 = deg2rad($providerLat);
-                $lon1 = deg2rad($providerLng);
-                $lat2 = deg2rad($data['latitude']);
-                $lon2 = deg2rad($data['longitude']);
-
-                $latDiff = $lat2 - $lat1;
-                $lonDiff = $lon2 - $lon1;
-
-                $a = sin($latDiff / 2) * sin($latDiff / 2) +
-                    cos($lat1) * cos($lat2) *
-                    sin($lonDiff / 2) * sin($lonDiff / 2);
-
-                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-                $distanceKm = $earthRadiusKm * $c;
+                $distanceKm = \App\Helpers\LocationHelper::calculateDistance(
+                    $providerLat,
+                    $providerLng,
+                    $data['latitude'],
+                    $data['longitude']
+                );
 
                 $totalPrice += ($distanceKm * $meetingService->price_per_km);
             }

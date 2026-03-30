@@ -42,5 +42,11 @@ class Service extends Model
                     ->wherePivot('is_main', true)
                     ->withTimestamps();
     }
+
+    public function getRequiredPartialAmount()
+    {
+        $percentage = $this->required_partial_percentage ?? 0;
+        return $this->price * ($percentage / 100);
+    }
     
 }

@@ -14,6 +14,18 @@ class RequestCustomServiceController extends Controller
         $this->requestCustomServiceService = $requestCustomServiceService;
     }
 
+    public function indexProvider()
+    {
+        $result = $this->requestCustomServiceService->indexProvider(['provider_id' => auth()->id()]);
+        return response()->json($result['requests']);
+    }
+
+    public function indexSeeker()
+    {
+        $result = $this->requestCustomServiceService->indexSeeker(['seeker_id' => auth()->id()]);
+        return response()->json($result['requests']);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -52,6 +64,29 @@ class RequestCustomServiceController extends Controller
 
             return response()->json([
                 'message' => 'تم تحديد السعر وتحديث حالة الطلب بنجاح',
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'الطلب غير موجود'
+            ], 404);
+        } catch (\Exception $e) {
+            $statusCode = $e->getCode() ?: 500;
+            if ($statusCode < 100 || $statusCode > 599) {
+                $statusCode = 500;
+            }
+            return response()->json([
+                'message' => $e->getMessage()
+            ], $statusCode);
+        }
+    }
+
+    public function reject($id)
+    {
+        try {
+            $this->requestCustomServiceService->reject((int)$id);
+
+            return response()->json([
+                'message' => 'تم رفض الطلب بنجاح',
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([

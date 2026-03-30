@@ -106,6 +106,7 @@ Create a new main service.
     - `is_active`: Optional, Boolean (1/0)
     - `distance_based_price`: Optional, Boolean (1/0)
     - `price_per_km`: Optional, Numeric, Min: 0
+    - `required_partial_percentage`: Required, Integer (0-100). Defines the % of total price needed to reach `accepted_partial_paid` status.
 
 ### 2.4 `PUT /api/services/{service_id}`
 
@@ -187,7 +188,9 @@ Create a new main service request.
 
 - **Validations**:
     - `service_id`: Required, Exists in `services`.
-    - `message`, `latitude`, `longitude`: Optional (latitude/longitude are needed if distance-based pricing applies).
+    - `message`, `latitude`, `longitude`: Optional. 
+    > [!NOTE]
+    > If `latitude`/`longitude` are missing, the system defaults to the seeker's profile coordinates to calculate distance-based pricing.
     - `sup_services`: Optional, Array.
     - `sup_services.*.id`: Required if array provided, Exists in `services`.
     - `sup_services.*.quantity`: Integer, Min: 1.
@@ -229,11 +232,33 @@ Create a new custom service request.
     - `message`: Required, String.
     - `latitude`, `longitude`: Optional, Numeric.
 
-### 4.4 `GET /api/requests`
+### 4.4 `GET /api/requests/custom-provider`
 
-Get all current main requests.
+Get all custom service requests assigned to the authenticated provider.
 
-### 4.5 `PATCH /api/requests/{request_id}/status`
+### 4.5 `PATCH /api/requests/custom/{request_id}/price`
+
+Provider accepts a custom request and sets the price.
+
+- **Body (`application/json`)**
+```json
+{ "price": 500.00 }
+```
+- **Action**: Sets `total_price` and updates status to `accepted_initial`.
+
+### 4.6 `PATCH /api/requests/custom/{request_id}/reject`
+
+Provider rejects a custom request.
+
+- **Action**: Updates status to `rejected`.
+
+### 4.8 `GET /api/requests/{request_id}`
+
+Get details of a specific request.
+
+- **Response Includes**: `user`, `main_service`, `sub_services`, `bonds`, and `required_partial_amount` (The calculated amount needed to reach partial payment status).
+
+### 4.9 `PATCH /api/requests/{request_id}/status`
 
 Update status of a request.
 
@@ -342,18 +367,88 @@ Submit a complaint to admins.
 
 ---
 
-## 8. Verification Requests
+## 8. Identity Verification Packages
 
-### 8.1 `POST /api/verification-requests`
+### 8.1 `POST /api/user-verification-packages`
 
-Submit ID verification details.
+Submit a request for identity verification (e.g., to become a Pro Provider).
+
+- **Content-Type**: `multipart/form-data`
+    - `verification_package_id`: Required, exists in `verification_packages`.
+    - `image_bond`: Required, Image file (Identity Card/Selfie), Max: 2MB.
+    - `number_bond`: Required, String (Bond/Transaction Number).
+
+- **Security**: The `number_bond` and `image_bond` are checked against the Central Bond Registry. Duplicate numbers or identical images will be rejected.
+
+### 8.2 `GET /api/user-verification-packages`
+
+Get the authenticated user's verification requests.
+
+---
+
+## 9. Payment Methods
+
+### 9.1 `POST /api/requests/{id}/payByPoints`
+
+Pay for a request using seeker's bonus points.
 
 - **Body (`application/json`)**
-
 ```json
-{
-    "content": "Verification request submission notes."
-}
+{ "transferred_points": 100 }
+```
+- **Logic**: Deducts from Seeker's `bonus_points` and adds to Provider's `paid_points`. Transitions status based on threshold.
+
+### 9.2 `POST /api/requests/{id}/addAmountToMoneyPaid`
+
+Manually add payment amount (e.g., via bank bond).
+
+- **Body (`application/json`)**
+```json
+{ "amount": 150.50 }
 ```
 
-- **Validations**: `content` (Required, String, Max:255).
+---
+
+## 10. Withdrawals (Provider Profits)
+
+### 10.1 `POST /api/withdraw-request`
+
+Submit a request to withdraw `paid_points`.
+
+- **Body (`application/json`)**
+```json
+{ "amount": 1000 }
+```
+- **Validations**: `amount` (Required, Numeric, Min: 1, Max: User's `paid_points`).
+
+### 10.2 `GET /api/my-withdraw-requests`
+
+Get user's withdrawal requests and their statuses.
+
+---
+
+## 11. Points Packages (Buying Points)
+
+### 11.1 `GET /api/available-points-packages`
+
+List all available points packages for purchase.
+
+### 11.2 `POST /api/subscribe-points-package`
+
+Subscribe to a points package by uploading a payment bond.
+
+- **Content-Type**: `multipart/form-data`
+    - `package_id`: Required, exists in `points_packages`.
+    - `bond_number`: Required, String.
+    - `bank_name`: Required, String.
+    - `bond_image`: Required, Image file, Max: 2MB.
+
+---
+
+## 🛡️ Security: Central Bond Registry
+
+All endpoints that involve uploading a payment bond (`request-bonds`, `user-verification-packages`, `subscribe-points-package`) are protected by a **Central Bond Registry**:
+
+1. **Uniqueness**: The `bond_number` must be unique across the entire system.
+2. **Anti-Fraud (Hashing)**: The system generates a digital fingerprint for every uploaded image. If the exact same image is uploaded twice (even with a different bond number), the request will be rejected.
+3. **Transaction Logging**: All point movements are logged in `point_transactions` for financial auditing.

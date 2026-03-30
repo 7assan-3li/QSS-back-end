@@ -102,15 +102,13 @@
                 </div>
             </div>
 
-            @if($userPackage->images->count() > 0)
+            @if($userPackage->image_bond)
                 <div style="margin-top: 30px;">
-                    <h4 style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">صور السندات</h4>
-                    <div class="bond-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
-                        @foreach($userPackage->images as $image)
-                            <a href="{{ asset('storage/' . $image->image_path) }}" target="_blank" title="اضغط لتكبير الصورة">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" class="bond-image" alt="صورة السند" style="max-height: 200px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                            </a>
-                        @endforeach
+                    <h4 style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">صورة السند / المرفق</h4>
+                    <div class="bond-container">
+                        <a href="{{ asset('storage/' . $userPackage->image_bond) }}" target="_blank" title="اضغط لتكبير الصورة">
+                            <img src="{{ asset('storage/' . $userPackage->image_bond) }}" class="bond-image" alt="صورة السند" style="max-height: 400px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                        </a>
                     </div>
                 </div>
             @endif

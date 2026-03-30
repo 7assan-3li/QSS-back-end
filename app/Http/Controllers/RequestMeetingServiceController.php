@@ -17,12 +17,10 @@ class RequestMeetingServiceController extends Controller
         $this->requestMeetingServiceService = $requestMeetingServiceService;
     }
 
-    public function indexProvider(IndexProviderMeetingRequest $request)
+    public function indexProvider()
     {
-        $data = $request->validated();
-
         try {
-            $result = $this->requestMeetingServiceService->indexProvider($data);
+            $result = $this->requestMeetingServiceService->indexProvider(['provider_id' => auth()->id()]);
 
             return response()->json([
                 'message' => 'تم الحصول على طلبات خدمات الاجتماع بنجاح',
@@ -39,12 +37,10 @@ class RequestMeetingServiceController extends Controller
         }
     }
 
-    public function indexSeeker(IndexSeekerMeetingRequest $request)
+    public function indexSeeker()
     {
-        $data = $request->validated();
-
         try {
-            $result = $this->requestMeetingServiceService->indexSeeker($data);
+            $result = $this->requestMeetingServiceService->indexSeeker(['seeker_id' => auth()->id()]);
 
             return response()->json([
                 'message' => 'تم الحصول على طلبات خدمات الاجتماع بنجاح',

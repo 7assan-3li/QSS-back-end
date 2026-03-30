@@ -9,6 +9,7 @@ class UserVerificationPackages extends Model
     protected $fillable = [
         'user_id',
         'verification_package_id',
+        'image_bond',
         'number_bond',
         'status',
         'admin_id',
