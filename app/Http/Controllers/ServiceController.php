@@ -32,7 +32,7 @@ class ServiceController extends Controller
             'category_id' => 'required|exists:categories,id',
             'parent_service_id' => 'nullable|exists:services,id',
             'status' => 'nullable|string|in:available,unavailable',
-            'image_path' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'image_path' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:10240',
             'is_available' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'distance_based_price' => 'nullable|boolean',
@@ -88,7 +88,7 @@ class ServiceController extends Controller
         ];
 
         if ($request->hasFile('image_path')) {
-            $rules['image_path'] = 'image|mimes:png,jpg,jpeg,webp|max:2048';
+            $rules['image_path'] = 'image|mimes:png,jpg,jpeg,webp|max:10240';
         } else {
             $rules['image_path'] = 'sometimes|nullable|string|max:255';
         }

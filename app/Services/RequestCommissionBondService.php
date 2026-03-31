@@ -28,6 +28,7 @@ class RequestCommissionBondService
         $commissionBond = RequestCommissionBond::create([
             'request_id'  => $data['request_id'],
             'image_path'  => $path,
+            'amount'      => $data['amount'],
             'bond_number' => $data['bond_number'] ?? null,
             'description' => $data['description'] ?? null,
         ]);

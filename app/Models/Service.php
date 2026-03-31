@@ -48,5 +48,19 @@ class Service extends Model
         $percentage = $this->required_partial_percentage ?? 0;
         return $this->price * ($percentage / 100);
     }
-    
+
+    public function schedules()
+    {
+        return $this->hasMany(ScheduleService::class);
+    }
+
+    public function getActiveSchedule()
+    {
+        return $this->schedules()
+            ->where('is_active', true)
+            ->whereHas('days', function ($query) {
+                $query->where('day', now()->format('l')); // l = full day name like Monday
+            })
+            ->first();
+    }
 }

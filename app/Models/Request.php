@@ -68,6 +68,23 @@ class Request extends Model
         return $this->hasOne(Review::class);
     }
 
+    public function getCommissionAmount()
+    {
+        // إذا كان هناك مبلغ تم حسابه مسبقاً عند اكتمال الطلب، نستخدمه
+        if ($this->commission_amount > 0) {
+            return $this->commission_amount;
+        }
+
+        // بخلاف ذلك نحسبه بناءً على إجمالي الطلب ونسبة عمولة المزود
+        $provider = $this->serviceProvider();
+        if (!$provider || $provider->no_commission) {
+            return 0;
+        }
+
+        $percentage = $provider->commission ?? 10; // افتراضي 10% إذا لم يتم التحديد
+        return $this->total_price * ($percentage / 100);
+    }
+
     public function commissionBonds()
     {
         return $this->hasMany(RequestCommissionBond::class, 'request_id');

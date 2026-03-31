@@ -23,7 +23,8 @@ class RequestCommissionBondRequest extends FormRequest
     {
         return [
             'request_id'   => 'required|exists:requests,id',
-            'image'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image'        => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'amount'       => 'required|numeric|min:0.01',
             'bond_number'  => 'nullable|integer',
             'description'  => 'nullable|string',
         ];

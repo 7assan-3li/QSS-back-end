@@ -268,7 +268,11 @@ class RequestController extends Controller
             ]);
 
             if ($newStatus == RequestStatus::COMPLETED) {
+                // 1. منح نقاط مكافأة لطالب الخدمة
                 $this->pointsService->addBonusPoints($requestModel->user_id, $requestModel->id);
+                
+                // 2. محاولة خصم العمولة آلياً من رصيد المزود
+                $this->pointsService->payCommissionFromPoints($requestModel->id);
             }
         });
         $requestModel = RequestModel::with([
@@ -333,6 +337,31 @@ class RequestController extends Controller
             return response()->json([
                 'message' => $e->getMessage()
             ], 400);
+        }
+    }
+
+    public function payCommissionByPoints($id)
+    {
+        $requestModel = RequestModel::findOrFail($id);
+
+        // التحقق من أن المستخدم هو مزود الخدمة لهذا الطلب
+        $provider = $requestModel->serviceProvider();
+        if (!$provider || $provider->id !== Auth::id()) {
+            return response()->json(['message' => 'غير مصرح لك بدفع عمولة هذا الطلب'], 403);
+        }
+
+        if ($requestModel->status !== RequestStatus::COMPLETED) {
+            return response()->json(['message' => 'لا يمكن دفع العمولة إلا للطلبات المكتملة'], 422);
+        }
+
+        try {
+            $updatedRequest = $this->pointsService->payCommissionFromPoints($id);
+            return response()->json([
+                'message' => 'تمت عملية دفع العمولة بنجاح',
+                'request' => $updatedRequest
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 

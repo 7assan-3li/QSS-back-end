@@ -93,6 +93,115 @@ class PointsService
         });
     }
 
+    public function payCommissionFromPoints($requestId)
+    {
+        return DB::transaction(function () use ($requestId) {
+            $request = RequestModel::lockForUpdate()->findOrFail($requestId);
+            
+            // حساب المبلغ المطلوب وتخزينه كثابت للطلب إذا لم يكن مخزناً
+            if ($request->commission_amount <= 0) {
+                $request->commission_amount = $request->getCommissionAmount();
+            }
+
+            $amountNeeded = $request->commission_amount - $request->commission_amount_paid;
+
+            if ($amountNeeded <= 0) {
+                $request->commission_paid = true;
+                $request->save();
+                return $request;
+            }
+
+            $providerModel = $request->serviceProvider();
+            if (!$providerModel) {
+                return $request;
+            }
+
+            $provider = User::lockForUpdate()->findOrFail($providerModel->id);
+            $totalDeducted = 0;
+
+            // 1. الخصم من نقاط المكافأة أولاً
+            if ($provider->bonus_points > 0) {
+                $bonusToDeduct = min($provider->bonus_points, $amountNeeded);
+                $provider->bonus_points -= $bonusToDeduct;
+                $amountNeeded -= $bonusToDeduct;
+                $totalDeducted += $bonusToDeduct;
+
+                \App\Models\PointTransaction::create([
+                    'seeker_id' => null,
+                    'provider_id' => $provider->id,
+                    'request_id' => $requestId,
+                    'amount' => $bonusToDeduct,
+                    'type' => 'commission_payment_bonus',
+                ]);
+            }
+
+            // 2. الخصم من نقاط الأرباح إذا كانت المكافآت لا تكفي
+            if ($amountNeeded > 0 && $provider->paid_points > 0) {
+                $paidToDeduct = min($provider->paid_points, $amountNeeded);
+                $provider->paid_points -= $paidToDeduct;
+                $amountNeeded -= $paidToDeduct;
+                $totalDeducted += $paidToDeduct;
+
+                \App\Models\PointTransaction::create([
+                    'seeker_id' => null,
+                    'provider_id' => $provider->id,
+                    'request_id' => $requestId,
+                    'amount' => $paidToDeduct,
+                    'type' => 'commission_payment_paid',
+                ]);
+            }
+
+            // تحديث الطلب
+            $request->commission_amount_paid += $totalDeducted;
+            if ($request->commission_amount_paid >= $request->commission_amount) {
+                $request->commission_paid = true;
+            }
+
+            $request->save();
+            $provider->save();
+
+            return $request;
+        });
+    }
+
+    public function convertPaidToBonus($userId, $amount)
+    {
+        if ($amount <= 0) {
+            throw new \Exception("المبلغ المختار للتحويل يجب أن يكون أكبر من الصفر");
+        }
+
+        return DB::transaction(function () use ($userId, $amount) {
+            $user = User::lockForUpdate()->findOrFail($userId);
+
+            if ($user->paid_points < $amount) {
+                throw new \Exception("رصيد الأرباح (Paid Points) غير كافٍ لإتمام التحويل");
+            }
+
+            // حساب مبلغ المكافأة مع حافز 1%
+            $bonusAmount = $amount * 1.01;
+
+            $user->paid_points -= $amount;
+            $user->bonus_points += $bonusAmount;
+            $user->save();
+
+            \App\Models\PointTransaction::create([
+                'seeker_id'   => null,
+                'provider_id' => $user->id,
+                'request_id'  => null,
+                'amount'      => $amount,
+                'type'        => 'points_conversion',
+                'description' => "تحويل $amount من الأرباح إلى $bonusAmount من المكافآت (حافز 1%)"
+            ]);
+
+            return [
+                'paid_points_deducted' => $amount,
+                'bonus_points_added'   => $bonusAmount,
+                'new_paid_points'      => $user->paid_points,
+                'new_bonus_points'     => $user->bonus_points,
+            ];
+        });
+    }
+
     private function calculateBonusPoints($request)
     {
         return $request->total_price * 0.1;

@@ -94,5 +94,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyEmailForMobile());
     }
 
-
+    public function favoriteServices()
+    {
+        return $this->belongsToMany(Service::class, 'favorite_services', 'user_id', 'service_id')
+                    ->withTimestamps();
+    }
 }

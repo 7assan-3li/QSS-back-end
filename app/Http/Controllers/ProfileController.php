@@ -6,16 +6,17 @@ use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Profile;
 use App\Services\ProfileService;
+use App\Http\Resources\ProfileResource;
 
 class ProfileController extends Controller
 {
 
     public function show($profile_id)
     {
-        $profile = Profile::with(['user','user.banks','profilePhones',])->findOrFail($profile_id);
+        $profile = Profile::with(['user.banks', 'profilePhones', 'previousWorks'])->findOrFail($profile_id);
         return response()->json([
             'message' => 'Profile retrieved successfully',
-            'profile' => $profile
+            'profile' => new ProfileResource($profile)
         ], 200);
     }
 
@@ -27,7 +28,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'Profile created successfully',
-            'profile' => $profile
+            'profile' => new ProfileResource($profile)
         ], 201);
 
     }
@@ -40,7 +41,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'Profile updated successfully',
-            'data' => $profile
+            'profile' => new ProfileResource($profile)
         ], 200);
     }
 }

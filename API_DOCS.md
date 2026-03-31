@@ -324,10 +324,14 @@ Upload a payment bond/receipt for a request.
 
 ### 6.3 `POST /api/request-commission-bonds`
 
-Upload a commission bond.
+Upload a manual commission bond (receipt).
 
 - **Content-Type**: `multipart/form-data`
-    - Same validations as `request-bonds` (`request_id`, `image`, `bond_number`, `description`).
+    - `request_id`: Required, exists in requests.
+    - `image`: Required, Image file, Max: 2MB.
+    - `amount`: Required, Numeric (Value of the receipt).
+    - `bond_number`: Optional, Integer.
+    - `description`: Optional, String.
 
 ---
 
@@ -398,7 +402,14 @@ Pay for a request using seeker's bonus points.
 ```
 - **Logic**: Deducts from Seeker's `bonus_points` and adds to Provider's `paid_points`. Transitions status based on threshold.
 
-### 9.2 `POST /api/requests/{id}/addAmountToMoneyPaid`
+### 9.2 `POST /api/requests/{id}/pay-commission`
+
+Pay the request commission using provider's points.
+
+- **Deduction Priority**: `bonus_points` first, then `paid_points`.
+- **Logic**: Only available for `COMPLETED` requests.
+
+### 9.3 `POST /api/requests/{id}/addAmountToMoneyPaid`
 
 Manually add payment amount (e.g., via bank bond).
 
@@ -406,6 +417,15 @@ Manually add payment amount (e.g., via bank bond).
 ```json
 { "amount": 150.50 }
 ```
+
+---
+
+## 🛡️ Commission Tracking (Advanced)
+
+Requests now include the following fields for financial auditing:
+- `commission_amount`: Total calculated commission at the time of completion.
+- `commission_amount_paid`: Total paid so far (via points or manual bonds).
+- `commission_paid`: Boolean, `true` when fully paid.
 
 ---
 
@@ -424,6 +444,16 @@ Submit a request to withdraw `paid_points`.
 ### 10.2 `GET /api/my-withdraw-requests`
 
 Get user's withdrawal requests and their statuses.
+
+### 10.3 `POST /api/points/convert`
+
+Convert `paid_points` (earnings) to `bonus_points` (spending) with a **1% incentive**.
+
+- **Body (`application/json`)**
+```json
+{ "amount": 500 }
+```
+- **Logic**: Deducts `amount` from `paid_points` and adds `amount * 1.01` to `bonus_points`. Useful for paying commissions without withdrawing.
 
 ---
 

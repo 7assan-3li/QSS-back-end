@@ -21,8 +21,28 @@ class RequestCommissionBondController extends Controller
     //web functions
     public function approve(RequestCommissionBond $bond)
     {
-        $bond->update(['status' => 'approved']);
-        return back()->with('success', 'تم قبول السند');
+        \DB::transaction(function () use ($bond) {
+            $bond->update(['status' => 'approved']);
+            
+            $request = $bond->request;
+            
+            // تحديث المبلغ المقبوض كعمولة
+            $request->commission_amount_paid += $bond->amount;
+            
+            // حساب المبلغ الإجمالي المطلوب للعمولة إذا لم يكن مسجلاً
+            if ($request->commission_amount <= 0) {
+                $request->commission_amount = $request->getCommissionAmount();
+            }
+
+            // تحديث حالة دفع العمولة
+            if ($request->commission_amount_paid >= $request->commission_amount) {
+                $request->commission_paid = true;
+            }
+            
+            $request->save();
+        });
+
+        return back()->with('success', 'تم قبول السند وتحديث رصيد العمولة');
     }
 
     public function reject(RequestCommissionBond $bond)
