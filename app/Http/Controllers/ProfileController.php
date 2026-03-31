@@ -5,15 +5,36 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Profile;
+use App\Models\User;
 use App\Services\ProfileService;
 use App\Http\Resources\ProfileResource;
-
+use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
 
     public function show($profile_id)
     {
         $profile = Profile::with(['user.banks', 'profilePhones', 'previousWorks'])->findOrFail($profile_id);
+        return response()->json([
+            'message' => 'Profile retrieved successfully',
+            'profile' => new ProfileResource($profile)
+        ], 200);
+    }
+    public function showUserProfile($user_id)
+    {
+        $user = User::findOrFail($user_id);
+        $profile = $user->profile;
+        $profile->load(['user.banks', 'profilePhones', 'previousWorks']);
+        return response()->json([
+            'message' => 'Profile retrieved successfully',
+            'profile' => new ProfileResource($profile)
+        ], 200);
+    }
+    public function showMyProfile()
+    {
+        $user = Auth::user();
+        $profile = $user->profile;
+        $profile->load(['user.banks', 'profilePhones', 'previousWorks']);
         return response()->json([
             'message' => 'Profile retrieved successfully',
             'profile' => new ProfileResource($profile)

@@ -63,9 +63,13 @@ class ServiceController extends Controller
         // $this->authorize('view', $service);
         $requiredPartialAmount = $service->getRequiredPartialAmount();
         $service->required_partial_amount = $requiredPartialAmount;
+
+        // إضافة معلومة التوفر الحالي
+        $service["is_available_now"] = $service->isAvailableNow();
+
         return response()->json([
             'message' => 'Service retrieved successfully',
-            'data' => $service->load('category', 'children')
+            'data' => $service->load(['category', 'children', 'schedules.days'])
         ]);
     }
 

@@ -1,10 +1,10 @@
-# Complete API Documentation
+# Complete System API Documentation (QSS)
 
-This document describes all API endpoints for the frontend, including required request bodies, JSON structures, and validation rules.
+This comprehensive document describes **ALL API endpoints** available in the system, including required request bodies, query parameters, expected responses, and validation rules.
 
-## General Requirements
+## 0. General Requirements
 
-All requests (except public endpoints) require:
+All requests (except public endpoints like `register` and `login`) require standard headers to be authenticated by Laravel Sanctum:
 
 ```http
 Accept: application/json
@@ -15,470 +15,274 @@ Authorization: Bearer {your_sanctum_token}
 
 ## 1. Authentication & Users
 
-### 1.1 `POST /api/register`
+Endpoints related to user registration, login, and email verification.
 
+### `POST /api/register`
 Create a new user.
+- **Body**: `name`, `email`, `password`, `password_confirmation`, `seeker_policy` (Accepted: true).
 
-- **Body (`application/json`)**
+### `POST /api/login`
+Authenticate a user and get a Bearer token.
+- **Body**: `email`, `password`.
 
-```json
-{
-    "name": "John Doe",
-    "email": "user@example.com",
-    "password": "password123",
-    "password_confirmation": "password123",
-    "seeker_policy": true
-}
-```
+### `POST /api/logout`
+Log out user and revoke token. Auth required.
 
-- **Validations**:
-    - `name`: Required, String, Max: 255.
-    - `email`: Required, Valid Email, Unique in `users` table.
-    - `password`: Required, Min: 6, Confirmed (must match `password_confirmation`).
-    - `seeker_policy`: Required, Must be accepted (true).
+### `POST /api/verify-email-code`
+Verify user's email address using a code.
+- **Body**: `email`, `code` (String).
 
-### 1.2 `POST /api/login`
+### `POST /api/resend-verification-code`
+Resend the OTP verification code to user email.
+- **Body**: `email`.
 
-Authenticate a user.
-
-- **Body (`application/json`)**
-
-```json
-{
-    "email": "user@example.com",
-    "password": "password123"
-}
-```
-
-- **Validations**: `email` (Required, Email), `password` (Required, Min: 8).
-
-### 1.3 `POST /api/logout`
-
-Log out user and revoke token.
-
-- **Headers**: Auth required.
-- **Body**: None.
-
-### 1.4 Email Verification
-
-- **`POST /api/verify-email-code`**
-    ```json
-    {
-        "email": "user@example.com",
-        "code": "123456"
-    }
-    ```
-
-    - **Validations**: `email` (Required), `code` (Required).
-- **`POST /api/resend-verification-code`**
-    ```json
-    { "email": "user@example.com" }
-    ```
-
-    - **Validations**: `email` (Required, Exists in `users`).
+### `PATCH /api/verify-email-admin/{id}`
+Admin-only endpoint to instantly verify a user's email bypassing OTP.
 
 ---
 
-## 2. Services
+## 2. Profiles & Portfolios
 
-### 2.1 `GET /api/all-services`
+Manage user details, contact numbers, and past work portfolio.
 
-Get all available services. (No Auth required).
+### `POST /api/profiles`
+Create the profile details for the authenticated user.
+- **Body (multipart/form-data)**: `bio` (String), `image` (Max 2MB).
 
-### 2.2 `GET /api/services`
+### `GET /api/profiles/{id}`
+Retrieve a profile by profile ID.
 
-Get the authenticated user's main services.
+### `PUT /api/profiles/{id}`
+Update an existing profile.
 
-### 2.3 `POST /api/services`
+### `GET /api/my-profile`
+Get the authenticated user's profile with all relationships (phones, banks, works).
 
-Create a new main service.
+### `GET /api/user-profile/{user_id}`
+Get a specific user's complete profile by their User ID.
 
-- **Content-Type**: `multipart/form-data`
-- **Body Format**:
-    - `name`: Required, String, Max 255
-    - `description`: Optional, String
-    - `price`: Required, Numeric, Min: 0
-    - `category_id`: Required, Exists in `categories` table
-    - `parent_service_id`: Optional, Exists in `services` table
-    - `status`: Optional, String (`available` or `unavailable`)
-    - `image_path`: Optional, Image File (png, jpg, jpeg, webp), Max: 2MB
-    - `is_available`: Optional, Boolean (1/0)
-    - `is_active`: Optional, Boolean (1/0)
-    - `distance_based_price`: Optional, Boolean (1/0)
-    - `price_per_km`: Optional, Numeric, Min: 0
-    - `required_partial_percentage`: Required, Integer (0-100). Defines the % of total price needed to reach `accepted_partial_paid` status.
+### `GET /api/profile-phones`
+List all phone numbers belonging to the user.
 
-### 2.4 `PUT /api/services/{service_id}`
+### `POST /api/profile-phones`
+Add a new phone number to the profile.
+- **Body**: `phone` (String).
 
-Update a main service. (Requires Auth).
+### `PUT /api/profile-phones/{id}`
+Update a specific phone number.
+- **Body**: `phone` (String).
 
-- **Body Format**: Same as POST, but all fields are `Optional`. If uploading image, use `POST` with `_method=PUT` or adjust backend.
+### `DELETE /api/profile-phones/{id}`
+Remove a phone number.
 
-### 2.5 `POST /api/services/children`
+### `GET /api/previous-work`
+Retrieve the authenticated provider's portfolio (previous works).
 
-Create a sub-service linked to a parent main service.
+### `POST /api/previous-work`
+Upload a new portfolio item.
+- **Body (multipart/form-data)**: `title`, `description`, `image`.
 
-- **Content-Type**: `multipart/form-data`
-    - `parent_service_id`: Required, Exists in `services`
-    - `name`: Required, String, Max 255
-    - `description`: Optional, String
-    - `price`: Required, Numeric, Min 0
-    - `image_path`: Optional, Image.
+### `POST /api/previous-work/{id}?_method=PUT`
+Update an existing portfolio item (use POST with `_method=PUT` for file uploads).
 
-### 2.6 `PUT /api/services/children/{child_service_id}`
+### `DELETE /api/previous-work/{id}`
+Remove a portfolio item.
 
+---
+
+## 3. Services & Schedules
+
+Manage categories, services, parent/child groupings, and time scheduling.
+
+### `GET /api/categories`
+List all system categories. (Public)
+
+### `GET /api/all-services`
+List all system services. (Public)
+
+### `GET /api/services`
+Get the authenticated provider's main services.
+
+### `POST /api/services`
+Create a main service.
+- **Body (multipart/form-data)**: `name`, `description`, `price`, `category_id`, `image_path`, `required_partial_percentage` (0-100), `distance_based_price` (0/1), `price_per_km`.
+
+### `GET /api/services/{service_id}`
+Get details of a specific service including its current availability `is_available_now` and full `schedules`.
+
+### `PUT /api/services/{service_id}`
+Update a main service.
+
+### `DELETE /api/services/{service_id}`
+Delete a main service.
+
+### `POST /api/services/children`
+Create a sub-service linked to a parent service.
+- **Body**: `parent_service_id`, `name`, `description`, `price`.
+
+### `PUT /api/services/children/{child_service_id}`
 Update a child service.
 
-- **Body**: `name`, `description`, `price`, `image_path` (All strictly optional).
+### `DELETE /api/services/children/{child_service_id}`
+Delete a child service.
 
-### 2.7 `PUT /api/services/type/{type}`
+### `PUT /api/services/type/{type}`
+Update the provider's unique auto-generated services (`custom` or `meeting`).
 
-Update the provider's unique custom or meeting service.
+### `GET /api/favorites`
+Get user's favorite services list.
 
-- **URL Param**: `type` (`custom` or `meeting`)
-- **Body**: `name`, `description`, `price`, `category_id`, `status`, `is_available`, etc. (All Optional).
+### `POST /api/favorites/toggle`
+Add or remove a service from favorites.
+- **Body**: `service_id`.
 
----
+### `GET /api/services/{serviceId}/schedules`
+Get all schedules (time slots and days) for a specific service.
 
-## 3. Profiles & Phones
+### `POST /api/services/schedules`
+Create a work time slot for a service.
+- **Body**: `service_id`, `label` (e.g., Morning Shift), `start_time` (H:i), `end_time` (H:i), `days` (Array of lowercase english days).
 
-### 3.1 `POST /api/profiles`
+### `PUT /api/services/schedules/{id}`
+Update a time slot and sync its assigned days.
 
-Create a user profile.
-
-- **Content-Type**: `multipart/form-data`
-    - `bio`: Optional, String, Max: 10000
-    - `image`: Optional, Image (png, jpg, jpeg, webp), Max: 2MB
-
-### 3.2 `POST /api/profile-phones`
-
-Add a new phone number.
-
-- **Body (`application/json`)**
-    ```json
-    { "phone": "0501234567" }
-    ```
-
-    - **Validations**: `phone` (Required, String, Max: 255).
+### `DELETE /api/services/schedules/{id}`
+Delete a time slot.
 
 ---
 
 ## 4. Requests (Orders)
 
-### 4.1 `POST /api/requests`
+Handling the full lifecycle of normal, meeting, and custom service requests.
 
-Create a new main service request.
+### `GET /api/requests`
+Get all requests belonging to the authenticated user.
 
-- **Body (`application/json`)**
+### `POST /api/requests`
+Create a standard request.
+- **Body**: `service_id`, `message`, `latitude`, `longitude`, `sup_services` array (id, quantity).
 
-```json
-{
-    "service_id": 1,
-    "message": "I need help with...",
-    "latitude": 24.7136,
-    "longitude": 46.6753,
-    "sup_services": [
-        {
-            "id": 5,
-            "quantity": 2
-        }
-    ]
-}
-```
+### `GET /api/requests/{request_id}`
+Show single request data (including bonds, sub-services, users).
 
-- **Validations**:
-    - `service_id`: Required, Exists in `services`.
-    - `message`, `latitude`, `longitude`: Optional. 
-    > [!NOTE]
-    > If `latitude`/`longitude` are missing, the system defaults to the seeker's profile coordinates to calculate distance-based pricing.
-    - `sup_services`: Optional, Array.
-    - `sup_services.*.id`: Required if array provided, Exists in `services`.
-    - `sup_services.*.quantity`: Integer, Min: 1.
+### `GET /api/requests/{request_id}/status`
+Get just the current string status of a request.
 
-### 4.2 `POST /api/requests/meeting`
+### `PATCH /api/requests/{request_id}/status`
+Provider changes the progress status of the request (e.g., `in_progress`, `completed`).
+- **Body**: `status` (String).
 
-Create a new meeting service request.
+### `GET /api/requests/meeting-provider` / `meeting-seeker`
+Get all meeting requests where user is the provider or seeker.
 
-- **Body (`application/json`)**
-```json
-{
-    "provider_id": 1,
-    "message": "Let's set up a meeting.",
-    "latitude": 24.7136,
-    "longitude": 46.6753
-}
-```
-- **Validations**:
-    - `provider_id`: Required, Exists in `users`.
-    - `message`: Optional, String.
-    - `latitude`: Optional, Numeric (Needed for distance cost calc if enabled).
-    - `longitude`: Optional, Numeric (Needed for distance cost calc if enabled).
+### `POST /api/requests/meeting`
+Create a meeting request with a specific provider.
+- **Body**: `provider_id`, `message`, `latitude`, `longitude`.
 
-### 4.3 `POST /api/requests/custom`
+### `GET /api/requests/custom-provider` / `custom-seeker`
+Get all custom requests for the user.
 
-Create a new custom service request.
+### `POST /api/requests/custom`
+Create an open-ended request asking for a custom quote.
+- **Body**: `provider_id`, `message`, `latitude`, `longitude`.
 
-- **Body (`application/json`)**
-```json
-{
-    "provider_id": 1,
-    "message": "Custom request details...",
-    "latitude": 24.7136,
-    "longitude": 46.6753
-}
-```
-- **Validations**:
-    - `provider_id`: Required, Exists in `users`.
-    - `message`: Required, String.
-    - `latitude`, `longitude`: Optional, Numeric.
+### `PATCH /api/requests/custom/{request}/price`
+Provider analyzes the custom request and sets a final price.
+- **Body**: `price` (Numeric). Changes status to `accepted_initial`.
 
-### 4.4 `GET /api/requests/custom-provider`
-
-Get all custom service requests assigned to the authenticated provider.
-
-### 4.5 `PATCH /api/requests/custom/{request_id}/price`
-
-Provider accepts a custom request and sets the price.
-
-- **Body (`application/json`)**
-```json
-{ "price": 500.00 }
-```
-- **Action**: Sets `total_price` and updates status to `accepted_initial`.
-
-### 4.6 `PATCH /api/requests/custom/{request_id}/reject`
-
-Provider rejects a custom request.
-
-- **Action**: Updates status to `rejected`.
-
-### 4.8 `GET /api/requests/{request_id}`
-
-Get details of a specific request.
-
-- **Response Includes**: `user`, `main_service`, `sub_services`, `bonds`, and `required_partial_amount` (The calculated amount needed to reach partial payment status).
-
-### 4.9 `PATCH /api/requests/{request_id}/status`
-
-Update status of a request.
-
-- **Body (`application/json`)**
-
-```json
-{ "status": "accepted_initial" }
-```
-
-- **Validations**: `status` (Required, In allowed request statuses strings).
+### `PATCH /api/requests/custom/{request}/reject`
+Provider rejects the custom request.
 
 ---
 
-## 5. Provider Management & Work History
+## 5. Payments, Points & Finance
 
-### 5.1 `POST /api/provider-requests`
+Financial operations covering internal points to external bank transfers.
 
-Send a request to become a provider or log interaction.
+### `GET /api/banks`
+List all official banks (Public).
 
-- **Content-Type**: `multipart/form-data`
-    - `name`: Required, String, Max: 150
-    - `location`: Required, String, Max: 150
-    - `requestContent`: Required, String, Max: 2000
-    - `id_card`: Required, Image (jpg, jpeg, png), Max: 10MB
+### `GET /api/user-banks` `POST` `PUT` `GET /{id}`
+Manage bank accounts belonging to the user (`bank_id`, `bank_account` number).
 
-### 5.2 `POST /api/previous-work`
+### `POST /api/requests/{id}/payByPoints`
+Seeker pays for a request using their `bonus_points`.
+- **Body**: `transferred_points` (Numeric).
 
-Add a new previous work item to portfolio.
+### `POST /api/requests/{id}/addAmountToMoneyPaid`
+Seeker marks manual cash payment against the request.
+- **Body**: `amount`.
 
-- **Content-Type**: `multipart/form-data`
-    - `title`: Required, String, Max: 255
-    - `description`: Required, String
-    - `image`: Required, Image, Max: 2MB
+### `POST /api/requests/{id}/pay-commission`
+Provider pays the platform commission automatically from their `bonus_points` followed by `paid_points`.
 
----
+### `POST /api/request-commission-bonds`
+Provider uploads an external receipt image if they do not have enough points to pay the platform commission.
+- **Body (multipart/form-data)**: `request_id`, `image`, `amount` (Paid value), `bond_number` (Unique Reference).
 
-## 6. Financial & Bonds
+### `POST /api/request-bonds`
+Seeker uploads a bank transfer receipt to pay for the service itself.
+- **Body (multipart/form-data)**: `request_id`, `image_path`, `amount`.
 
-### 6.1 `POST /api/user-bank`
+### `POST /api/withdraw-request`
+Provider requests to withdraw their real earnings (`paid_points`) to their bank account.
+- **Body**: `amount` (Numeric).
 
-Add a bank account for the user.
+### `GET /api/my-withdraw-requests`
+Track statuses of submitted withdrawal requests.
 
-- **Body (`application/json`)**
-
-```json
-{
-    "bank_id": 1,
-    "bank_account": 1234567890
-}
-```
-
-- **Validations**: `bank_id` (Required, exists in banks), `bank_account` (Required, Integer, Unique per user-bank).
-
-### 6.2 `POST /api/request-bonds`
-
-Upload a payment bond/receipt for a request.
-
-- **Content-Type**: `multipart/form-data`
-    - `request_id`: Required, exists in requests.
-    - `image_path`: Required, Image file, Max: 2MB.
-    - `bond_number`: Optional, Integer.
-    - `description`: Optional, String.
-
-### 6.3 `POST /api/request-commission-bonds`
-
-Upload a manual commission bond (receipt).
-
-- **Content-Type**: `multipart/form-data`
-    - `request_id`: Required, exists in requests.
-    - `image`: Required, Image file, Max: 2MB.
-    - `amount`: Required, Numeric (Value of the receipt).
-    - `bond_number`: Optional, Integer.
-    - `description`: Optional, String.
+### `POST /api/points/convert`
+Provider converts `paid_points` into `bonus_points` with a system-provided 1% incentive to pay commissions easily.
+- **Body**: `amount` (Numeric).
 
 ---
 
-## 7. Reviews & Complaints
+## 6. Points Packages & Verification Subscriptions
 
-### 7.1 `POST /api/reviews`
+### `GET /api/available-points-packages`
+View list of bundles available to buy (e.g., 500 points for $50).
 
+### `GET /api/my-points-packages`
+See packages user has already subscribed to.
+
+### `POST /api/subscribe-points-package`
+User uploads a bond to buy a Points Package.
+
+### `GET /api/verification-packages`
+View identity tier packages (e.g., Bronze, Silver, Gold Provider).
+
+### `POST /api/user-verification-packages`
+Subscribe to a verification package by uploading an ID/selfie.
+- **Body (multipart/form-data)**: `verification_package_id`, `image_bond`, `number_bond`.
+
+---
+
+## 7. Reviews, Complaints & Meta
+
+### `POST /api/reviews`
 Review a completed request.
+- **Body**: `request_id`, `rating` (1-5), `comment`.
 
-- **Body (`application/json`)**
+### `POST /api/request-complaints`
+Complain about an issue inside a specific request.
+- **Body**: `request_id`, `reason_for_complaint`.
 
-```json
-{
-    "request_id": 1,
-    "rating": 5,
-    "comment": "Great service!"
-}
-```
+### `POST /api/system-complaints`
+General system, technical, or broad complaints.
+- **Body**: `title`, `content`, `type`.
 
-- **Validations**: `request_id` (Exists), `rating` (Numeric, Min:1, Max:5), `comment` (String, Max:2000).
+### `POST /api/store-token`
+Save the Firebase/FCM device token for mobile Push Notifications.
 
-### 7.2 `POST /api/system-complaints`
+### `GET /api/notifications`
+Get a paginated list of all mobile/system notifications for the user.
 
-Submit a complaint to admins.
-
-- **Body (`application/json`)**
-
-```json
-{
-    "title": "Issue with app",
-    "content": "The app crashed when...",
-    "type": "technical"
-}
-```
-
-- **Validations**: `title` (Required, String, Max:255), `content` (Required, String), `type` (Required, Max:200).
+### `DELETE /api/notifications/{id}`
+Delete a single notification from the tray.
 
 ---
 
-## 8. Identity Verification Packages
-
-### 8.1 `POST /api/user-verification-packages`
-
-Submit a request for identity verification (e.g., to become a Pro Provider).
-
-- **Content-Type**: `multipart/form-data`
-    - `verification_package_id`: Required, exists in `verification_packages`.
-    - `image_bond`: Required, Image file (Identity Card/Selfie), Max: 2MB.
-    - `number_bond`: Required, String (Bond/Transaction Number).
-
-- **Security**: The `number_bond` and `image_bond` are checked against the Central Bond Registry. Duplicate numbers or identical images will be rejected.
-
-### 8.2 `GET /api/user-verification-packages`
-
-Get the authenticated user's verification requests.
-
----
-
-## 9. Payment Methods
-
-### 9.1 `POST /api/requests/{id}/payByPoints`
-
-Pay for a request using seeker's bonus points.
-
-- **Body (`application/json`)**
-```json
-{ "transferred_points": 100 }
-```
-- **Logic**: Deducts from Seeker's `bonus_points` and adds to Provider's `paid_points`. Transitions status based on threshold.
-
-### 9.2 `POST /api/requests/{id}/pay-commission`
-
-Pay the request commission using provider's points.
-
-- **Deduction Priority**: `bonus_points` first, then `paid_points`.
-- **Logic**: Only available for `COMPLETED` requests.
-
-### 9.3 `POST /api/requests/{id}/addAmountToMoneyPaid`
-
-Manually add payment amount (e.g., via bank bond).
-
-- **Body (`application/json`)**
-```json
-{ "amount": 150.50 }
-```
-
----
-
-## 🛡️ Commission Tracking (Advanced)
-
-Requests now include the following fields for financial auditing:
-- `commission_amount`: Total calculated commission at the time of completion.
-- `commission_amount_paid`: Total paid so far (via points or manual bonds).
-- `commission_paid`: Boolean, `true` when fully paid.
-
----
-
-## 10. Withdrawals (Provider Profits)
-
-### 10.1 `POST /api/withdraw-request`
-
-Submit a request to withdraw `paid_points`.
-
-- **Body (`application/json`)**
-```json
-{ "amount": 1000 }
-```
-- **Validations**: `amount` (Required, Numeric, Min: 1, Max: User's `paid_points`).
-
-### 10.2 `GET /api/my-withdraw-requests`
-
-Get user's withdrawal requests and their statuses.
-
-### 10.3 `POST /api/points/convert`
-
-Convert `paid_points` (earnings) to `bonus_points` (spending) with a **1% incentive**.
-
-- **Body (`application/json`)**
-```json
-{ "amount": 500 }
-```
-- **Logic**: Deducts `amount` from `paid_points` and adds `amount * 1.01` to `bonus_points`. Useful for paying commissions without withdrawing.
-
----
-
-## 11. Points Packages (Buying Points)
-
-### 11.1 `GET /api/available-points-packages`
-
-List all available points packages for purchase.
-
-### 11.2 `POST /api/subscribe-points-package`
-
-Subscribe to a points package by uploading a payment bond.
-
-- **Content-Type**: `multipart/form-data`
-    - `package_id`: Required, exists in `points_packages`.
-    - `bond_number`: Required, String.
-    - `bank_name`: Required, String.
-    - `bond_image`: Required, Image file, Max: 2MB.
-
----
-
-## 🛡️ Security: Central Bond Registry
-
-All endpoints that involve uploading a payment bond (`request-bonds`, `user-verification-packages`, `subscribe-points-package`) are protected by a **Central Bond Registry**:
-
-1. **Uniqueness**: The `bond_number` must be unique across the entire system.
-2. **Anti-Fraud (Hashing)**: The system generates a digital fingerprint for every uploaded image. If the exact same image is uploaded twice (even with a different bond number), the request will be rejected.
-3. **Transaction Logging**: All point movements are logged in `point_transactions` for financial auditing.
+> [!CAUTION]
+> **Bond Registry Security Mechanism**
+>
+> To eliminate fraud, any endpoint that accepts an image bond or receipt (e.g., `request-bonds`, `request-commission-bonds`, `subscribe-points-package`) validates the file signature inside the **Central Bond Registry**. Uploading the same exact image for two different payments will result in instant rejection by the server.

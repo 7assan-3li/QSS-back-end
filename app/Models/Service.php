@@ -3,10 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Service extends Model
 {
     protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::created(function ($service) {
+            $service->setAllTimeAvailability();
+        });
+    }
 
     public function provider()
     {
@@ -54,13 +62,59 @@ class Service extends Model
         return $this->hasMany(ScheduleService::class);
     }
 
-    public function getActiveSchedule()
+    /**
+     * التحقق مما إذا كانت الخدمة متاحة في الوقت الحالي بناءً على الجدول الزمني
+     */
+    public function isAvailableNow()
     {
+        $dayName = strtolower(now()->format('l')); // يجلب اسم اليوم (monday, sunday, etc.)
+        $currentTime = now()->format('H:i:s');
+
         return $this->schedules()
             ->where('is_active', true)
-            ->whereHas('days', function ($query) {
-                $query->where('day', now()->format('l')); // l = full day name like Monday
+            ->whereHas('days', function ($query) use ($dayName) {
+                $query->where('day', $dayName);
             })
+            ->whereTime('start_time', '<=', $currentTime)
+            ->whereTime('end_time', '>=', $currentTime)
+            ->exists();
+    }
+
+    /**
+     * إعداد الخدمة لتكون متاحة طوال الوقت (24/7)
+     */
+    public function setAllTimeAvailability()
+    {
+        return DB::transaction(function () {
+            // إنشاء الفترة الزمنية الرئيسية (24 ساعة)
+            $schedule = $this->schedules()->create([
+                'label'      => 'متاح دائماً (24/7)',
+                'start_time' => '00:00:00',
+                'end_time'   => '23:59:59',
+                'is_active'  => true,
+            ]);
+
+            // ربطها بجميع الأيام السبعة
+            foreach (\App\constant\Days::all() as $day) {
+                $schedule->days()->create(['day' => $day]);
+            }
+
+            return $schedule;
+        });
+    }
+
+    public function getActiveSchedule()
+    {
+        $dayName = strtolower(now()->format('l'));
+        $currentTime = now()->format('H:i:s');
+
+        return $this->schedules()
+            ->where('is_active', true)
+            ->whereHas('days', function ($query) use ($dayName) {
+                $query->where('day', $dayName);
+            })
+            ->whereTime('start_time', '<=', $currentTime)
+            ->whereTime('end_time', '>=', $currentTime)
             ->first();
     }
 }

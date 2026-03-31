@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\constant\Role;
 use App\Models\Category;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,15 +20,41 @@ class DatabaseSeeder extends Seeder
 
 
         $admin = User::factory()->create([
-            'name' => 'Hassan',
-            'email' => 'h@gmail.com',
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
-            'role' => 'admin',
+            'role' => Role::ADMIN,
             'seeker_policy' => true,
             'email_verified_at' => now()
         ]);
 
         $admin->profile()->create([
+        ]);
+
+       
+        $user1 = User::factory()->create([
+            'name' => 'seeker',
+            'email' => 'seeker@gmail.com',
+            'password' => Hash::make('12345678'),
+            'role' => Role::SEEKER,
+            'seeker_policy' => true,
+            'email_verified_at' => now()
+        ]);
+
+        $user1->profile()->create([
+        ]);
+
+        
+        $user2 = User::factory()->create([
+            'name' => 'provider',
+            'email' => 'provider@gmail.com',
+            'password' => Hash::make('12345678'),
+            'role' => Role::PROVIDER,
+            'seeker_policy' => true,
+            'email_verified_at' => now()
+        ]);
+
+        $user2->profile()->create([
         ]);
 
         Category::factory()->create([

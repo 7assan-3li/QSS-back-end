@@ -8,4 +8,7 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
     Route::post('/profiles',[ProfileController::class, 'store']);
     Route::get('/profiles/{id}',[ProfileController::class, 'show']);
     Route::put('/profiles/{id}',[ProfileController::class, 'update']);
+    Route::get('/my-profile',[ProfileController::class, 'showMyProfile']);
 });
+
+Route::get('/user-profile/{user_id}',[ProfileController::class, 'showUserProfile']);
