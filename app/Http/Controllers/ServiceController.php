@@ -65,7 +65,7 @@ class ServiceController extends Controller
         $service->required_partial_amount = $requiredPartialAmount;
 
         // إضافة معلومة التوفر الحالي
-        $service["is_available_now"] = $service->isAvailableNow();
+        $service->setAttribute('is_available_now', $service->isAvailableNow());
 
         return response()->json([
             'message' => 'Service retrieved successfully',
@@ -252,7 +252,7 @@ class ServiceController extends Controller
 
     public function showAll()
     {
-        $services = Service::where('type', '')->with('provider')->get();
+        $services = Service::where('type', ServiceType::MAIN)->with('provider')->get();
         return response()->json($services, 200);
     }
 
