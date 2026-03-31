@@ -256,6 +256,20 @@ class ServiceController extends Controller
         return response()->json($services, 200);
     }
 
+    public function getTopRequestedServices(Request $request)
+    {
+        $limit = $request->input('limit', 10); // Number of services to return
+        
+        $services = Service::where('type', ServiceType::MAIN)
+            ->with(['provider', 'category'])
+            ->withCount('requests')
+            ->orderByDesc('requests_count')
+            ->take($limit)
+            ->get();
+            
+        return response()->json($services, 200);
+    }
+
 
 
 

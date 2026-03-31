@@ -1,288 +1,261 @@
-# Complete System API Documentation (QSS)
+# QSS - الشامل لتوثيق واجهات برمجة التطبيقات (API Documentation)
 
-This comprehensive document describes **ALL API endpoints** available in the system, including required request bodies, query parameters, expected responses, and validation rules.
+هذا المستند هو المرجع الشامل والأساسي لجميع الـ (Endpoints) المتاحة في النظام لمطوري الواجهات (Frontend/Mobile). تم تصميم هذا الدليل ليعطيك فكرة مفصلة عن الغرض من كل مسار، وما هي البيانات المطلوبة منه، وكيف تبدو نتيجته.
 
-## 0. General Requirements
+---
 
-All requests (except public endpoints like `register` and `login`) require standard headers to be authenticated by Laravel Sanctum:
-
+## 🛠️ التعليمات العامة (General Requirements)
+أغلب المسارات في النظام تتطلب وجود **معرف مصادقة (Bearer Token)** لضمان الأمان، باستثناء المسارات المذكورة بأنها (عامة).
+يجب دائماً تمرير الـ Headers التالية لأي استدعاء:
 ```http
 Accept: application/json
-Authorization: Bearer {your_sanctum_token}
+Authorization: Bearer {your_token}
 ```
 
 ---
 
-## 1. Authentication & Users
+## 1. المصادقة والمستخدمين (Authentication & Users)
 
-Endpoints related to user registration, login, and email verification.
+هذا القسم مسؤول عن إنشاء الحسابات، تسجيل الدخول، والمصادقة على البريد الإلكتروني.
 
-### `POST /api/register`
-Create a new user.
-- **Body**: `name`, `email`, `password`, `password_confirmation`, `seeker_policy` (Accepted: true).
+### 1.1 إنشاء حساب جديد `POST /api/register` (عام)
+**الوصف:** يُستخدم لتسجيل حساب مستخدم جديد في النظام، في البداية يكون دور المستخدم `seeker` (مستفيد) بشكل افتراضي، ויجب عليه قبول سياسة الاستخدام.
+- **البيانات المطلوبة (Body JSON):**
+  - `name`: (مطلوب، نص، أقصى حد 255 حرف) اسم المستخدم.
+  - `email`: (مطلوب، نص، يجب أن يكون بريد إلكتروني صالح وأن لا يكون مسجلاً مسبقاً).
+  - `password`: (مطلوب، نص، الحد الأدنى 8 أحرف).
+  - `password_confirmation`: (مطلوب، نص، يجب أن يتطابق تماماً مع الباسورد).
+  - `seeker_policy`: (مطلوب، `true`) تأكيد الموافقة على الشروط.
 
-### `POST /api/login`
-Authenticate a user and get a Bearer token.
-- **Body**: `email`, `password`.
+### 1.2 تسجيل الدخول `POST /api/login` (عام)
+**الوصف:** تسجيل الدخول والحصول على `Token` للاستخدام في جميع الطلبات القادمة.
+- **البيانات المطلوبة:** `email` و `password`.
+- **النتيجة (Response):** يعيد بيانات المستخدم الأساسية بالإضافة إلى `access_token` نوعه Bearer.
 
-### `POST /api/logout`
-Log out user and revoke token. Auth required.
+### 1.3 تسجيل الخروج `POST /api/logout` (Auth)
+**الوصف:** يقوم بإلغاء أو مسح الـ Token الحالي للمستخدم لمنعه من تنفيذ عمليات مسيئة بعد تسجيل الخروج.
+- **البيانات المطلوبة:** لا يوجد. يحتاج فقط للـ Token في الـ Header.
 
-### `POST /api/verify-email-code`
-Verify user's email address using a code.
-- **Body**: `email`, `code` (String).
+### 1.4 توثيق البريد الإلكتروني (رمز التحقق) `POST /api/verify-email-code` (Auth)
+**الوصف:** بعد التسجيل، يقوم النظام بإرسال كود (OTP) لبريد المستخدم للتحقق من هويته، يُستخدم هذا المسار لإدخال الكود.
+- **البيانات المطلوبة:** `email` الخاص بالمستخدم، و `code` (وهو الرمز المكون من أرقام والذي تم إرساله).
 
-### `POST /api/resend-verification-code`
-Resend the OTP verification code to user email.
-- **Body**: `email`.
+### 1.5 إعادة إرسال رمز التحقق `POST /api/resend-verification-code` (Auth)
+**الوصف:** في حال لم يصل الكود أو انتهت صلاحيته، يُستخدم هذا المسار لطلب إرسال كود جديد.
+- **البيانات المطلوبة:** `email`.
 
-### `PATCH /api/verify-email-admin/{id}`
-Admin-only endpoint to instantly verify a user's email bypassing OTP.
-
----
-
-## 2. Profiles & Portfolios
-
-Manage user details, contact numbers, and past work portfolio.
-
-### `POST /api/profiles`
-Create the profile details for the authenticated user.
-- **Body (multipart/form-data)**: `bio` (String), `image` (Max 2MB).
-
-### `GET /api/profiles/{id}`
-Retrieve a profile by profile ID.
-
-### `PUT /api/profiles/{id}`
-Update an existing profile.
-
-### `GET /api/my-profile`
-Get the authenticated user's profile with all relationships (phones, banks, works).
-
-### `GET /api/user-profile/{user_id}`
-Get a specific user's complete profile by their User ID.
-
-### `GET /api/profile-phones`
-List all phone numbers belonging to the user.
-
-### `POST /api/profile-phones`
-Add a new phone number to the profile.
-- **Body**: `phone` (String).
-
-### `PUT /api/profile-phones/{id}`
-Update a specific phone number.
-- **Body**: `phone` (String).
-
-### `DELETE /api/profile-phones/{id}`
-Remove a phone number.
-
-### `GET /api/previous-work`
-Retrieve the authenticated provider's portfolio (previous works).
-
-### `POST /api/previous-work`
-Upload a new portfolio item.
-- **Body (multipart/form-data)**: `title`, `description`, `image`.
-
-### `POST /api/previous-work/{id}?_method=PUT`
-Update an existing portfolio item (use POST with `_method=PUT` for file uploads).
-
-### `DELETE /api/previous-work/{id}`
-Remove a portfolio item.
+### 1.6 التوثيق المباشر (للإدارة) `PATCH /api/verify-email-admin/{id}` (AdminAuth)
+**الوصف:** مسار مخصص لمدير النظام لتخطي التحقق عبر الإيميل وتوثيق حساب شخص ما فوراً عبر المعرف الخاص به (ID).
 
 ---
 
-## 3. Services & Schedules
+## 2. الملفات الشخصية (Profiles & Details)
 
-Manage categories, services, parent/child groupings, and time scheduling.
+بناء الملف الشخصي للمستخدم، إضافة الأرقام، وتكوين معرض الأعمال.
 
-### `GET /api/categories`
-List all system categories. (Public)
+### 2.1 إنشاء الملف الشخصي `POST /api/profiles` (Auth)
+**الوصف:** ينشئ البيانات الافتراضية والبيو والصورة الشخصية للمستخدم الحالي.
+- **النوع:** `multipart/form-data` (لوجود ملفات).
+- **البيانات المطلوبة:**
+  - `bio`: (اختياري) نبذة تعريفية.
+  - `image`: (اختياري، ملف صورة `png/jpg`) ألا تتجاوز 2MB.
 
-### `GET /api/all-services`
-List all system services. (Public)
+### 2.2 عرض الملف الشخصي للمستخدم الحالي `GET /api/my-profile` (Auth)
+**الوصف:** يقوم بجلب الحساب الشخصي للمستخدم المسجل دخوله حالياً، بالإضافة إلى جميع البيانات المرتبطة: (أرقام الجوال، البنوك، معرض الأعمال). مفيد جداً لبناء صفحة "حسابي".
 
-### `GET /api/services`
-Get the authenticated provider's main services.
+### 2.3 عرض ملف شخصي لأي مستخدم آخر `GET /api/user-profile/{user_id}` (عام/Auth)
+**الوصف:** استعراض تفاصيل حساب شخص آخر (مثل مزود خدمة تريد التعاقد معه). يعيد النبذة ومعرض الأعمال الخاص به.
 
-### `POST /api/services`
-Create a main service.
-- **Body (multipart/form-data)**: `name`, `description`, `price`, `category_id`, `image_path`, `required_partial_percentage` (0-100), `distance_based_price` (0/1), `price_per_km`.
+### 2.4 تعديل الملف الشخصي `PUT /api/profiles/{id}` (Auth)
+**الوصف:** لتحديث النبذة أو الصورة الشخصية. جميع الحقول فيه اختيارية لكن يتم تحديث ما يتم إرساله فقط.
 
-### `GET /api/services/{service_id}`
-Get details of a specific service including its current availability `is_available_now` and full `schedules`.
+### 2.5 أرقام الجوال `GET` `POST` `PUT` `DELETE` `/api/profile-phones` (Auth)
+**الوصف:** تتيح هذه المسارات للمستخدمين إضافة أرقام تواصل لملفاتهم الشخصية أو تعديلها أو حذفها.
+- **مسار الإضافة:** يتطلب حقل `phone` كقيمة نصية.
+- **مسار الحذف:** `/api/profile-phones/{id}` يحذف رقماً معيناً.
 
-### `PUT /api/services/{service_id}`
-Update a main service.
-
-### `DELETE /api/services/{service_id}`
-Delete a main service.
-
-### `POST /api/services/children`
-Create a sub-service linked to a parent service.
-- **Body**: `parent_service_id`, `name`, `description`, `price`.
-
-### `PUT /api/services/children/{child_service_id}`
-Update a child service.
-
-### `DELETE /api/services/children/{child_service_id}`
-Delete a child service.
-
-### `PUT /api/services/type/{type}`
-Update the provider's unique auto-generated services (`custom` or `meeting`).
-
-### `GET /api/favorites`
-Get user's favorite services list.
-
-### `POST /api/favorites/toggle`
-Add or remove a service from favorites.
-- **Body**: `service_id`.
-
-### `GET /api/services/{serviceId}/schedules`
-Get all schedules (time slots and days) for a specific service.
-
-### `POST /api/services/schedules`
-Create a work time slot for a service.
-- **Body**: `service_id`, `label` (e.g., Morning Shift), `start_time` (H:i), `end_time` (H:i), `days` (Array of lowercase english days).
-
-### `PUT /api/services/schedules/{id}`
-Update a time slot and sync its assigned days.
-
-### `DELETE /api/services/schedules/{id}`
-Delete a time slot.
+### 2.6 معرض الأعمال السابقة `GET` `POST` `DELETE` `/api/previous-work` (Provider Auth)
+**الوصف:** خاص بمزودي الخدمة. يُستخدم لإضافة أعمال سابقة (صورة مرفقة، عنوان، ووصف) لكي يراها المستفيدون عند فتح صفحته.
+- **مسار الإضافة:** `POST` بصيغة `multipart/form-data` يتطلب `title` و `description` و `image`.
+- **مسار التعديل:** بسبب مشاكل رفع الملفات في بروتوكول PUT، يجب استخدام `POST /api/previous-work/{id}?_method=PUT` مع إرسال الصورة والعنوان الجديد.
 
 ---
 
-## 4. Requests (Orders)
+## 3. الخدمات وجدولة المواعيد (Services & Schedules)
 
-Handling the full lifecycle of normal, meeting, and custom service requests.
+الجزء الأساسي في النظام، يتيح للمزودين عرض خدماتهم، وللعملاء البحث عنها.
 
-### `GET /api/requests`
-Get all requests belonging to the authenticated user.
+### 3.1 استعراض الأقسام `GET /api/categories` (عام)
+**الوصف:** جلب كافة الأقسام الرئيسية في النظام (مثل: صيانة، استشارات، تصميم).
 
-### `POST /api/requests`
-Create a standard request.
-- **Body**: `service_id`, `message`, `latitude`, `longitude`, `sup_services` array (id, quantity).
+### 3.2 استعراض كل الخدمات العامة `GET /api/all-services` (عام)
+**الوصف:** جلب **كل الخدمات المتاحة** في النظام من النوع `MAIN` مع عرض بيانات المزود. يُستخدم في الشاشة الرئيسية للتطبيق.
 
-### `GET /api/requests/{request_id}`
-Show single request data (including bonds, sub-services, users).
+### 3.3 الخدمات الأكثر طلباً `GET /api/top-requested-services` (عام)
+**الوصف:** يقوم بجلب قائمة بأكثر الخدمات في التطبيق بناءً على عدد الطلبات الناجحة المرتبطة بها لعرضها في الشاشة الرئيسية (Home Page).
+- **المعاملات (Query Params):** يتم استقبال `limit` وهو اختياري لتقييد عدد الخدمات الراجعة، مثلاً `?limit=5` (الافتراضي: 10).
+- **البيانات المسترجعة:** مصفوفة من الخدمات مرتبة تنازلياً حسب شعبية الخدمة متضمنة بيانات الأقسام ومزودي الخدمة `provider, category`.
 
-### `GET /api/requests/{request_id}/status`
-Get just the current string status of a request.
+### 3.4 استعراض خدمة محددة `GET /api/services/{service_id}` (عام)
+**الوصف:** عرض تفاصيل كاملة لخدمة معينة للعميل.
+- **المرفقات في النتيجة:** يعيد بيانات الـ Category التابع لها، والـ Children (الخدمات الفرعية إن وجدت)، و `schedules.days` (الجداول الزمنية الخاصة بها)، والأهم من ذلك حقل الدلالة **`is_available_now`** والذي يرجع (`true` أو `false`) ليوضح لك ما إذا كان مزود الخدمة متاحاً لاستقبال طلبات في هذه الدقيقة أم لا.
 
-### `PATCH /api/requests/{request_id}/status`
-Provider changes the progress status of the request (e.g., `in_progress`, `completed`).
-- **Body**: `status` (String).
+### 3.4 إدارة خدماتي كمزود `GET` `POST` `PUT` `DELETE` `/api/services` (Provider Auth)
+**الوصف:** مسارات تمكن مزود الخدمة من إدارة الخدمات التي يقدمها (إضافة خدمة جديدة، تعديل تفاصيلها، أو إخفائها).
+- **مسار الإنشاء `POST`:** (شكل البيانات `multipart/form-data`) ويشمل:
+  - `name`: (مطلوب).
+  - `description`: الوصف التفصيلي.
+  - `price`: السعر الافتراضي للخدمة للطلبات المباشرة.
+  - `category_id`: رقم القسم التابع له.
+  - `required_partial_percentage`: النسبة المئوية المطلوبة مسبقاً (مقدم).
+  - `distance_based_price` و `price_per_km`: (خيارات تحديد ما إذا كان السعر يرتبط بمسافة العميل).
+  - ملاحظة هامة: فور إنشاء الخدمة عبر الـ `POST`، يتم إنشاء جدول زمني افتراضي (24/7) يجعلها متاحة دائماً بشكل تلقائي.
 
-### `GET /api/requests/meeting-provider` / `meeting-seeker`
-Get all meeting requests where user is the provider or seeker.
+### 3.5 إدارة الخدمات الفرعية (Children) `/api/services/children` (Provider Auth)
+**الوصف:** يُستخدم إذا كان للخدمة الرئيسية إضافات بأسعار منفصلة. (مثال: الخدمة الأساسية "غسيل سيارة"، الخدمة الفرعية "تشميع إضافي").
+- **مسار الإنشاء:** يتطلب `parent_service_id` لربطها بالخدمة الأم، مع اسم وسعر.
 
-### `POST /api/requests/meeting`
-Create a meeting request with a specific provider.
-- **Body**: `provider_id`, `message`, `latitude`, `longitude`.
+### 3.6 إدارة مواعيد الخدمة (Schedules) `/api/services/schedules` (Provider Auth)
+**الوصف:** للتحكم بالأيام والأوقات التي تكون فيها الخدمة متاحة للاستقبال.
+- **جلب المواعيد:** `GET /api/services/{serviceId}/schedules` يجلب كل الفترات.
+- **إضافة فترة جديدة:** `POST /api/services/schedules`:
+  - `service_id`: الخدمة التابعة لها.
+  - `start_time` و `end_time`: بنسق (HH:mm) مثال `14:30`.
+  - `days`: مصفوفة بأسماء الأيام المتطابقة مع الثوابت (مثال: `["sunday", "monday"]`).
+- **التعديل والحذف:** مسارات `PUT` و `DELETE` متوفرة لنفس الخصائص على مسار `/api/services/schedules/{id}`.
 
-### `GET /api/requests/custom-provider` / `custom-seeker`
-Get all custom requests for the user.
+### 3.7 تحديث الخدمات التلقائية `PUT /api/services/type/{type}` (Provider Auth)
+**الوصف:** كل مزود يتم إنشاء خدمتين له آلياً (خدمة اللقاء `meeting`، والخدمة المخصصة `custom`). هذا المسار يسمح للمزود بتعديل السعر المبدئي أو الوصف لهذه الخدمات الخاصة. قيمة `type` إما `meeting` أو `custom`.
 
-### `POST /api/requests/custom`
-Create an open-ended request asking for a custom quote.
-- **Body**: `provider_id`, `message`, `latitude`, `longitude`.
-
-### `PATCH /api/requests/custom/{request}/price`
-Provider analyzes the custom request and sets a final price.
-- **Body**: `price` (Numeric). Changes status to `accepted_initial`.
-
-### `PATCH /api/requests/custom/{request}/reject`
-Provider rejects the custom request.
-
----
-
-## 5. Payments, Points & Finance
-
-Financial operations covering internal points to external bank transfers.
-
-### `GET /api/banks`
-List all official banks (Public).
-
-### `GET /api/user-banks` `POST` `PUT` `GET /{id}`
-Manage bank accounts belonging to the user (`bank_id`, `bank_account` number).
-
-### `POST /api/requests/{id}/payByPoints`
-Seeker pays for a request using their `bonus_points`.
-- **Body**: `transferred_points` (Numeric).
-
-### `POST /api/requests/{id}/addAmountToMoneyPaid`
-Seeker marks manual cash payment against the request.
-- **Body**: `amount`.
-
-### `POST /api/requests/{id}/pay-commission`
-Provider pays the platform commission automatically from their `bonus_points` followed by `paid_points`.
-
-### `POST /api/request-commission-bonds`
-Provider uploads an external receipt image if they do not have enough points to pay the platform commission.
-- **Body (multipart/form-data)**: `request_id`, `image`, `amount` (Paid value), `bond_number` (Unique Reference).
-
-### `POST /api/request-bonds`
-Seeker uploads a bank transfer receipt to pay for the service itself.
-- **Body (multipart/form-data)**: `request_id`, `image_path`, `amount`.
-
-### `POST /api/withdraw-request`
-Provider requests to withdraw their real earnings (`paid_points`) to their bank account.
-- **Body**: `amount` (Numeric).
-
-### `GET /api/my-withdraw-requests`
-Track statuses of submitted withdrawal requests.
-
-### `POST /api/points/convert`
-Provider converts `paid_points` into `bonus_points` with a system-provided 1% incentive to pay commissions easily.
-- **Body**: `amount` (Numeric).
+### 3.8 المفضلة `/api/favorites/toggle` (Auth)
+**الوصف:** مسار للمستفيد يتيح له الاحتفاظ بالخدمات ضمن المفضلة للرجوع إليها لاحقاً.
+- **البيانات المطلوبة:** `service_id`. (تقوم بإضافة الخدمة للمفضلة إن لم تكن موجودة، وتحذفها إن كانت موجودة).
+- **جلب المفضلة:** عن طريق `GET /api/favorites`.
 
 ---
 
-## 6. Points Packages & Verification Subscriptions
+## 4. نظام الطلبات المتقدم (Requests & Orders)
 
-### `GET /api/available-points-packages`
-View list of bundles available to buy (e.g., 500 points for $50).
+إدارة طلب الخدمات، اللقاءات، والطلبات المبنية على المفاوضات.
 
-### `GET /api/my-points-packages`
-See packages user has already subscribed to.
+### 4.1 جلب كل طلباتي `GET /api/requests` (Auth)
+**الوصف:** يجلب جميع الطلبات التي قام بها المعين الحقيقي (سواء كنت طالب للخدمة Seeker أو مزود لها Provider سيقوم النظام بفلترتها بشكل تلقائي).
 
-### `POST /api/subscribe-points-package`
-User uploads a bond to buy a Points Package.
+### 4.2 إنشاء طلب خدمة عادي `POST /api/requests` (Seeker Auth)
+**الوصف:** يستخدم لطلب خدمة رئيسية معينة.
+- **البيانات المطلوب إرسالها:**
+  - `service_id`: الخدمة المطلوبة.
+  - `message`: (اختياري) تفاصيل إضافية عن الطلب.
+  - `latitude` و `longitude`: دقة الموقع. (مهمة إذا كانت الخدمة تعتمد في التسعير على المسافة، إذا لم يتم إرسالها سيتم استخدام موقع المستخدم الافتراضي من ملفه الشخصي).
+  - `sup_services`: (اختياري) مصفوفة تحتوي أرقام الخدمات الفرعية المطلوبة مع كمية كل واحدة. شكلها: `[{"id": 1, "quantity": 2}, ...]`.
 
-### `GET /api/verification-packages`
-View identity tier packages (e.g., Bronze, Silver, Gold Provider).
+### 4.3 عرض وحالة الطلب `GET /api/requests/{request_id}` (Auth)
+**الوصف:** مسار رئيسي يعرض كافة تفاصيل الطلب (أطراف الطلب، التكلفة النهائية، كمية الأموال المدفوعة، الحالة، والخدمات المرفقة به).
 
-### `POST /api/user-verification-packages`
-Subscribe to a verification package by uploading an ID/selfie.
-- **Body (multipart/form-data)**: `verification_package_id`, `image_bond`, `number_bond`.
+### 4.4 تغيير حالة الطلب `PATCH /api/requests/{request_id}/status` (Auth)
+**الوصف:** مسار مخصص لتغيير حالة الطلب من قبل الطرفين للتقدم بدورته (مثال: تحويله إلى `completed`).
+- **البيانات:** `status` (String).
 
----
+### 4.5 طلبات اللقاءات الجسدية `POST /api/requests/meeting` (Seeker Auth)
+**الوصف:** يختلف عن الطلب العادي في أنه لا يطلب خدمة بحد ذاتها، بل يطلب **مزود الخدمة** للقاء معين.
+- **البيانات المطلوبة:** `provider_id` (رقم هاتف المزود أو الـ ID العام له)، والموقع `latitude` و `longitude`.
 
-## 7. Reviews, Complaints & Meta
+### 4.6 الطلبات المخصصة (المفتوحة) `POST /api/requests/custom` (Seeker Auth)
+**الوصف:** لطلب شيء غير موجود كأيقونة خدمة ثابتة. يرسل المستفيد تفاصيل مشكلته لمزود محدد ليقوم الأخير بوضع التسعيرة في الخطوة القادمة.
+- **البيانات:** `provider_id` ومحتوى `message` (التفاصيل) ضروري جداً هنا.
 
-### `POST /api/reviews`
-Review a completed request.
-- **Body**: `request_id`, `rating` (1-5), `comment`.
+### 4.7 إدارة التسعيرة للطلبات المخصصة `/api/requests/custom/{id}/price` (Provider Auth)
+**الوصف:** عند استقبال مزود الخدمة لطلب من النوع "المخصص"، يقرأ المشكلة ويرد بتسعيرة نهائية.
+- **النوع:** `PATCH`
+- **البيانات:** `price` (المبلغ). فور إرساله تتغير حالة الطلب إلى `accepted_initial` وتظهر التكلفة للمستفيد للموافقة.
 
-### `POST /api/request-complaints`
-Complain about an issue inside a specific request.
-- **Body**: `request_id`, `reason_for_complaint`.
-
-### `POST /api/system-complaints`
-General system, technical, or broad complaints.
-- **Body**: `title`, `content`, `type`.
-
-### `POST /api/store-token`
-Save the Firebase/FCM device token for mobile Push Notifications.
-
-### `GET /api/notifications`
-Get a paginated list of all mobile/system notifications for the user.
-
-### `DELETE /api/notifications/{id}`
-Delete a single notification from the tray.
+### 4.8 رفض الطلبات المخصصة `/api/requests/custom/{id}/reject` (Provider Auth)
+**الوصف:** إذا لم تناسب المهمة مزود الخدمة، يمكنه الرفض عبر هذا المسار، وتتحول الحالة إلى `rejected`.
 
 ---
 
-> [!CAUTION]
-> **Bond Registry Security Mechanism**
->
-> To eliminate fraud, any endpoint that accepts an image bond or receipt (e.g., `request-bonds`, `request-commission-bonds`, `subscribe-points-package`) validates the file signature inside the **Central Bond Registry**. Uploading the same exact image for two different payments will result in instant rejection by the server.
+## 5. المالية، السندات والنقاط (Payments, Bonds & Finances)
+
+### 5.1 البنوك الموثقة `GET /api/banks` (عام)
+**الوصف:** عرض جميع البنوك المسجلة في النظام والتي يمكن التعامل معها.
+
+### 5.2 حسابات البنك للمستخدم `GET` `POST` `PUT` `/api/user-banks` (Auth)
+**الوصف:** لربط رقم الآيبان بحساب المستخدم لاستخدامه لاحقاً في استقبال وسحب الأرباح.
+- **مسار `POST` يطلب:** `bank_id` (رقم البنك من 5.1)، و `bank_account` (رقم الحساب أو الآيبان).
+
+### 5.3 رفع وصل سداد لطلب (سند مالي للعميل) `POST /api/request-bonds` (Seeker Auth)
+**الوصف:** الطريقة التقليدية للدفع؛ يقوم المستفيد بدفع قيمة الخدمة بحوالة بنكية لحساب التطبيق، ثم يرفع الوصل هنا.
+- **البيانات (Multipart):** `request_id`، `image_path` (صورة الإيصال)، `amount` (المبلغ المدفوع فيه).
+
+### 5.4 الدفع عبر النقاط (Wallet) للعميل `POST /api/requests/{id}/payByPoints` (Seeker Auth)
+**الوصف:** يقبل النظام دفع قيمة الخدمة بالكامل أو جزء منها إذا كان العميل يمتلك رصيد نقاط في النظام (Bonus Points).
+- **البيانات:** `transferred_points` بكمية النقاط التي يريد استخدامها بالدفع. 
+- يقوم النظام آلياً بتحويلها من العميل إلى المستفيد ويطور حالة الطلب.
+
+### 5.5 دفع العمولات النظامية بالنقاط (للمزودين) `POST /api/requests/{id}/pay-commission` (Provider Auth)
+**الوصف:** يقوم التطبيق باقتطاع نسبة (العمولة) على مزود الخدمة عند إنهاء الطلب بنجاح. يمكنه تسديدها آلياً باستخدام رصيد نقاطه، ويقوم النظام بخصمها وتوثيقها دون تدخل بشري.
+
+### 5.6 دفع العمولات بسند خارجي (للمزودين) `POST /api/request-commission-bonds` (Provider)
+**الوصف:** إذا لم يكن لدى مزود الخدمة رصيد كافي في محفظته لسداد العمولة، يمكنه الدفع بحوالة عادية ورفع إيصال الحوالة هنا.
+- **البيانات (Multipart):** `image`، `amount` (قيمة الإيصال)، و `bond_number` (المرجع البنكي للإيصال للتأكد من عدم تكراره).
+
+### 5.7 عملية السحب للأرباح `POST /api/withdraw-request` (Provider Auth)
+**الوصف:** طلب تحويل الأموال الموجودة في حساب المزود (مكاسب / `paid_points`) إلى حسابه البنكي المسجل مسبقاً في نقطة 5.2.
+- **البيانات:** `amount` (كم المبلغ الذي يريد سحبه من محفظته).
+
+### 5.8 عرض طلبات السحب `GET /api/my-withdraw-requests` (Auth)
+**الوصف:** استعراض حالة العمليات البنكية التي طلب السحب فيها (حالتها: قيد المعالجة، أم مكتملة).
+
+### 5.9 تحويل الأرباح لنقاط (Bonus +1%) `POST /api/points/convert` (Provider Auth)
+**الوصف:** ميزة ذكية؛ يمكن للمزود التنازل عن سحب جزء من أرباحه للحساب البنكي وتحويلها إلى رصيد نقاط دفع ليتمكن من سداد العمولات القادمة بسرعة، ويكافئه النظام بزيادة قدرها **1%** على المبلغ المحول.
+- **البيانات:** `amount` (المبلغ المطلوب تحويله من `paid_points` إلى `bonus`).
+
+---
+
+## 6. باقات النقاط وتوثيق الهويات (Packages & Identity Verification)
+
+### 6.1 عرض باقات الشحن `GET /api/available-points-packages` (عام/Auth)
+**الوصف:** لاستعراض الباقات الرائجة لشحن رصيد التطبيق (مثال: ادفع 100 لتصلك 100 نقطة و 10 نقاط هدية).
+
+### 6.2 طلب شحن باقة `POST /api/subscribe-points-package` (Auth)
+**الوصف:** بعد إيداع العميل لأموال الباقة لحساب المؤسسة، عليه طلب تفعيلها من خلال إرفاق الإيصال (السند).
+- **البيانات `Multipart`:** `package_id` رقم الباقة، `bond_number` مرجع العملية، و `bond_image` الصورة.
+
+### 6.3 عرض باقات التوثيق المهنية `GET /api/verification-packages` (عام/Auth)
+**الوصف:** للبحث عن شروط وترقيات العضويات (لكي يصبح مزود الخدمة موثقاً).
+
+### 6.4 طلب توثيق الهوية `POST /api/user-verification-packages` (Auth)
+**الوصف:** يقوم المزود هنا برفع مستند إثبات المهارة (هوية، شهادة مهنية كـ سند ورقي أو ملف)، وحال الموافقة عليها من قبل الإدارة، يتحول دوره تلقائياً إلى "مزود موثق".
+- **البيانات `Multipart`:** `verification_package_id` و `image_bond` و `number_bond`.
+
+---
+
+## 7. التقييمات، الشكاوى والإشعارات (Reviews & Meta)
+
+### 7.1 إضافة تقييم للخدمة `POST /api/reviews` (Seeker Auth)
+**الوصف:** يمكن للعميل تقييم الطلبات المكتملة `COMPLETED`.
+- **البيانات:** `request_id` (يجب أن يكون تابعاً له ومكتمل)، `rating` تقييم بين 1 كحد أدنى و 5 كحد أقصى، و `comment` تعليق كتابي في حدود 2000 حرف.
+
+### 7.2 إرسال شكوى حول طلب معين `POST /api/request-complaints` (Auth)
+**الوصف:** في حال حصول خلاف قبل اكتمال الطلب أو عدم رضى، يتم التصعيد عبر هذا المسار.
+- **البيانات:** `request_id` للطلب المراد الشكوى عليه، و `reason_for_complaint` النص التفصيلي للمشكلة، وسيصل للإدارة.
+
+### 7.3 إرسال شكوى عامة / تقنية `POST /api/system-complaints` (Auth)
+**الوصف:** إيصال مشكلة مرتبطة بالتطبيق نفسه (مثال: تعليق في نظام الإشعارات، مقترح، إلخ).
+- **البيانات:** `title` العنوان، `content` المحتوى، `type` تصنيف الشكوى.
+
+### 7.4 تسجيل جهاز للتنبيهات الفورية `POST /api/store-token` (Auth)
+**الوصف:** مسار مخصص لمطوري الـ Mobile/Frontend يقومون من خلاله بإرسال `fcm_token` المستخرج من (Google FCM / Firebase) وحفظه للنظام لكي تستطيع الـ Backend إرسال Push Notifications عند كل حالة جديدة.
+
+---
+
+## 🛡️ الحماية وسجل إيصالات مكافحة الاحتيال (Bond Registry Mechanism)
+
+توضيح تقني لمسؤولي التعامل مع واجهات التطبيق ومطوري הـ Mobile:
+
+> [!CAUTION]  
+> النظام محمي بتكنولوجيا **السجل المركزي للسندات (Bond Registry)**.  
+> أي مسار يحتوي على رفع إيصال بنكي (مثل: `request-bonds` و `request-commission-bonds` و باقات التوثيق) يمر بعدة فلاتر رقمية صارمة لمنع التلاعب والتحايل البنكي:
+> 1. يتم تحويل "صورة الإيصال" نفسها إلى بصمة رقمية (Hash).
+> 2. إذا حاول مستخدم آخر (أو نفس المستخدم) اقتطاع وتصوير الإيصال مجدداً ورفعه في ذات المسار بمعلومات أخرى، **سيتم منعه تلقائياً** في حال تطابقت تلك البصمة، حتى لو قام بتغيير الاسم.
+> 3. يجب التأكد دوماً كمطور أن تعرض الأخطاء العائدة برقم (HTTP 422 - Validation Exception) بوضوح للمستخدم عند رفض الإيصالات ليعرف مكمن العلة.

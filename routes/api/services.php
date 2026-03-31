@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 //service routes
 Route::get('/all-services', [ServiceController::class, 'showAll']);
+Route::get('/top-requested-services', [ServiceController::class, 'getTopRequestedServices']);
 Route::get('/services/{service}', [ServiceController::class, 'show']);
 Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function () {
     Route::get('/services', [ServiceController::class, 'index']);
