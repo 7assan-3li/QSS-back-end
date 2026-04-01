@@ -23,6 +23,7 @@ class StoreProfileRequest extends FormRequest
     {
         return [
             'bio' => 'nullable|string|max:10000',
+            'job_title' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',

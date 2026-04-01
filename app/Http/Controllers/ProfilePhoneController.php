@@ -8,28 +8,41 @@ use App\Http\Requests\UpdateProfilePhoneRequest;
 use App\Services\ProfilePhoneService;
 class ProfilePhoneController extends Controller
 {
-    public function store(StoreProfilePhoneRequest $request,ProfilePhoneService $profilePhoneService)
+    public function index(ProfilePhoneService $profilePhoneService)
     {
-        $request->validate([
-            'phone' => 'required|string|max:255',
-        ]);
-
-        $data = $request->validated();
-        $profilePhoneService->create($data);
+        $phones = $profilePhoneService->index(auth()->user());
         return response()->json([
-            'message' => 'تم اضافة رقم الهاتف بنجاح',
-            'status' => 'success',
-        ],200);
+            'phones' => $phones,
+            'message' => 'تم استرجاع أرقام الهاتف بنجاح',
+        ], 200);
     }
-    public function update(UpdateProfilePhoneRequest $request,ProfilePhoneService $profilePhoneService,$profile_phone_id)
-    {
-        
 
-        $data = $request->validated();
-        $profilePhoneService->update($data, $profile_phone_id);
+    public function store(StoreProfilePhoneRequest $request, ProfilePhoneService $profilePhoneService)
+    {
+        $phone = $profilePhoneService->create($request->user(), $request->validated());
+
+        return response()->json([
+            'message' => 'تم إضافة رقم الهاتف بنجاح',
+            'phone' => $phone,
+        ], 201);
+    }
+
+    public function update(UpdateProfilePhoneRequest $request, ProfilePhoneService $profilePhoneService, $profile_phone_id)
+    {
+        $phone = $profilePhoneService->update($request->user(), $request->validated(), $profile_phone_id);
+
         return response()->json([
             'message' => 'تم تحديث رقم الهاتف بنجاح',
-            'status' => 'success',
-        ],200);
+            'phone' => $phone,
+        ], 200);
+    }
+
+    public function destroy(ProfilePhoneService $profilePhoneService, $profile_phone_id)
+    {
+        $profilePhoneService->delete(auth()->user(), $profile_phone_id);
+
+        return response()->json([
+            'message' => 'تم حذف رقم الهاتف بنجاح',
+        ], 200);
     }
 }

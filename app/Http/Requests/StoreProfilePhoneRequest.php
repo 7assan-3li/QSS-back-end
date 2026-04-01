@@ -22,12 +22,11 @@ class StoreProfilePhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "phone"=> "required|string|max:255",
-            "country_code"=> "required|string|max:255",
-            "profile_id"=> "required|exists:profiles,id",
-            "type"=> "required|string|in:mobile,whatsapp,both",
-            "is_primary"=> "required|boolean",
-            "is_active"=> "required|boolean",
+            "phone" => "required|string|max:20",
+            "country_code" => "required|string|max:5",
+            "type" => "sometimes|string|in:mobile,whatsapp,both",
+            "is_primary" => "sometimes|boolean",
+            "is_active" => "sometimes|boolean",
         ];
     }
 }
