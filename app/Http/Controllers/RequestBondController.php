@@ -24,6 +24,19 @@ class RequestBondController extends Controller
 
         return response()->json($bonds);
     }
+
+    public function providerIndex()
+    {
+        $bonds = RequestBond::with(['request.main_service'])
+            ->whereHas('request', function ($q) {
+                $q->whereHas('main_service', function ($sq) {
+                    $sq->where('provider_id', Auth::id());
+                });
+            })
+            ->get();
+
+        return response()->json($bonds);
+    }
     public function store(Request $request)
     {
         $validated = $request->validate([

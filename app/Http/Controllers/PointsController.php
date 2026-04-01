@@ -37,4 +37,15 @@ class PointsController extends Controller
             ], 400);
         }
     }
+    public function indexTransactions(Request $request)
+    {
+        $transactions = \App\Models\PointTransaction::where('user_id', $request->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'message' => 'تم استرجاع حركة النقاط بنجاح',
+            'data' => $transactions
+        ]);
+    }
 }

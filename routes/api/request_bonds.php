@@ -10,6 +10,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/request-bonds', [RequestBondController::class, 'store']);
     });
 
+    // Provider endpoints
+    Route::get('/provider-request-bonds', [RequestBondController::class, 'providerIndex']);
     Route::patch('/request-bonds/{bond}/approve', [RequestBondController::class, 'approve']);
     Route::patch('/request-bonds/{bond}/reject', [RequestBondController::class, 'reject']);
 });

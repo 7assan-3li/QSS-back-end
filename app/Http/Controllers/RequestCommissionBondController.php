@@ -9,8 +9,19 @@ use Illuminate\Http\Request;
 
 class RequestCommissionBondController extends Controller
 {
-    public function index()
-    {}
+    public function index(Request $request)
+    {
+        $bonds = RequestCommissionBond::with('request.main_service')
+            ->whereHas('request', function ($q) use ($request) {
+                $q->whereHas('main_service', function ($sq) use ($request) {
+                    $sq->where('provider_id', $request->user()->id);
+                });
+            })
+            ->get();
+
+        return response()->json($bonds);
+    }
+
     public function store(RequestCommissionBondRequest $request,RequestCommissionBondService $service)
     {
         $commissionBond = $service->create($request->validated());
