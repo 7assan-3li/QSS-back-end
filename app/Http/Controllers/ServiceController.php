@@ -9,10 +9,103 @@ use App\Services\ServiceService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
     use AuthorizesRequests;
+
+    public function search(Request $request)
+    {
+        $queryText = $request->input('query');
+        $categoryId = $request->input('category_id');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
+
+        $servicesQuery = Service::where('type', ServiceType::MAIN)
+            ->where('is_active', true)
+            ->with(['provider.profile', 'category', 'children']);
+
+        // 1. Text Search (Name, Description, Hierarchical Category, Children)
+        if ($queryText) {
+            // Find all categories that match the query and their descendants
+            $matchedCategories = \App\Models\Category::where('name', 'LIKE', "%{$queryText}%")->get();
+            $categoryIds = [];
+            foreach ($matchedCategories as $cat) {
+                $categoryIds = array_merge($categoryIds, \App\Models\Category::getAllChildrenIds($cat->id));
+            }
+            $categoryIds = array_unique($categoryIds);
+
+            $servicesQuery->where(function ($q) use ($queryText, $categoryIds) {
+                $q->where('name', 'LIKE', "%{$queryText}%")
+                    ->orWhere('description', 'LIKE', "%{$queryText}%")
+                    ->orWhereIn('category_id', $categoryIds)
+                    ->orWhereHas('children', function ($sq) use ($queryText) {
+                        $sq->where('name', 'LIKE', "%{$queryText}%");
+                    });
+            });
+        }
+
+        // 2. Hierarchical Category Filter
+        if ($categoryId) {
+            $allCategoryIds = \App\Models\Category::getAllChildrenIds($categoryId);
+            $servicesQuery->whereIn('category_id', $allCategoryIds);
+        }
+
+        // 3. Price Filter
+        if ($minPrice) {
+            $servicesQuery->where('price', '>=', $minPrice);
+        }
+        if ($maxPrice) {
+            $servicesQuery->where('price', '<=', $maxPrice);
+        }
+
+        $services = $servicesQuery->get();
+
+        // 4. Calculate Availability and Distance
+        $services->map(function ($service) use ($lat, $lng) {
+            $service->is_available_now = $service->isAvailableNow();
+            
+            if ($lat && $lng && $service->provider && $service->provider->profile) {
+                $pLat = $service->provider->profile->latitude;
+                $pLng = $service->provider->profile->longitude;
+                
+                if ($pLat && $pLng) {
+                    $service->distance = $this->calculateDistance($lat, $lng, $pLat, $pLng);
+                } else {
+                    $service->distance = null;
+                }
+            } else {
+                $service->distance = null;
+            }
+            return $service;
+        });
+
+        // 5. Sort by Distance if coordinates provided
+        if ($lat && $lng) {
+            $services = $services->sortBy('distance')->values();
+        }
+
+        return response()->json([
+            'message' => 'Search results retrieved successfully',
+            'count' => $services->count(),
+            'data' => $services
+        ]);
+    }
+
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // km
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+            sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return $earthRadius * $c;
+    }
     public function index()
     {
         $user = Auth::user();

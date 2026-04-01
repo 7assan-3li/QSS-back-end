@@ -29,4 +29,16 @@ class Category extends Model
     {
         return $this->hasMany( Service::class, 'category_id');
     }
+
+    public static function getAllChildrenIds($parentId)
+    {
+        $ids = [$parentId];
+        $children = self::where('category_id', $parentId)->pluck('id');
+        
+        foreach ($children as $childId) {
+            $ids = array_merge($ids, self::getAllChildrenIds($childId));
+        }
+        
+        return $ids;
+    }
 }
