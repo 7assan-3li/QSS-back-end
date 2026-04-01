@@ -8,38 +8,39 @@ class PreviousWorkService
 {
     public function create(array $data, $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        if (!$user->profile) {
-            throw new \Exception('User does not have a profile.');
+        if (!$user || !$user->profile) {
+            abort(403, 'User does not have a profile.');
         }
 
         // 📷 حفظ الصورة
-        $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')
-                ->store('previous_works', 'public');
+            $data['image_path'] = $request->file('image')->store('previous_works', 'public');
         }
 
-        if (!$imagePath) {
-            throw new \Exception('Image is required for previous work.');
+        if (!isset($data['image_path'])) {
+            abort(400, 'Image is required for previous work.');
         }
 
-        $previousWork = PreviousWork::create([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'image_path' => $imagePath,
-            'profile_id' => $user->profile->id,
-        ]);
+        // إزالة الصورة من مصفوفة البيانات (لتتوافق مع الإنشاء المباشر)
+        unset($data['image']);
+        
+        // التأكد من أن الوصف لا يسبب خطأ إذا كان غير موجود
+        $data['description'] = $data['description'] ?? null;
+        
+        $data['profile_id'] = $user->profile->id;
+
+        $previousWork = PreviousWork::create($data);
 
         return $previousWork;
     }
     public function update(array $data, $request, int $previousWorkId)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        if (!$user->profile) {
-            throw new \Exception('User does not have a profile.');
+        if (!$user || !$user->profile) {
+            abort(403, 'User does not have a profile.');
         }
 
         $previousWork = PreviousWork::where('id', $previousWorkId)
@@ -52,7 +53,6 @@ class PreviousWorkService
             if ($previousWork->image_path && Storage::disk('public')->exists($previousWork->image_path)) {
                 Storage::disk('public')->delete($previousWork->image_path);
             }
-
 
             // 💾 حفظ الصورة الجديدة
             $data['image_path'] = $request->file('image')->store('previous_works', 'public');
@@ -67,12 +67,12 @@ class PreviousWorkService
         return $previousWork->fresh();
     }
 
-    public function delete(int $previousWorkId)
+    public function delete($request, int $previousWorkId)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        if (!$user->profile) {
-            throw new \Exception('User does not have a profile.');
+        if (!$user || !$user->profile) {
+            abort(403, 'User does not have a profile.');
         }
 
         $previousWork = PreviousWork::where('id', $previousWorkId)

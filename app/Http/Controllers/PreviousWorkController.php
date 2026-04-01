@@ -56,9 +56,9 @@ class PreviousWorkController extends Controller
         ], 200);
     }
 
-    public function destroy(PreviousWorkService $previousWorkService, $previousWork_id)
+    public function destroy(\Illuminate\Http\Request $request, PreviousWorkService $previousWorkService, $previousWork_id)
     {
-        $previousWorkService->delete((int) $previousWork_id);
+        $previousWorkService->delete($request, (int) $previousWork_id);
         return response()->json([
             'message' => 'Previous work deleted successfully'
         ], 200);
