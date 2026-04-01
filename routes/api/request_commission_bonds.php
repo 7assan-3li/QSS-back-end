@@ -8,4 +8,5 @@ Route::middleware(['auth:sanctum', 'verified', 'provider.policy'])->group(functi
     //request commission bonds routes
     Route::get('/request-commission-bonds', [RequestCommissionBondController::class, 'index']);
     Route::post('/request-commission-bonds', [RequestCommissionBondController::class, 'store']);
+    Route::get('/provider-commission-summary', [RequestCommissionBondController::class, 'commissionSummary']);
 });

@@ -62,4 +62,41 @@ class RequestCommissionBondController extends Controller
         return back()->with('success', 'تم رفض السند');
     }
 
+    public function commissionSummary(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        $requests = \App\Models\Request::with(['user', 'main_service'])
+            ->whereHas('main_service', function ($q) use ($userId) {
+                $q->where('provider_id', $userId);
+            })
+            ->where('commission_amount', '>', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalDue = $requests->sum('commission_amount');
+        $totalPaid = $requests->sum('commission_amount_paid');
+        $remaining = $totalDue - $totalPaid;
+
+        return response()->json([
+            'summary' => [
+                'total_commission_due'  => $totalDue,
+                'total_commission_paid' => $totalPaid,
+                'remaining_balance'     => $remaining,
+                'requests_count'        => $requests->count(),
+            ],
+            'details' => $requests->map(function ($req) {
+                return [
+                    'id'                     => $req->id,
+                    'seeker_name'            => $req->user->name ?? 'N/A',
+                    'total_price'            => $req->total_price,
+                    'commission_amount'      => $req->commission_amount,
+                    'commission_amount_paid' => $req->commission_amount_paid,
+                    'commission_paid_status' => $req->commission_paid,
+                    'created_at'             => $req->created_at->toDateTimeString(),
+                    'status'                 => $req->status,
+                ];
+            }),
+        ]);
+    }
 }
