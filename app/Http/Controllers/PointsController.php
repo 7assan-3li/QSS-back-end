@@ -48,4 +48,14 @@ class PointsController extends Controller
             'data' => $transactions
         ]);
     }
+    public function getPointsBalance(Request $request)
+    {
+        $userId = Auth::id();
+        $points = $this->pointsService->getUserPoints($userId);
+
+        return response()->json([
+            'message' => 'تم استرجاع الرصيد بنجاح',
+            'data' => $points
+        ]);
+    }
 }

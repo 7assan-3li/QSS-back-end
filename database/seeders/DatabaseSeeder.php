@@ -37,6 +37,30 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $admin->profile()->updateOrCreate(['user_id' => $admin->id], []);
+        //seeker
+        $seeker = User::updateOrCreate(
+            ['email' => 'seeker@gmail.com'],
+            [
+                'name' => 'طالب الخدمة',
+                'password' => Hash::make('12345678'),
+                'role' => Role::SEEKER,
+                'seeker_policy' => true,
+                'email_verified_at' => now()
+            ]
+        );
+        $seeker->profile()->updateOrCreate(['user_id' => $seeker->id], []);
+        //provider
+        $provider = User::updateOrCreate(
+            ['email' => 'provider@gmail.com'],
+            [
+                'name' => 'مزود الخدمة',
+                'password' => Hash::make('12345678'),
+                'role' => Role::PROVIDER,
+                'seeker_policy' => true,
+                'email_verified_at' => now()
+            ]
+        );
+        $provider->profile()->updateOrCreate(['user_id' => $provider->id], []);
 
         // 2. Hierarchical Categories
         $categories = [

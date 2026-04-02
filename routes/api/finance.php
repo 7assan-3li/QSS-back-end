@@ -12,6 +12,7 @@ Route::get('banks', [BankController::class, 'getAllBanks']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('points/convert', [PointsController::class, 'convertPaidToBonus']);
     Route::get('points/transactions', [PointsController::class, 'indexTransactions']);
+    Route::get('points/balance', [PointsController::class, 'getPointsBalance']);
 });
 
 // User Bank Accounts

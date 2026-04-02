@@ -212,5 +212,12 @@ class PointsService
         return $request->status == RequestStatus::ACCEPTED_INITIAL || $request->status == RequestStatus::ACCEPTED_PARTIAL_PAID;
     }
 
-    
+    public function getUserPoints($userId)
+    {
+        $user = User::findOrFail($userId);
+        return [
+            'bonus_points' => $user->bonus_points,
+            'paid_points'  => $user->paid_points,
+        ];
+    }
 }
