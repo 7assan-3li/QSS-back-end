@@ -8,6 +8,6 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
     Route::get('/previous-work', [PreviousWorkController::class, 'index']);
     Route::post('/previous-work', [PreviousWorkController::class, 'store']);
     Route::get('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'show']);
-    Route::post('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'update']);
+    Route::put('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'update']);
     Route::delete('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'destroy']);
 });

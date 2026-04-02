@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('request_id')->constrained('requests')->onDelete('cascade');
             $table->string('image_path');
+            $table->decimal('amount', 10, 2)->default(0);
             $table->integer('bond_number')->nullable();
             $table->string('description')->nullable();
             $table->string('status')->default('pending');

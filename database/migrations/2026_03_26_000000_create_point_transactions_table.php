@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('point_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('seeker_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('provider_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('request_id')->constrained('requests')->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
+            $table->foreignId('seeker_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('provider_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('request_id')->nullable()->constrained('requests')->onDelete('cascade');
+            $table->foreignId('points_package_id')->nullable()->constrained('points_packages')->onDelete('cascade');
+            $table->decimal('amount', 10, 2)->nullable();
             $table->string('type')->default('payment'); // e.g. payment, bonus
             $table->timestamps();
         });

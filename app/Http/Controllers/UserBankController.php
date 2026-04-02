@@ -40,7 +40,7 @@ class UserBankController extends Controller
             'bank_id' => ['required', 'exists:banks,id'],
             'bank_account' => [
                 'required',
-                'integer',
+                'string',
                 Rule::unique('user_bank')->where(function ($query) use ($request) {
                     return $query->where('user_id', Auth::id())
                         ->where('bank_id', $request->bank_id);
@@ -98,7 +98,7 @@ class UserBankController extends Controller
             'bank_id' => ['required', 'exists:banks,id'],
             'bank_account' => [
                 'required',
-                'integer',
+                'string',
                 Rule::unique('user_bank')->where(function ($query) use ($request, $userBankId) {
                     return $query
                         ->where('user_id', Auth::id())

@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('verification_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('content');
+            $table->text('content');
             $table->string('status')->default('pending');
             $table->timestamps();
         });

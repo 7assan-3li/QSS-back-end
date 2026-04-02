@@ -99,4 +99,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Service::class, 'favorite_services', 'user_id', 'service_id')
                     ->withTimestamps();
     }
+
+    public function verificationPackages()
+    {
+        return $this->belongsToMany(VerificationPackages::class, 'user_verification_packages', 'user_id', 'verification_package_id')
+            ->withPivot(['id', 'image_bond', 'number_bond', 'status', 'admin_id'])
+            ->withTimestamps();
+    }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('profile_id')->constrained('profiles')->onDelete('cascade');
             $table->string('image_path');
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
