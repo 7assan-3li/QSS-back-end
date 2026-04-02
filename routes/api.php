@@ -28,4 +28,5 @@ require __DIR__ . '/api/system_complaints.php';
 require __DIR__ . '/api/points_packages.php';
 require __DIR__ . '/api/withdrawals.php';
 require __DIR__ . '/api/favorites.php';
+require __DIR__ . '/api/finance.php';
 
