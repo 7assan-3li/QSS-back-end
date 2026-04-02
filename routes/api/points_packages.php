@@ -4,7 +4,7 @@ use App\Http\Controllers\PointsPackageController;
 use App\Http\Controllers\UserPointsPackageController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function () {
     
     // User Routes
     Route::get('/available-points-packages', [UserPointsPackageController::class, 'availablePackages']);
