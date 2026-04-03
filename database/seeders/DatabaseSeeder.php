@@ -216,6 +216,109 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        echo "Seed complete: Banks, Packages, Requests, and Reviews populated.\n";
+        // 11. System Complaints
+        for ($i = 0; $i < 10; $i++) {
+            $user = fake()->boolean() ? $seekers->random() : $providers->random();
+            $appSource = $user->role === Role::SEEKER ? 'seeker' : 'provider';
+            \App\Models\SystemComplaint::create([
+                'title' => fake()->sentence(4),
+                'content' => fake()->paragraph(),
+                'type' => fake()->randomElement(['مشكلة تقنية', 'اقتراح', 'استفسار مالي', 'أخرى']),
+                'user_id' => $user->id,
+                'status' => fake()->randomElement(['pending', 'in_progress', 'completed']),
+                'app_source' => $appSource,
+            ]);
+        }
+
+        // 12. Request Complaints
+        $requests = Request::all();
+        foreach ($requests->random(min(5, $requests->count())) as $r) {
+            // Complaint could be from Seeker or Provider
+            $providerId = $r->services->first() ? $r->services->first()->provider_id : null;
+            $complainantId = (fake()->boolean() && $providerId) ? $providerId : $r->user_id;
+
+            \App\Models\RequestComplaint::create([
+                'title' => 'شكوى بخصوص الطلب ' . $r->id,
+                'type' => fake()->randomElement(['تأخير', 'جودة الخدمة', 'عدم الالتزام', 'أخرى']),
+                'content' => fake()->paragraph(),
+                'request_id' => $r->id,
+                'user_id' => $complainantId,
+                'status' => fake()->randomElement(['pending', 'in_progress', 'resolved']),
+            ]);
+        }
+
+        // 13. Provider Requests
+        for ($i = 0; $i < 5; $i++) {
+            \App\Models\ProviderRequest::create([
+                'name' => 'طلب انضمام: ' . fake()->name(),
+                'user_id' => $seekers->random()->id,
+                'status' => fake()->randomElement(['pending', 'accepted', 'rejected']),
+                'requestContent' => 'أرغب بالانضمام لمنصتكم كمزود خدمة محترف',
+                'id_card' => 'bonds/fake_id.jpg',
+                'location' => fake()->address(),
+            ]);
+        }
+
+        // 14. User Points Packages
+        foreach ($seekers->random(5) as $user) {
+            \App\Models\UserPointsPackage::create([
+                'user_id' => $user->id,
+                'package_id' => $allPPackages->random()->id,
+                'bond_number' => 'BND' . fake()->numerify('######'),
+                'bond_image' => 'bonds/fake_bond.jpg',
+                'bank_name' => fake()->randomElement(['مصرف الراجحي', 'البنك الأهلي', 'بنك الرياض']),
+                'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
+            ]);
+        }
+
+        // 15. Withdraw Requests
+        foreach ($providers->random(5) as $provider) {
+            \App\Models\WithdrawRequest::create([
+                'user_id' => $provider->id,
+                'amount' => fake()->randomFloat(2, 100, 1000),
+                'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
+            ]);
+        }
+
+        // 16. Financial Bonds
+        foreach ($requests->random(min(3, $requests->count())) as $r) {
+            \App\Models\RequestBond::create([
+                'request_id' => $r->id,
+                'image_path' => 'bonds/fake_bond.jpg',
+                'amount' => $r->total_price ?? 50.00,
+            ]);
+        }
+
+        foreach ($providers->random(3) as $provider) {
+            \App\Models\RequestCommissionBond::create([
+                'provider_id' => $provider->id,
+                'bond_number' => 'COM' . fake()->numerify('######'),
+                'image' => 'bonds/fake_bond.jpg',
+                'amount' => fake()->randomFloat(2, 50, 200),
+                'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
+            ]);
+        }
+
+        // 17. Favorite Services
+        $allServices = \App\Models\Service::all();
+        if ($allServices->isNotEmpty()) {
+            foreach ($seekers->random(5) as $seeker) {
+                \App\Models\FavoriteService::firstOrCreate([
+                    'user_id' => $seeker->id,
+                    'service_id' => $allServices->random()->id,
+                ]);
+            }
+        }
+
+        // 18. Point Transactions
+        foreach ($providers->random(3) as $provider) {
+            \App\Models\PointTransaction::create([
+                'provider_id' => $provider->id,
+                'amount' => fake()->numberBetween(10, 100),
+                'type' => fake()->randomElement(['commission_deduction', 'withdrawal', 'bonus']),
+            ]);
+        }
+
+        echo "Seed complete: Banks, Packages, Requests, Reviews, Complaints, and Finances populated.\n";
     }
 }
