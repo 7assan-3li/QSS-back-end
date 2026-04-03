@@ -42,6 +42,13 @@
                 </p>
 
                 <ul class="meta">
+                    <li>📱 المصدر: 
+                        @if($systemComplaint->app_source === 'provider')
+                            <span style="background-color: #6366f1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">تطبيق المزود</span>
+                        @else
+                            <span style="background-color: #ec4899; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">تطبيق الطالب</span>
+                        @endif
+                    </li>
                     <li>👤 المستخدم: {{ $systemComplaint->user->name }}</li>
                     <li>📧 البريد: {{ $systemComplaint->user->email }}</li>
                     <li>📅 التاريخ: {{ $systemComplaint->created_at->format('Y-m-d H:i') }}</li>

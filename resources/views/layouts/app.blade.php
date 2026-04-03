@@ -89,6 +89,16 @@
                     <span class="text">طلبات السحب</span>
                 </a>
 
+                <a href="{{ route('system-complaints.index') }}" class="{{ request()->is('system-complaints*') ? 'active' : '' }}">
+                    <span class="icon">⚠️</span>
+                    <span class="text">شكاوى النظام</span>
+                </a>
+
+                <a href="{{ route('request-complaints.index') }}" class="{{ request()->is('request-complaints*') ? 'active' : '' }}">
+                    <span class="icon">🚨</span>
+                    <span class="text">بلاغات الطلبات</span>
+                </a>
+
                 <a href="#" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                     <span class="icon">⚙️</span>
                     <span class="text">الإعدادات</span>

@@ -14,6 +14,7 @@ class SystemComplaintService
             'title' => $data['title'],
             'content' => $data['content'],
             'type' => $data['type'],
+            'app_source' => $data['app_source'],
             'user_id' => $user->id,
         ]);
         if ($systemComplaint) {

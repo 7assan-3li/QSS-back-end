@@ -136,11 +136,13 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/withdrawals/{id}', [WithdrawRequestController::class, 'showWebAdmin'])->name('admin.withdrawals.show');
     Route::patch('/admin/withdrawals/{id}/approve', [WithdrawRequestController::class, 'approveWebAdmin'])->name('admin.withdrawals.approve');
     Route::patch('/admin/withdrawals/{id}/reject', [WithdrawRequestController::class, 'rejectWebAdmin'])->name('admin.withdrawals.reject');
+    // System Complaints
+    Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');
+    Route::get('/system-complaints/{systemComplaint}', [SystemComplaintController::class, 'showAdmin'])->name('system-complaints.show');
+    Route::patch('/system-complaints/{systemComplaint}/status', [SystemComplaintController::class, 'updateStatus'])->name('system-complaints.update-status');
+
+    // Request Complaints
+    Route::get('/request-complaints', [\App\Http\Controllers\RequestComplaintController::class, 'indexAdmin'])->name('request-complaints.index');
+    Route::get('/request-complaints/{requestComplaint}', [\App\Http\Controllers\RequestComplaintController::class, 'showAdmin'])->name('request-complaints.show');
+    Route::patch('/request-complaints/{requestComplaint}/status', [\App\Http\Controllers\RequestComplaintController::class, 'updateStatus'])->name('request-complaints.update-status');
 });
-
-Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');
-Route::get('/system-complaints/{systemComplaint}', [SystemComplaintController::class, 'showAdmin'])
-    ->name('system-complaints.show');
-
-Route::patch('/system-complaints/{systemComplaint}/status', [SystemComplaintController::class, 'updateStatus'])
-    ->name('system-complaints.update-status');

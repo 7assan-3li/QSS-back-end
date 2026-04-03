@@ -25,6 +25,7 @@ class StoreSystemComplaintRequest extends FormRequest
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'type' => 'required|max:200',
+            'app_source' => 'required|in:seeker,provider',
         ];
     }
 }
