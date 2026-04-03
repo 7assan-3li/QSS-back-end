@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('schedule_service_id')->constrained()->onDelete('cascade');
             $table->string('day');
             $table->timestamps();
-            
             $table->index(['schedule_service_id', 'day']);
         });
     }

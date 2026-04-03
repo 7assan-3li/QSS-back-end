@@ -77,7 +77,9 @@ class RequestCommissionBondController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $totalDue = $requests->sum('commission_amount');
+        $totalDue = $requests->sum(function (\App\Models\Request $req) {
+            return $req->getCommissionAmount();
+        });
         $totalPaid = $requests->sum('commission_amount_paid');
         $remaining = $totalDue - $totalPaid;
 
@@ -88,7 +90,7 @@ class RequestCommissionBondController extends Controller
                 'remaining_balance'     => $remaining,
                 'requests_count'        => $requests->count(),
             ],
-            'details' => $requests->map(function ($req) {
+            'details' => $requests->map(function (\App\Models\Request $req) {
                 return [
                     'id'                     => $req->id,
                     'seeker_name'            => $req->user->name ?? 'N/A',

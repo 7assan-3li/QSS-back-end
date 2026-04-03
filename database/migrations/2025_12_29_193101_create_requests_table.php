@@ -25,7 +25,6 @@ return new class extends Migration
             $table->integer('bonus_points_awarded')->default(0);
             $table->decimal('commission_amount', 10, 2)->default(0);
             $table->decimal('commission_amount_paid', 10, 2)->default(0);
-            $table->boolean('commission_paid_status')->default(false);
             $table->timestamp('end_at')->nullable();
             $table->timestamps();
         });
