@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class MeetingAndCustomServiceController extends Controller
 {
+    private MeetingServiceService $meetingServiceService;
+    private CustomServiceService $customServiceService;
+
     public function __construct(MeetingServiceService $meetingServiceService, CustomServiceService $customServiceService)
     {
         $this->meetingServiceService = $meetingServiceService;
@@ -19,19 +22,19 @@ class MeetingAndCustomServiceController extends Controller
 
     public function getMeetingService()
     {
-        $meetingService = Service::where('provider_id', Auth::user()->id)->where('type', 'meeting')->first();
-        if (!$meetingService) {
-            $meetingService = Service::create([
-                'provider_id' => Auth::user()->id,
-                'type' => ServiceType::MEETING,
+        $meetingService = Service::firstOrCreate(
+            ['provider_id' => Auth::user()->id, 'type' => ServiceType::MEETING],
+            [
                 'distance_based_price' => true,
                 'price_per_km' => 0,
                 'is_active' => true,
                 'price' => 0,
                 'description' => '',
                 'name' => '_meeting',
-            ]);
-        }
+            ]
+        );
+        
+        $meetingService->load('schedules.days');
         return response()->json([
             'data' => $meetingService,
             'message' => 'Meeting service retrieved successfully'
@@ -48,19 +51,19 @@ class MeetingAndCustomServiceController extends Controller
 
     public function getCustomService()
     {
-        $customService = Service::where('provider_id', Auth::user()->id)->where('type', 'custom')->first();
-        if (!$customService) {
-            $customService = Service::create([
-                'provider_id' => Auth::user()->id,
-                'type' => ServiceType::CUSTOM,
+        $customService = Service::firstOrCreate(
+            ['provider_id' => Auth::user()->id, 'type' => ServiceType::CUSTOM],
+            [
                 'distance_based_price' => true,
                 'price_per_km' => 0,
                 'is_active' => true,
                 'price' => 0,
                 'description' => '',
                 'name' => '_custom',
-            ]);
-        }
+            ]
+        );
+        
+        $customService->load('schedules.days');
         return response()->json([
             'data' => $customService,
             'message' => 'Custom service retrieved successfully'
