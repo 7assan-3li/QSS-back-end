@@ -70,7 +70,10 @@ class RequestCommissionBondController extends Controller
             ->whereHas('main_service', function ($q) use ($userId) {
                 $q->where('provider_id', $userId);
             })
-            ->where('commission_amount', '>', 0)
+            ->where(function($q) {
+                $q->where('commission_amount', '>', 0)
+                  ->orWhere('status', \App\constant\RequestStatus::COMPLETED);
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -90,7 +93,7 @@ class RequestCommissionBondController extends Controller
                     'id'                     => $req->id,
                     'seeker_name'            => $req->user->name ?? 'N/A',
                     'total_price'            => $req->total_price,
-                    'commission_amount'      => $req->commission_amount,
+                    'commission_amount'      => $req->getCommissionAmount(),
                     'commission_amount_paid' => $req->commission_amount_paid,
                     'commission_paid_status' => $req->commission_paid,
                     'created_at'             => $req->created_at->toDateTimeString(),

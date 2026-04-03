@@ -268,6 +268,12 @@ class RequestController extends Controller
             ]);
 
             if ($newStatus == RequestStatus::COMPLETED) {
+                // التأكد من تهيئة مبلغ العمولة عند اكتمال الطلب
+                $requestModel->commission_amount = $requestModel->getCommissionAmount();
+                $requestModel->save();
+            }
+
+            if ($newStatus == RequestStatus::COMPLETED) {
                 // 1. منح نقاط مكافأة لطالب الخدمة
                 $this->pointsService->addBonusPoints($requestModel->user_id, $requestModel->id);
                 
@@ -380,7 +386,7 @@ class RequestController extends Controller
             'commissionBonds'
         ])->findOrFail($id);
 
-        $commission = $request->total_price * 0.10;
+        $commission = $request->getCommissionAmount();
 
         return view('requests.show', ['request' => $request, 'commission' => $commission]);
     }
