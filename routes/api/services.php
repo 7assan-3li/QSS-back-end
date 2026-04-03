@@ -27,6 +27,8 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
     Route::delete('/services/children/{childService}', [ServiceController::class, 'deleteChild']);
     Route::put('/services/type/{type}', [ServiceController::class, 'updateByType']);
 
+    Route::get('/services-meeting', [MeetingAndCustomServiceController::class, 'getMeetingService']);
     Route::put('/services-meeting', [MeetingAndCustomServiceController::class, 'updateMeetingService']);
+    Route::get('/services-custom', [MeetingAndCustomServiceController::class, 'getCustomService']);
     Route::put('/services-custom', [MeetingAndCustomServiceController::class, 'updateCustomService']);
 });
