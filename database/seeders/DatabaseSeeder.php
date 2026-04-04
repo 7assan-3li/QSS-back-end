@@ -186,10 +186,11 @@ class DatabaseSeeder extends Seeder
             $provider = $providers->random();
             $pServices = $provider->services;
 
-            if ($pServices->isEmpty()) continue;
+            if ($pServices->isEmpty())
+                continue;
 
             $mainService = $pServices->random();
-            
+
             $request = Request::create([
                 'user_id' => $seeker->id,
                 'total_price' => $mainService->price,
@@ -289,11 +290,11 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        foreach ($providers->random(3) as $provider) {
+        foreach ($requests->random(min(3, $requests->count())) as $r) {
             \App\Models\RequestCommissionBond::create([
-                'provider_id' => $provider->id,
-                'bond_number' => 'COM' . fake()->numerify('######'),
-                'image' => 'bonds/fake_bond.jpg',
+                'request_id' => $r->id,
+                'bond_number' => fake()->numerify('######'),
+                'image_path' => 'bonds/fake_bond.jpg',
                 'amount' => fake()->randomFloat(2, 50, 200),
                 'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
             ]);
