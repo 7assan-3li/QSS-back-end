@@ -83,7 +83,8 @@ class Request extends Model
             return 0;
         }
 
-        $percentage = $provider->commission ?? 10; // افتراضي 10% إذا لم يتم التحديد
+        $defaultCommission = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
+        $percentage = $provider->commission ?? $defaultCommission;
         return $this->total_price * ($percentage / 100);
     }
 

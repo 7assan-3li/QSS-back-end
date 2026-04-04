@@ -13,8 +13,9 @@ class WithdrawRequestController extends Controller
     // API: Provider sends a withdrawal request
     public function store(Request $request)
     {
+        $minWithdrawal = \App\Models\Setting::where('key', 'min_withdrawal_amount')->value('value') ?? 50;
         $request->validate([
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'required|numeric|min:' . $minWithdrawal,
         ]);
 
         try {

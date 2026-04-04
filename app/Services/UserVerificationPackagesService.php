@@ -80,6 +80,7 @@ class UserVerificationPackagesService
             $newDate = $startDate->addDays($userPackage->verificationPackage->duration_days);
 
             $userPackage->user->update([
+                'verification_provider' => true,
                 'provider_verified_until' => $newDate
             ]);
 

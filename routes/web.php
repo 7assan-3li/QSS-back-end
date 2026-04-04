@@ -145,4 +145,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/request-complaints', [\App\Http\Controllers\RequestComplaintController::class, 'indexAdmin'])->name('request-complaints.index');
     Route::get('/request-complaints/{requestComplaint}', [\App\Http\Controllers\RequestComplaintController::class, 'showAdmin'])->name('request-complaints.show');
     Route::patch('/request-complaints/{requestComplaint}/status', [\App\Http\Controllers\RequestComplaintController::class, 'updateStatus'])->name('request-complaints.update-status');
+
+    // System Settings
+    Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'indexAdmin'])->name('settings.index');
+    Route::put('/settings', [\App\Http\Controllers\SettingController::class, 'updateAdmin'])->name('settings.update');
 });

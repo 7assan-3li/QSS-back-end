@@ -106,15 +106,50 @@ class VerificationRequestController extends Controller
     {
         $request = VerificationRequest::findOrFail($id);
         $request->update(['status' => 'accepted']);
-        $request->user()->update(['verification_provider' => true]);
+        $provider = $request->user();
 
-        return back()->with('success', 'تم قبول طلب التحقق');
+        // التحقق مما إذا كانت هذه هي المرة الأولى التي يُقبل فيها توثيق هذا المزود
+        $hasBeenVerifiedBefore = VerificationRequest::where('user_id', $provider->id)
+            ->whereIn('status', [\App\constant\VerificationRequestStatus::ACCEPTED, \App\constant\VerificationRequestStatus::EXPIRED])
+            ->where('id', '!=', $id) // استثناء الطلب الحالي
+            ->exists();
+
+        if (!$hasBeenVerifiedBefore) {
+            $freeDays = \App\Models\Setting::where('key', 'initial_free_verification_days')->value('value') ?? 365;
+            $provider->verification_provider = true;
+            $provider->provider_verified_until = now()->addDays($freeDays);
+            $provider->save();
+            return back()->with('success', "تم قبول طلب التحقق وتوثيق مزود الخدمة ومنحه $freeDays يوم مجاني لأول مرة.");
+        }
+
+        // للمرات اللاحقة: منح فترة سماح قصيرة محددة من الإعدادات
+        $graceDays = \App\Models\Setting::where('key', 'returning_free_verification_days')->value('value') ?? 0;
+        
+        if ($graceDays > 0) {
+            $currentDate = $provider->provider_verified_until ? \Carbon\Carbon::parse($provider->provider_verified_until) : null;
+            $startDate = ($currentDate && $currentDate->isFuture()) ? $currentDate : now();
+            
+            $provider->verification_provider = true;
+            $provider->provider_verified_until = $startDate->addDays($graceDays);
+            $provider->save();
+            
+            return back()->with('success', "تم قبول تحديث الهوية ومنح المزود فترة سماح قدرها $graceDays أيام إضافية للتفعيل.");
+        }
+
+        // إذا كانت فترة السماح 0، تُقبل هويته فقط، ولا يُعطى شارة التوثيق ولا تاريخ الصلاحية
+        $provider->save();
+        return back()->with('success', 'تم قبول الهوية. المزود كان موثقاً من قبل، لذا يجب عليه شراء باقة توثيق لتفعيل التوثيق في حسابه مجدداً.');
     }
 
     public function rejectAdmin($id)
     {
         $request = VerificationRequest::findOrFail($id);
         $request->update(['status' => 'rejected']);
+        $provider = $request->user();
+
+        $provider->verification_provider = false;
+        $provider->provider_verified_until = null;
+        $provider->save();
 
         return back()->with('success', 'تم رفض طلب التحقق');
     }
@@ -166,7 +201,9 @@ class VerificationRequestController extends Controller
             ->where('commission_paid', false)
             ->sum('total_price');
 
-            $totalCommission = $totalCommission / 10;
+        $defaultCommission = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
+        $percentage = $provider->commission ?? $defaultCommission;
+        $totalCommission = $totalCommission * ($percentage / 100);
 
         /*
         |--------------------------------------------------------------------------
@@ -191,33 +228,7 @@ class VerificationRequestController extends Controller
     }
 
 
-    public function approve(VerificationRequest $verificationRequest)
-    {
-        $provider = User::findOrFail($verificationRequest->user_id);
-
-        $provider->verification_provider = true;
-        $provider->provider_verified_until = now()->addYear();
-        $provider->save();
-
-        $verificationRequest->status = 'accepted';
-        $verificationRequest->save();
-
-        return redirect()->back()->with('success', 'تم قبول توثيق مزود الخدمة');
-    }
-
-    public function reject(VerificationRequest $verificationRequest)
-    {
-        $provider = User::findOrFail($verificationRequest->user_id);
-
-        $provider->verification_provider = false;
-        $provider->provider_verified_until = null;
-        $provider->save();
-
-        $verificationRequest->status = 'rejected';
-        $verificationRequest->save();
-
-        return redirect()->back()->with('error', 'تم رفض توثيق مزود الخدمة');
-    }
+    // Cleaned up dead duplicated code.
 
 
 }

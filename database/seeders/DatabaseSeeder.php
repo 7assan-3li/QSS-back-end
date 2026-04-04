@@ -25,6 +25,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // 0. Global Settings
+        $settings = [
+            ['key' => 'provider_commission', 'display_name' => 'نسبة المنصة من إجمالي الطلب ومزود الخدمة (%)', 'value' => '10'],
+            ['key' => 'seeker_bonus', 'display_name' => 'نسبة نقاط مكافأة طالب الخدمة بعد الانتهاء من الطلب (%)', 'value' => '10'],
+            ['key' => 'provider_conversion_bonus', 'display_name' => 'نسبة الحافز الإضافي لمزود الخدمة عند تحويل الأرباح لنقاط (%)', 'value' => '1'],
+            ['key' => 'min_withdrawal_amount', 'display_name' => 'الحد الأدنى لطلب سحب الأرباح التراكمية للمزود (مقدار ثابت)', 'value' => '50'],
+            ['key' => 'initial_free_verification_days', 'display_name' => 'أيام التوثيق المجانية الممنوحة عند قبول التوثيق (لأول مرة فقط)', 'value' => '365'],
+            ['key' => 'returning_free_verification_days', 'display_name' => 'أيام التوثيق المجانية الممنوحة عند تحديث التوثيق (للمرات اللاحقة)', 'value' => '3'],
+            ['key' => 'stale_identity_expiry_days', 'display_name' => 'صلاحية بقاء الهوية المقبولة بدون اشتراك غي باقة (أيام)', 'value' => '7'],
+        ];
+        foreach ($settings as $setting) {
+            \App\Models\Setting::updateOrCreate(['key' => $setting['key']], $setting);
+        }
+
         // 1. Admin
         $admin = User::updateOrCreate(
             ['email' => 'admin@gmail.com'],

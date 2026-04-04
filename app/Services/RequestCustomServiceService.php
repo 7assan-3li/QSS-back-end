@@ -55,6 +55,9 @@ class RequestCustomServiceService
                     $data['longitude'] = $userProfile->longitude;
                 }
             }
+            if (empty($data['latitude']) || empty($data['longitude'])) {
+                throw new Exception('لا يمكن حساب المسافة، يرجى تفعيل الموقع أو إدخال الإحداثيات.');
+            }
         }
 
         $request_id = null;

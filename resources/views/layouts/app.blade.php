@@ -99,9 +99,9 @@
                     <span class="text">بلاغات الطلبات</span>
                 </a>
 
-                <a href="#" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                <a href="{{ route('settings.index') }}" class="{{ request()->is('settings*') ? 'active' : '' }}">
                     <span class="icon">⚙️</span>
-                    <span class="text">الإعدادات</span>
+                    <span class="text">إعدادات النظام الديناميكية</span>
                 </a>
 
                 <!-- Logout -->

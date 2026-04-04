@@ -177,8 +177,9 @@ class PointsService
                 throw new \Exception("رصيد الأرباح (Paid Points) غير كافٍ لإتمام التحويل");
             }
 
-            // حساب مبلغ المكافأة مع حافز 1%
-            $bonusAmount = $amount * 1.01;
+            // حساب مبلغ المكافأة مع الحافز الديناميكي
+            $conversionBonusRate = \App\Models\Setting::where('key', 'provider_conversion_bonus')->value('value') ?? 1;
+            $bonusAmount = $amount * (1 + ($conversionBonusRate / 100));
 
             $user->paid_points -= $amount;
             $user->bonus_points += $bonusAmount;
@@ -190,7 +191,7 @@ class PointsService
                 'request_id'  => null,
                 'amount'      => $amount,
                 'type'        => 'points_conversion',
-                'description' => "تحويل $amount من الأرباح إلى $bonusAmount من المكافآت (حافز 1%)"
+                'description' => "تحويل $amount من الأرباح إلى $bonusAmount من المكافآت (حافز $conversionBonusRate%)"
             ]);
 
             return [
@@ -204,7 +205,8 @@ class PointsService
 
     private function calculateBonusPoints($request)
     {
-        return $request->total_price * 0.1;
+        $seekerBonusRate = \App\Models\Setting::where('key', 'seeker_bonus')->value('value') ?? 10;
+        return $request->total_price * ($seekerBonusRate / 100);
     }
 
     private function checkRequestStatusToPay($request)

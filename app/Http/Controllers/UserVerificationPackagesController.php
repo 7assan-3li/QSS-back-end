@@ -30,6 +30,17 @@ class UserVerificationPackagesController extends Controller
 
     public function store(StoreUserVerificationPackageRequest $request)
     {
+        // حماية النظام: منع شراء الباقات لمن لم يسبق قبول توثيق هويتهم الأساسية ولو لمرة واحدة
+        $hasApprovedIdentity = \App\Models\VerificationRequest::where('user_id', Auth::id())
+            ->where('status', 'accepted')
+            ->exists();
+
+        if (!$hasApprovedIdentity) {
+            return response()->json([
+                'message' => 'عذراً، لا يُسمح لك بشراء باقات التوثيق الممتدة إلا بعد تقديم طلب توثيق الهوية الأساسي والموافقة عليه من قبل الإدارة.'
+            ], 403);
+        }
+
         $validated = $request->validated();
         $imageFile = $request->file('image_bond');
 
