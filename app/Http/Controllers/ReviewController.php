@@ -45,24 +45,25 @@ class ReviewController extends Controller
 
         $review = Review::create($validated);
 
+        // 1. تحديث تقييم الخدمة المعينة (المتوسط الحسابي لكل تقييمات هذه الخدمة)
         $mainService = $requestModel->main_service->first();
-
-        $averageRating = $mainService->requests()
-            ->whereHas('review')
+        $serviceRating = $mainService->requests()
             ->join('reviews', 'reviews.request_id', '=', 'requests.id')
-            ->selectRaw('AVG(reviews.rating) as avg_rating')
-            ->value('avg_rating');
+            ->avg('reviews.rating');
 
         $mainService->update([
-            'rating_avg' => round($averageRating ?? 0, 2),
+            'rating_avg' => round($serviceRating ?? 0, 2),
         ]);
 
-        $user = $mainService->provider;
-        $userRating =  $user->mainServices()
-            ->whereNotNull('rating_avg')
-            ->avg('rating_avg');
-        $user->update([
-            'rating_avg' => round($userRating, 2),
+        // 2. تحديث التقييم العام للمزود (المتوسط الحسابي لجميع التقييمات في كافة خدماته)
+        $provider = $mainService->provider;
+        $providerRating = Review::whereHas('request.services', function($q) use ($provider) {
+                $q->where('provider_id', $provider->id);
+            })
+            ->avg('rating');
+
+        $provider->update([
+            'rating_avg' => round($providerRating ?? 0, 2),
         ]);
 
 
