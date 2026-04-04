@@ -49,6 +49,9 @@ class ProfileService
         // ✏️ تحديث البيانات الأخرى
         $profile->update([
             'bio' => $data['bio'] ?? $profile->bio,
+            'job_title' => $data['job_title'] ?? $profile->job_title,
+            'latitude' => $data['latitude'] ?? $profile->latitude,
+            'longitude' => $data['longitude'] ?? $profile->longitude,
         ]);
 
         return $profile;

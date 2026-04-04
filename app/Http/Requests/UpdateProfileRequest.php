@@ -22,11 +22,12 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio' => 'nullable|string|max:10000',
-            'job_title' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+            'name' => 'sometimes|required|string|max:255',
+            'bio' => 'sometimes|nullable|string|max:10000',
+            'job_title' => 'sometimes|nullable|string|max:255',
+            'image' => 'sometimes|nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'latitude' => 'sometimes|nullable|numeric|between:-90,90',
+            'longitude' => 'sometimes|nullable|numeric|between:-180,180',
         ];
     }
 }

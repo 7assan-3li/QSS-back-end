@@ -61,14 +61,21 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request, ProfileService $profileService)
     {
         $validated = $request->validated();
-
         $user = Auth::user();
-        $profile_id = $user->profile->id;
-        $user = $this->userService->update($user->id, $validated);
-        $profile = $profileService->update($validated, $request, $profile_id);
-        $profile['name'] = $user->name;
-        $profile['email'] = $user->email;
-        $profile['phone'] = $user->phone;
+
+        // 1. تحديث بيانات المستخدم (الاسم والإيميل)
+        $userData = array_intersect_key($validated, array_flip(['name']));
+        if (!empty($userData)) {
+            $this->userService->update($user->id, $userData);
+        }
+
+        // 2. تحديث بيانات الملف الشخصي
+        $profileId = $user->profile->id;
+        $profileData = array_diff_key($validated, array_flip(['name', 'email']));
+        $profile = $profileService->update($profileData, $request, $profileId);
+
+        // 3. تحميل العلاقة لضمان ظهور البيانات المحدثة في الريسورس
+        $profile->load('user');
 
         return response()->json([
             'message' => 'Profile updated successfully',
