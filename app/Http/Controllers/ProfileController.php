@@ -8,9 +8,13 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Services\ProfileService;
 use App\Http\Resources\ProfileResource;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
+    public function __construct(private UserService $userService)
+    {
+    }
 
     public function show($profile_id)
     {
@@ -41,11 +45,11 @@ class ProfileController extends Controller
         ], 200);
     }
 
-    public function store(StoreProfileRequest $request,ProfileService $profileService)
+    public function store(StoreProfileRequest $request, ProfileService $profileService)
     {
 
         $validated = $request->validated();
-        $profile = $profileService->create($validated, $request );
+        $profile = $profileService->create($validated, $request);
 
         return response()->json([
             'message' => 'Profile created successfully',
@@ -53,12 +57,18 @@ class ProfileController extends Controller
         ], 201);
 
     }
- 
-    public function update(UpdateProfileRequest $request,ProfileService $profileService,$profile_id)
+
+    public function update(UpdateProfileRequest $request, ProfileService $profileService)
     {
         $validated = $request->validated();
 
+        $user = Auth::user();
+        $profile_id = $user->profile->id;
+        $user = $this->userService->update($user->id, $validated);
         $profile = $profileService->update($validated, $request, $profile_id);
+        $profile['name'] = $user->name;
+        $profile['email'] = $user->email;
+        $profile['phone'] = $user->phone;
 
         return response()->json([
             'message' => 'Profile updated successfully',
