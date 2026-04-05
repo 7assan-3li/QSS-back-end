@@ -160,9 +160,20 @@ class ServiceController extends Controller
         // إضافة معلومة التوفر الحالي
         $service->setAttribute('is_available_now', $service->isAvailableNow());
 
+        // جلب التقييمات والمراجعات الخاصة بهذه الخدمة
+        $reviews = \App\Models\Review::whereHas('request.services', function($q) use ($service) {
+                $q->where('service_id', $service->id);
+            })
+            ->where('is_hidden', false)
+            ->with(['request.user.profile'])
+            ->latest()
+            ->get();
+
+        $service->setAttribute('reviews', \App\Http\Resources\ReviewResource::collection($reviews));
+
         return response()->json([
             'message' => 'Service retrieved successfully',
-            'data' => $service->load(['category', 'children', 'schedules.days'])
+            'data' => $service->load(['category', 'children', 'schedules.days', 'provider.profile'])
         ]);
     }
 

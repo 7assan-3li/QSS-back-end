@@ -11,13 +11,43 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $reviews = Review::with(['request.user.profile', 'request.services.provider.profile'])
+            ->whereHas('request', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'message' => 'Reviews retrieved successfully',
+            'data' => \App\Http\Resources\ReviewResource::collection($reviews)
+        ]);
+    }
+
+    public function getProviderFeedback($user_id)
+    {
+        $reviews = Review::with(['request.user.profile', 'request.services.provider.profile'])
+            ->whereHas('request.main_service', function ($q) use ($user_id) {
+                $q->where('provider_id', $user_id);
+            })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'message' => 'Reviews retrieved successfully',
+            'data' => \App\Http\Resources\ReviewResource::collection($reviews)
+        ]);
+    }
     public function store(Request $request)
     {
 
         $validated = $request->validate([
             'request_id' => 'required|exists:requests,id',
-            'rating'     => 'required|numeric|min:1|max:5',
-            'comment'    => 'nullable|string|max:2000',
+            'rating' => 'required|numeric|min:1|max:5',
+            'comment' => 'nullable|string|max:2000',
         ]);
 
         $requestModel = ModelsRequest::findOrFail($request->request_id);
@@ -57,9 +87,9 @@ class ReviewController extends Controller
 
         // 2. تحديث التقييم العام للمزود (المتوسط الحسابي لجميع التقييمات في كافة خدماته)
         $provider = $mainService->provider;
-        $providerRating = Review::whereHas('request.services', function($q) use ($provider) {
-                $q->where('provider_id', $provider->id);
-            })
+        $providerRating = Review::whereHas('request.services', function ($q) use ($provider) {
+            $q->where('provider_id', $provider->id);
+        })
             ->avg('rating');
 
         $provider->update([
@@ -70,7 +100,7 @@ class ReviewController extends Controller
 
         return response()->json([
             'message' => 'تم إضافة التقييم بنجاح',
-            'review'  => $review,
+            'review' => $review,
         ], 201);
     }
 
@@ -78,15 +108,27 @@ class ReviewController extends Controller
     public function update(Request $request, $id)
     {
         $review = Review::findOrFail($id);
+
+        // التحقق من أن المستخدم الحالي هو صاحب الخدمة (المزود) المرتبط بهذا التقييم
+        $provider = $review->request->serviceProvider();
+
+        if (!$provider || $provider->id !== Auth::id()) {
+            return response()->json([
+                'message' => 'ليس لديك الصلاحية لإخفاء أو إظهار هذا التقييم'
+            ], 403);
+        }
+
         $request->validate([
             'is_hidden' => 'required|boolean',
         ]);
+
         $review->update([
             'is_hidden' => $request->is_hidden,
         ]);
+
         return response()->json([
-            'message' => 'تم تحديث التقييم بنجاح',
-            'review'  => $review,
+            'message' => 'تم تحديث حالة ظهور التقييم بنجاح',
+            'review' => $review,
         ], 200);
     }
 }
