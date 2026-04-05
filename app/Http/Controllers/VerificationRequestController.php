@@ -106,7 +106,7 @@ class VerificationRequestController extends Controller
     {
         $request = VerificationRequest::findOrFail($id);
         $request->update(['status' => 'accepted']);
-        $provider = $request->user();
+        $provider = $request->user;
 
         // التحقق مما إذا كانت هذه هي المرة الأولى التي يُقبل فيها توثيق هذا المزود
         $hasBeenVerifiedBefore = VerificationRequest::where('user_id', $provider->id)
@@ -115,7 +115,7 @@ class VerificationRequestController extends Controller
             ->exists();
 
         if (!$hasBeenVerifiedBefore) {
-            $freeDays = \App\Models\Setting::where('key', 'initial_free_verification_days')->value('value') ?? 365;
+            $freeDays = (int) (\App\Models\Setting::where('key', 'initial_free_verification_days')->value('value') ?? 365);
             $provider->verification_provider = true;
             $provider->provider_verified_until = now()->addDays($freeDays);
             $provider->save();
@@ -123,16 +123,16 @@ class VerificationRequestController extends Controller
         }
 
         // للمرات اللاحقة: منح فترة سماح قصيرة محددة من الإعدادات
-        $graceDays = \App\Models\Setting::where('key', 'returning_free_verification_days')->value('value') ?? 0;
-        
+        $graceDays = (int) (\App\Models\Setting::where('key', 'returning_free_verification_days')->value('value') ?? 0);
+
         if ($graceDays > 0) {
             $currentDate = $provider->provider_verified_until ? \Carbon\Carbon::parse($provider->provider_verified_until) : null;
             $startDate = ($currentDate && $currentDate->isFuture()) ? $currentDate : now();
-            
+
             $provider->verification_provider = true;
             $provider->provider_verified_until = $startDate->addDays($graceDays);
             $provider->save();
-            
+
             return back()->with('success', "تم قبول تحديث الهوية ومنح المزود فترة سماح قدرها $graceDays أيام إضافية للتفعيل.");
         }
 
@@ -145,7 +145,7 @@ class VerificationRequestController extends Controller
     {
         $request = VerificationRequest::findOrFail($id);
         $request->update(['status' => 'rejected']);
-        $provider = $request->user();
+        $provider = $request->user;
 
         $provider->verification_provider = false;
         $provider->provider_verified_until = null;

@@ -31,6 +31,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'commission',
         'bonus_points',
         'paid_points',
+        'verification_provider',
+        'provider_verified_until',
     ];
 
     /**

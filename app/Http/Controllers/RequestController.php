@@ -267,10 +267,12 @@ class RequestController extends Controller
                 'status' => $newStatus,
             ]);
 
-            if ($newStatus == RequestStatus::COMPLETED) {
-                // التأكد من تهيئة مبلغ العمولة عند اكتمال الطلب
-                $requestModel->commission_amount = $requestModel->getCommissionAmount();
-                $requestModel->save();
+            if (in_array($newStatus, [RequestStatus::COMPLETED, RequestStatus::ACCEPTED_FULL_PAID, RequestStatus::ACCEPTED_PARTIAL_PAID])) {
+                // التأكد من تهيئة مبلغ العمولة عند البدء في سداد الطلب أو إكماله لضمان ثبات القيمة
+                if ($requestModel->commission_amount <= 0) {
+                    $requestModel->commission_amount = $requestModel->getCommissionAmount();
+                    $requestModel->save();
+                }
             }
 
             if ($newStatus == RequestStatus::COMPLETED) {

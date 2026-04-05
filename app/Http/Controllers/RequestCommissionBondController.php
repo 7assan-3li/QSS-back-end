@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RequestCommissionBondRequest;
 use App\Models\RequestCommissionBond;
+use App\Models\Setting;
+use App\constant\RequestStatus;
 use App\Services\RequestCommissionBondService;
 use Illuminate\Http\Request;
 
@@ -66,42 +68,56 @@ class RequestCommissionBondController extends Controller
     {
         $userId = $request->user()->id;
 
-        $requests = \App\Models\Request::with(['user', 'main_service'])
+        // تحميل الطلبات مع العلاقة والمزود لتجنب N+1 queries
+        $requests = \App\Models\Request::with(['user', 'main_service.provider'])
             ->whereHas('main_service', function ($q) use ($userId) {
                 $q->where('provider_id', $userId);
             })
             ->where(function($q) {
+                // تضمين الطلبات المكتملة أو التي تم دفعها بالكامل أو جزئياً لضمان دقة البيانات
                 $q->where('commission_amount', '>', 0)
-                  ->orWhere('status', \App\constant\RequestStatus::COMPLETED);
+                  ->orWhereIn('status', [
+                      RequestStatus::COMPLETED,
+                      RequestStatus::ACCEPTED_FULL_PAID,
+                      RequestStatus::ACCEPTED_PARTIAL_PAID
+                  ]);
             })
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $totalDue = $requests->sum(function (\App\Models\Request $req) {
-            return $req->getCommissionAmount();
+        // جلب الإعدادات مرة واحدة خارج الحلقة
+        $defaultCommission = Setting::where('key', 'provider_commission')->value('value') ?? 10;
+
+        $details = $requests->map(function (\App\Models\Request $req) use ($defaultCommission) {
+            // الاستفادة من التحميل المسبق في النموذج
+            $provider = $req->serviceProvider();
+            $commissionAmount = $req->getCommissionAmount($provider, $defaultCommission);
+
+            return [
+                'id'                     => $req->id,
+                'seeker_name'            => $req->user->name ?? 'N/A',
+                'total_price'            => (float) $req->total_price,
+                'commission_amount'      => $commissionAmount,
+                'commission_rate'        => (float) $req->commission_rate,
+                'commission_amount_paid' => (float) $req->commission_amount_paid,
+                'commission_paid_status' => (bool) $req->commission_paid,
+                'created_at'             => $req->created_at->toDateTimeString(),
+                'status'                 => $req->status,
+            ];
         });
-        $totalPaid = $requests->sum('commission_amount_paid');
+
+        $totalDue = $details->sum('commission_amount');
+        $totalPaid = $details->sum('commission_amount_paid');
         $remaining = $totalDue - $totalPaid;
 
         return response()->json([
             'summary' => [
-                'total_commission_due'  => $totalDue,
-                'total_commission_paid' => $totalPaid,
-                'remaining_balance'     => $remaining,
+                'total_commission_due'  => (float) $totalDue,
+                'total_commission_paid' => (float) $totalPaid,
+                'remaining_balance'     => (float) $remaining,
                 'requests_count'        => $requests->count(),
             ],
-            'details' => $requests->map(function (\App\Models\Request $req) {
-                return [
-                    'id'                     => $req->id,
-                    'seeker_name'            => $req->user->name ?? 'N/A',
-                    'total_price'            => $req->total_price,
-                    'commission_amount'      => $req->getCommissionAmount(),
-                    'commission_amount_paid' => $req->commission_amount_paid,
-                    'commission_paid_status' => $req->commission_paid,
-                    'created_at'             => $req->created_at->toDateTimeString(),
-                    'status'                 => $req->status,
-                ];
-            }),
+            'details' => $details,
         ]);
     }
 }

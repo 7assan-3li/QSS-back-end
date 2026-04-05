@@ -68,18 +68,20 @@ class UserVerificationPackagesService
     public function approvePackage($packageId, $adminId)
     {
         return DB::transaction(function () use ($packageId, $adminId) {
-            $userPackage = UserVerificationPackages::findOrFail($packageId);
+            $userPackage = UserVerificationPackages::with(['user', 'verificationPackage'])->findOrFail($packageId);
             
             $userPackage->update([
                 'status' => BondStatus::APPROVED,
                 'admin_id' => $adminId,
             ]);
 
-            $currentDate = $userPackage->user->provider_verified_until ? \Carbon\Carbon::parse($userPackage->user->provider_verified_until) : null;
+            $user = $userPackage->user;
+            $currentDate = $user->provider_verified_until ? \Carbon\Carbon::parse($user->provider_verified_until) : null;
             $startDate = ($currentDate && $currentDate->isFuture()) ? $currentDate : now();
-            $newDate = $startDate->addDays($userPackage->verificationPackage->duration_days);
+            $durationDays = (int) ($userPackage->verificationPackage->duration_days ?? 0);
+            $newDate = $startDate->copy()->addDays($durationDays);
 
-            $userPackage->user->update([
+            $user->update([
                 'verification_provider' => true,
                 'provider_verified_until' => $newDate
             ]);

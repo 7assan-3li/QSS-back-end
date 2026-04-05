@@ -49,13 +49,16 @@ class Request extends Model
 
     public function serviceProvider()
     {
-        return $this->main_service()->first()?->provider;
+        // استخدام العلاقة المحملة مسبقاً إذا كانت موجودة لتجنب N+1 queries
+        $mainService = $this->relationLoaded('main_service') ? $this->main_service->first() : $this->main_service()->first();
+        return $mainService?->provider;
     }
 
     public function getRequiredPartialAmount()
     {
-        $percentage = $this->main_service()->first()?->required_partial_percentage ?? 0;
-        return $this->total_price * ($percentage / 100);
+        $mainService = $this->relationLoaded('main_service') ? $this->main_service->first() : $this->main_service()->first();
+        $percentage = $mainService?->required_partial_percentage ?? 0;
+        return (float) ($this->total_price * ($percentage / 100));
     }
 
 
@@ -70,22 +73,32 @@ class Request extends Model
         return $this->hasOne(Review::class);
     }
 
-    public function getCommissionAmount()
+    public function getCommissionAmount($provider = null, $defaultPercentage = null)
     {
-        // إذا كان هناك مبلغ تم حسابه مسبقاً عند اكتمال الطلب، نستخدمه
+        // إذا كان هناك مبلغ تم حسابه مسبقاً، نستخدمه لضمان ثبات البيانات
         if ($this->commission_amount > 0) {
-            return $this->commission_amount;
+            return (float) $this->commission_amount;
         }
 
         // بخلاف ذلك نحسبه بناءً على إجمالي الطلب ونسبة عمولة المزود
-        $provider = $this->serviceProvider();
+        $provider = $provider ?? $this->serviceProvider();
         if (!$provider || $provider->no_commission) {
-            return 0;
+            $this->commission_rate = 0;
+            return 0.0;
         }
 
-        $defaultCommission = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
-        $percentage = $provider->commission ?? $defaultCommission;
-        return $this->total_price * ($percentage / 100);
+        if ($defaultPercentage === null) {
+            $defaultPercentage = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
+        }
+        
+        // إذا كانت عمولة المزود 0، نستخدم العمولة الافتراضية للنظام
+        // إلا إذا كان لديه استثناء يدوي عبر no_commission (تم معالجته أعلاه)
+        $percentage = ($provider->commission > 0) ? $provider->commission : $defaultPercentage;
+        
+        // تخرين النسبة المستخدمة في خاصية الموديل لكي يتم حفظها عند عمل save()
+        $this->commission_rate = (float) $percentage;
+        
+        return (float) ($this->total_price * ($percentage / 100));
     }
 
     public function commissionBonds()
