@@ -11,17 +11,17 @@
                 <a href="{{ route('system-complaints.index') }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800">
                     <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-600 text-2xl font-Cairo shadow-lg shadow-rose-500/5">🚩</span>
                     {{ __('معالجة بلاغ النظام') }}
                 </h3>
             </div>
-            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start">
+            <div class="flex items-center gap-3 text-[10px] font-black mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
                 <span>{{ __('تفاصيل البلاغ') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                 <span>{{ __('التحليل النوعي') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-rose-600">{{ __('البلاغ') }} #{{ str_pad($systemComplaint->id, 5, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-rose-600 opacity-100">{{ __('البلاغ') }} #{{ str_pad($systemComplaint->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
         
@@ -57,10 +57,10 @@
                     </div>
                     <div class="flex flex-col items-center text-center font-Cairo">
                         <span class="text-[10px] font-black uppercase tracking-[0.2em] font-Cairo mb-2
-                            @if($isCurrent) text-rose-600 @elseif($isCompleted) text-emerald-600 @else text-slate-400/80 @endif">
+                            @if($isCurrent) text-rose-600 @elseif($isCompleted) text-emerald-600 @else opacity-60 @endif">
                             {{ $step == 'pending' ? __('المرحلة') . ': ' . __('قيد الانتظار') : ($step == 'in_progress' ? __('المرحلة') . ': ' . __('قيد المعالجة') : __('المرحلة') . ': ' . __('تم الحل')) }}
                         </span>
-                        <span class="text-xs font-black text-slate-800 dark:text-white font-Cairo">
+                        <span class="text-xs font-black font-Cairo italic">
                             {{ __($step) }}
                         </span>
                     </div>
@@ -84,12 +84,12 @@
                 
                 <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
                     <span class="w-3 h-10 bg-rose-600 rounded-full shadow-lg shadow-rose-600/30"></span>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start">{{ __('محتوى البلاغ') }}</h4>
+                    <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('محتوى البلاغ') }}</h4>
                 </div>
                 
                 <div class="bg-slate-50/50 dark:bg-slate-950/40 p-12 rounded-[3.5rem] border border-slate-100 dark:border-slate-800/80 mb-16 relative group text-start font-Cairo shadow-inner">
                     <div class="absolute -top-8 -right-8 w-20 h-20 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl flex items-center justify-center text-4xl group-hover:rotate-12 transition-all duration-500 font-Cairo">💬</div>
-                    <p class="text-xl font-bold text-slate-700 dark:text-slate-200 leading-[2.2] font-Cairo italic text-start font-Cairo">
+                    <p class="text-xl font-bold leading-[2.2] font-Cairo italic text-start font-Cairo opacity-70">
                         " {{ $systemComplaint->content }} "
                     </p>
                 </div>
@@ -98,8 +98,8 @@
                     <!-- Metadata Node: Source -->
                     <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
                         <div class="w-16 h-16 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📱</div>
-                        <div class="flex flex-col text-start">
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('قناة الوارد') }}</span>
+                        <div class="flex flex-col text-start font-Cairo">
+                            <span class="text-[9px] font-black uppercase tracking-[0.3em] mb-2 font-Cairo text-start opacity-60">{{ __('قناة الوارد') }}</span>
                             <span class="text-sm font-black text-indigo-600 font-Cairo text-start">
                                 {{ $systemComplaint->app_source === 'provider' ? __('تطبيق المزود') : __('تطبيق العميل') }}
                             </span>
@@ -109,18 +109,18 @@
                     <!-- Metadata Node: User Identity -->
                     <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
                         <div class="w-16 h-16 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">👤</div>
-                        <div class="flex flex-col text-start">
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('هوية المُبلغ') }}</span>
-                            <span class="text-sm font-black text-slate-800 dark:text-white font-Cairo text-start">{{ $systemComplaint->user->name }}</span>
+                        <div class="flex flex-col text-start font-Cairo">
+                            <span class="text-[9px] font-black uppercase tracking-[0.3em] mb-2 font-Cairo text-start opacity-60">{{ __('هوية المُبلغ') }}</span>
+                            <span class="text-sm font-black font-Cairo text-start italic">{{ $systemComplaint->user->name }}</span>
                         </div>
                     </div>
 
                     <!-- Metadata Node: Communication -->
                     <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start font-Cairo">
                         <div class="w-16 h-16 bg-blue-500/10 text-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">✉️</div>
-                        <div class="flex flex-col text-start">
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('قنوات الاتصال') }}</span>
-                            <span class="text-[11px] font-black text-slate-700 dark:text-slate-300 font-mono tracking-tight text-start">{{ $systemComplaint->user->email }}</span>
+                        <div class="flex flex-col text-start font-Cairo font-mono">
+                            <span class="text-[9px] font-black uppercase tracking-[0.3em] mb-2 font-Cairo text-start opacity-60">{{ __('قنوات الاتصال') }}</span>
+                            <span class="text-[11px] font-black tracking-tight text-start italic opacity-70">{{ $systemComplaint->user->email }}</span>
                         </div>
                     </div>
 
@@ -146,7 +146,7 @@
                  
                 <div class="flex items-center gap-4 mb-10 text-start font-Cairo">
                     <span class="w-2 h-8 bg-rose-600 rounded-full shadow-md font-Cairo"></span>
-                    <h4 class="font-black text-slate-800 dark:text-white font-Cairo text-sm uppercase tracking-[0.2em] text-start">{{ __('تحديث حالة البلاغ') }}</h4>
+                    <h4 class="font-black font-Cairo text-sm uppercase tracking-[0.2em] text-start italic">{{ __('تحديث حالة البلاغ') }}</h4>
                 </div>
 
                 @if(session('success'))
@@ -160,9 +160,9 @@
                     @method('PATCH')
 
                     <div class="space-y-4 text-start font-Cairo">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('الحالة الجديدة') }}</label>
+                        <label class="text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">{{ __('الحالة الجديدة') }}</label>
                         <div class="relative text-start font-Cairo">
-                            <select name="status" class="w-full px-10 py-6 bg-slate-50 dark:bg-slate-950 border-2 border-slate-100 dark:border-slate-800/80 rounded-[2.5rem] text-sm font-black outline-none focus:border-rose-600 focus:ring-[12px] focus:ring-rose-500/5 appearance-none font-Cairo transition-all dark:text-white text-center shadow-inner">
+                            <select name="status" class="w-full px-10 py-6 bg-slate-50 dark:bg-slate-950 border-2 border-slate-100 dark:border-slate-800/80 rounded-[2.5rem] text-sm font-black outline-none focus:border-rose-600 focus:ring-[12px] focus:ring-rose-500/5 appearance-none font-Cairo transition-all text-center shadow-inner">
                                 @foreach (\App\constant\SystemComplaintStatus::all() as $status)
                                     <option value="{{ $status }}" {{ $systemComplaint->status == $status ? 'selected' : '' }}>
                                         {{ __($status) }}
@@ -187,19 +187,19 @@
             <div class="card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo">
                 <div class="flex items-center gap-4 mb-10 text-start font-Cairo">
                     <span class="w-2 h-8 bg-indigo-500 rounded-full shadow-md font-Cairo"></span>
-                    <h4 class="font-black text-slate-800 dark:text-white font-Cairo text-sm uppercase tracking-[0.2em] text-start font-Cairo">{{ __('إحصائيات المعالجة') }}</h4>
+                    <h4 class="font-black font-Cairo text-sm uppercase tracking-[0.2em] text-start italic">{{ __('إحصائيات المعالجة') }}</h4>
                 </div>
                 <div class="relative h-64 text-start font-Cairo font-mono">
                     <canvas id="complaintChart"></canvas>
                 </div>
                 <div class="mt-10 grid grid-cols-2 gap-6 text-start font-Cairo">
-                    <div class="bg-amber-500/10 p-6 rounded-[2rem] border border-amber-500/20 text-center group hover:bg-amber-500/15 transition-all text-start">
-                        <span class="block text-[8px] font-black text-amber-600 uppercase tracking-[0.3em] mb-2 font-Cairo">{{ __('وقت الانتظار') }}</span>
-                        <span class="text-lg font-black text-slate-800 dark:text-white font-mono">{{ $waitingHours }}h</span>
+                    <div class="bg-amber-500/10 p-6 rounded-[2rem] border border-amber-500/20 text-center group hover:bg-amber-500/15 transition-all text-start font-Cairo">
+                        <span class="block text-[8px] font-black text-amber-600 uppercase tracking-[0.3em] mb-2 font-Cairo opacity-70">{{ __('وقت الانتظار') }}</span>
+                        <span class="text-lg font-black font-mono italic">{{ $waitingHours }}h</span>
                     </div>
-                    <div class="bg-emerald-500/10 p-6 rounded-[2rem] border border-emerald-500/20 text-center group hover:bg-emerald-500/15 transition-all text-start">
-                        <span class="block text-[8px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-2 font-Cairo">{{ __('وقت المعالجة') }}</span>
-                        <span class="text-lg font-black text-slate-800 dark:text-white font-mono">{{ $processingHours }}h</span>
+                    <div class="bg-emerald-500/10 p-6 rounded-[2rem] border border-emerald-500/20 text-center group hover:bg-emerald-500/15 transition-all text-start font-Cairo">
+                        <span class="block text-[8px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-2 font-Cairo opacity-70">{{ __('وقت المعالجة') }}</span>
+                        <span class="text-lg font-black font-mono italic">{{ $processingHours }}h</span>
                     </div>
                 </div>
             </div>
@@ -240,14 +240,13 @@
                     }
                 },
                 scales: {
-                    y: {
                         beginAtZero: true,
                         grid: { color: 'rgba(226, 232, 240, 0.4)', drawBorder: false },
-                        ticks: { font: { size: 10, family: 'Cairo' }, color: '#94a3b8', callback: v => v + 'h' }
+                        ticks: { font: { size: 10, family: 'Cairo' }, color: 'currentColor', callback: v => v + 'h' }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { font: { size: 11, family: 'Cairo', weight: '900' }, color: '#64748b' }
+                        ticks: { font: { size: 11, family: 'Cairo', weight: '900' }, color: 'currentColor' }
                     }
                 }
             }

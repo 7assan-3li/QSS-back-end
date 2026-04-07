@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start font-Cairo">
         <div class="text-start font-Cairo">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-3xl font-Cairo shadow-lg shadow-indigo-500/5">💎</span>
                 {{ __('سجل اشتراكات التوثيق') }}
             </h3>
@@ -28,7 +28,7 @@
             <div class="flex flex-col gap-2 relative z-10 text-start font-Cairo">
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('إجمالي الطلبات') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-Cairo">
-                    <span class="text-4xl font-black text-slate-800 dark:text-white leading-none font-mono italic text-start">{{ number_format($userPackages->count()) }}</span>
+                    <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($userPackages->count()) }}</span>
                     <span class="text-[10px] font-black text-slate-400 italic text-start font-Cairo">{{ __('طلب') }}</span>
                 </div>
             </div>
@@ -91,7 +91,7 @@
     <div class="card-premium glass-panel rounded-[2rem] shadow-2xl border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
         <div class="p-10 border-b border-slate-100 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-8 text-start font-Cairo">
             <div class="text-start font-Cairo">
-                <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('سجل طلبات باقات التوثيق') }}</h4>
+                <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('سجل طلبات باقات التوثيق') }}</h4>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('مراجعة وإدارة طلبات اشتراك باقات التوثيق.') }}</p>
             </div>
             <div class="flex items-center gap-4 text-start font-Cairo">
@@ -120,7 +120,7 @@
                                         {{ mb_substr($request->user->name ?? 'U', 0, 1) }}
                                     </div>
                                     <div class="flex flex-col text-start font-Cairo">
-                                        <span class="text-[13px] font-black text-slate-700 dark:text-slate-200 font-Cairo leading-none mb-2 italic text-start uppercase">{{ $request->user->name ?? __('مستخدم غير معروف') }}</span>
+                                        <span class="text-[13px] font-black font-Cairo leading-none mb-2 italic text-start uppercase">{{ $request->user->name ?? __('مستخدم غير معروف') }}</span>
                                         <span class="text-[10px] font-bold text-slate-400 font-mono tracking-wide text-start italic">{{ $request->user->email ?? '' }}</span>
                                     </div>
                                 </div>

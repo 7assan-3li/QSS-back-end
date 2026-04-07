@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-slate-500/10 rounded-2xl flex items-center justify-center text-slate-500 text-3xl font-Cairo shadow-lg shadow-slate-500/5">📦</span>
                 {{ __('إدارة طلبات الخدمات') }}
             </h3>
@@ -23,7 +23,7 @@
         <a href="{{ route('requests.index') }}" class="card-premium glass-panel p-6 rounded-[2.5rem] shadow-xl border border-white dark:border-slate-800/50 hover:scale-[1.05] transition-all group text-center bg-white/40 dark:bg-slate-900/40 relative overflow-hidden">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-slate-500/5 rounded-full blur-2xl group-hover:bg-slate-500/10 transition-colors"></div>
             <div class="flex flex-col items-center gap-3 relative z-10">
-                <span class="text-3xl font-black text-slate-800 dark:text-white group-hover:text-indigo-600 transition-colors font-mono leading-none">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-3xl font-black group-hover:text-indigo-600 transition-colors font-mono leading-none">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
                 <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] text-center font-Cairo">{{ __('إجمالي الطلبات') }}</span>
             </div>
         </a>
@@ -107,7 +107,7 @@
                         {{ mb_substr($request->user->name, 0, 1) }}
                     </div>
                     <div class="flex flex-col text-start">
-                        <h4 class="font-black text-lg text-slate-800 dark:text-white leading-tight font-Cairo text-start">{{ $request->user->name }}</h4>
+                        <h4 class="font-black text-lg leading-tight font-Cairo text-start">{{ $request->user->name }}</h4>
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1 font-Cairo text-start">{{ __('صاحب الطلب (العميل)') }}</span>
                     </div>
                 </div>
@@ -117,8 +117,8 @@
                     <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] block mb-3 px-1 font-Cairo text-start">{{ __('قائمة الخدمات المطلوبة') }}</span>
                     <div class="flex flex-wrap gap-2 text-start">
                         @foreach ($request->services as $service)
-                            <div class="px-3.5 py-2 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3 transition-all hover:bg-white dark:hover:bg-slate-800 text-start">
-                                <span class="text-[10px] font-black text-slate-700 dark:text-slate-300 font-Cairo text-start">{{ $service->name }}</span>
+                             <div class="px-3.5 py-2 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3 transition-all hover:bg-white dark:hover:bg-slate-800 text-start">
+                                <span class="text-[10px] font-black font-Cairo text-start">{{ $service->name }}</span>
                                 <div class="w-px h-3 bg-slate-200 dark:bg-slate-700"></div>
                                 <span class="text-[9px] font-black text-brand-primary font-mono text-start">×{{ $service->pivot->quantity }}</span>
                                 @if($service->pivot->is_main)
@@ -134,7 +134,7 @@
                     <div class="flex flex-col gap-1.5 text-start">
                         <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] font-Cairo text-start">{{ __('القيمة الإجمالية') }}</span>
                         <div class="flex items-baseline gap-1 text-start">
-                            <span class="text-base font-black text-slate-800 dark:text-white font-mono text-start">{{ number_format($request->total_price, 2) }}</span>
+                            <span class="text-base font-black font-mono text-start">{{ number_format($request->total_price, 2) }}</span>
                             <span class="text-[8px] font-black text-slate-400 font-Cairo text-start">YER</span>
                         </div>
                     </div>
@@ -161,7 +161,7 @@
         @empty
             <div class="col-span-full py-40 bg-slate-50/50 dark:bg-slate-950/40 rounded-[4rem] text-center border-4 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-start">
                 <div class="w-24 h-24 bg-white dark:bg-slate-900 rounded-[2rem] flex items-center justify-center text-5xl mb-8 shadow-inner">🕳️</div>
-                <h5 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start">{{ __('لا توجد طلبات') }}</h5>
+                <h5 class="text-2xl font-black font-Cairo text-start">{{ __('لا توجد طلبات') }}</h5>
                 <p class="text-[10px] font-black text-slate-400 mt-6 max-w-sm leading-relaxed uppercase tracking-[0.2em] font-Cairo text-start">
                     {{ __('لا توجد طلبات مسجلة في هذا القسم حالياً.') }}
                 </p>

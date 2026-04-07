@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', __('بلاغات الطلبات'))
 
@@ -7,11 +7,11 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-pink-500/10 rounded-2xl flex items-center justify-center text-pink-600 text-3xl font-Cairo shadow-lg shadow-pink-500/5">⚖️</span>
                 {{ __('إدارة شكاوى الطلبات') }}
             </h3>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo">
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo opacity-60">
                 {{ __('إدارة الشكاوى معالجة النزاعات والوصول لحلول مرضية لجميع الأطراف.') }}
             </p>
         </div>
@@ -29,8 +29,8 @@
             <div class="flex items-center gap-6 relative z-10 text-start">
                 <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 shadow-inner group-hover:rotate-6 transition-transform font-Cairo text-2xl">📁</div>
                 <div class="flex flex-col text-start">
-                    <span class="text-3xl font-black text-slate-800 dark:text-white font-mono leading-none text-start">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('إجمالي الشكاوى') }}</span>
+                    <span class="text-3xl font-black font-mono leading-none text-start italic">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-[9px] font-black uppercase tracking-[0.2em] mt-2 font-Cairo text-start opacity-60">{{ __('إجمالي الشكاوى') }}</span>
                 </div>
             </div>
         </div>
@@ -41,8 +41,8 @@
             <div class="flex items-center gap-6 relative z-10 text-start">
                 <div class="w-16 h-16 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">⏳</div>
                 <div class="flex flex-col text-start">
-                    <span class="text-3xl font-black text-amber-600 font-mono leading-none text-start">{{ str_pad($stats['pending'], 2, '0', STR_PAD_LEFT) }}</span>
-                    <span class="text-[9px] font-black text-amber-500/80 uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('بانتظار المراجعة') }}</span>
+                    <span class="text-3xl font-black text-amber-600 font-mono leading-none text-start italic">{{ str_pad($stats['pending'], 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-[9px] font-black text-amber-500 uppercase tracking-[0.2em] mt-2 font-Cairo text-start opacity-80">{{ __('بانتظار المراجعة') }}</span>
                 </div>
             </div>
         </a>
@@ -53,8 +53,8 @@
             <div class="flex items-center gap-6 relative z-10 text-start">
                 <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-blue-600/20 group-hover:rotate-6 transition-transform font-Cairo">⚖️</div>
                 <div class="flex flex-col text-start">
-                    <span class="text-3xl font-black text-blue-600 font-mono leading-none text-start">{{ str_pad($stats['in_progress'], 2, '0', STR_PAD_LEFT) }}</span>
-                    <span class="text-[9px] font-black text-blue-500/80 uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('قيد المعالجة') }}</span>
+                    <span class="text-3xl font-black text-blue-600 font-mono leading-none text-start italic">{{ str_pad($stats['in_progress'], 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mt-2 font-Cairo text-start opacity-80">{{ __('قيد المعالجة') }}</span>
                 </div>
             </div>
         </a>
@@ -65,8 +65,8 @@
             <div class="flex items-center gap-6 relative z-10 text-start">
                 <div class="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform font-Cairo">✔️</div>
                 <div class="flex flex-col text-start">
-                    <span class="text-3xl font-black text-emerald-600 font-mono leading-none text-start">{{ str_pad($stats['completed'], 2, '0', STR_PAD_LEFT) }}</span>
-                    <span class="text-[9px] font-black text-emerald-500/80 uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('بلاغات مكتملة') }}</span>
+                    <span class="text-3xl font-black text-emerald-600 font-mono leading-none text-start italic">{{ str_pad($stats['completed'], 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em] mt-2 font-Cairo text-start opacity-80">{{ __('بلاغات مكتملة') }}</span>
                 </div>
             </div>
         </a>
@@ -77,7 +77,7 @@
         <!-- Status Distribution -->
         <div class="lg:col-span-4 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo">
             <div class="flex items-center justify-between mb-10 text-start">
-                <h4 class="font-black text-slate-800 dark:text-white text-base flex items-center gap-3 font-Cairo text-start">
+                <h4 class="font-black text-base flex items-center gap-3 font-Cairo text-start">
                     <span class="w-2 h-6 bg-pink-500 rounded-full shadow-lg shadow-pink-500/20"></span>
                     {{ __('إحصائيات الشكاوى والحلول') }}
                 </h4>
@@ -90,13 +90,13 @@
         <!-- Complaints Frequency Chart -->
         <div class="lg:col-span-8 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 text-start">
-                <h4 class="font-black text-slate-800 dark:text-white text-base flex items-center gap-3 font-Cairo text-start">
+                <h4 class="font-black text-base flex items-center gap-3 font-Cairo text-start">
                     <span class="w-2 h-6 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/20"></span>
                     {{ __('معدل تقديم الشكاوى') }}
                 </h4>
                 <div class="flex gap-2 bg-slate-900/5 dark:bg-white/5 p-1.5 rounded-2xl border border-slate-200/10 text-start font-Cairo shadow-inner">
                     @foreach([7, 30, 90] as $d)
-                        <a href="?days={{ $d }}" class="px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] transition-all font-Cairo {{ $days == $d ? 'bg-pink-600 text-white shadow-lg shadow-pink-600/20' : 'text-slate-400 hover:text-slate-600' }}">
+                        <a href="?days={{ $d }}" class="px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] transition-all font-Cairo {{ $days == $d ? 'bg-pink-600 text-white shadow-lg shadow-pink-600/20' : 'opacity-40 hover:opacity-100' }}">
                             {{ $d }} يوم
                         </a>
                     @endforeach
@@ -111,13 +111,13 @@
     <!-- Complaints List Table -->
     <div class="card-premium glass-panel rounded-[4rem] overflow-hidden shadow-2xl relative border border-white dark:border-slate-800/50 text-start font-Cairo">
         <div class="px-12 py-10 border-b border-white dark:border-slate-800/50 bg-slate-50/40 dark:bg-slate-950/20 text-start font-Cairo">
-            <h4 class="font-black text-xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('سجل شكاوى الطلبات') }}</h4>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-2 text-start font-Cairo">{{ __('قائمة بجميع الشكاوى المقدمة بخصوص طلبات الخدمات.') }}</p>
+            <h4 class="font-black text-xl font-Cairo text-start italic">{{ __('سجل شكاوى الطلبات') }}</h4>
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] mt-2 text-start font-Cairo opacity-60">{{ __('قائمة بجميع الشكاوى المقدمة بخصوص طلبات الخدمات.') }}</p>
         </div>
         
         <div class="overflow-x-auto text-start">
             <table class="w-full text-start">
-                <thead class="bg-slate-50/80 dark:bg-slate-900/40 text-slate-400 dark:text-slate-500 font-black text-[9px] uppercase tracking-[0.3em] border-b border-slate-100 dark:border-slate-800/50 font-Cairo text-start uppercase">
+                <thead class="bg-slate-50/80 dark:bg-slate-900/40 font-black text-[9px] uppercase tracking-[0.3em] border-b border-slate-100 dark:border-slate-800/50 font-Cairo text-start opacity-60 uppercase">
                     <tr>
                         <th class="px-10 py-6 text-start">{{ __('رقم الشكوى / ID') }}</th>
                         <th class="px-10 py-6 text-start">{{ __('الطلب المرجعي') }}</th>
@@ -131,7 +131,7 @@
                     @forelse ($complaints as $complaint)
                         <tr class="hover:bg-pink-500/[0.01] transition-all group text-start">
                             <td class="px-10 py-7 text-start">
-                                <span class="text-xs font-black text-slate-400 font-mono tracking-tighter">#{{ str_pad($complaint->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                <span class="text-xs font-black font-mono tracking-tighter opacity-60">#{{ str_pad($complaint->id, 5, '0', STR_PAD_LEFT) }}</span>
                             </td>
                             <td class="px-10 py-7 text-start">
                                 <a href="{{ route('requests.show', $complaint->request_id) }}" class="inline-flex items-center gap-3 px-4 py-2 bg-indigo-500/5 text-indigo-600 rounded-xl font-black text-[10px] border border-indigo-500/10 hover:bg-indigo-600 hover:text-white transition-all shadow-sm font-Cairo group/link">
@@ -140,9 +140,9 @@
                                 </a>
                             </td>
                             <td class="px-10 py-7 text-start">
-                                <div class="flex flex-col text-start">
-                                    <span class="text-sm font-black text-slate-800 dark:text-slate-200 font-Cairo leading-tight mb-2 text-start italic">{{ $complaint->title }}</span>
-                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] font-Cairo text-start font-mono">{{ $complaint->type }}</span>
+                                <div class="flex flex-col text-start font-Cairo">
+                                    <span class="text-sm font-black font-Cairo leading-tight mb-2 text-start italic">{{ $complaint->title }}</span>
+                                    <span class="text-[9px] font-black uppercase tracking-[0.2em] font-Cairo text-start font-mono opacity-60">{{ $complaint->type }}</span>
                                 </div>
                             </td>
                             <td class="px-10 py-7 text-start">
@@ -151,7 +151,7 @@
                                         <div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-[11px] font-black group-hover:bg-brand-primary group-hover:text-white transition-all shadow-inner font-Cairo">
                                             {{ mb_substr($complaint->user->name ?? 'U', 0, 1) }}
                                         </div>
-                                        <span class="text-[13px] font-black text-slate-700 dark:text-white font-Cairo text-start">{{ $complaint->user->name ?? 'NON-OBJECT' }}</span>
+                                        <span class="text-[13px] font-black font-Cairo text-start italic">{{ $complaint->user->name ?? 'NON-OBJECT' }}</span>
                                     </div>
                                     <span class="px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest w-max font-Cairo
                                         {{ $complaint->user_id == $complaint->request->user_id ? 'bg-pink-500/10 text-pink-600 border border-pink-500/20' : 'bg-indigo-500/10 text-indigo-600 border border-indigo-500/20' }}">
@@ -178,7 +178,7 @@
                             <td colspan="6" class="px-10 py-32 text-center">
                                 <div class="flex flex-col items-center justify-center gap-6 opacity-30">
                                     <div class="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center text-6xl shadow-inner animate-pulse">📢</div>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo">{{ __('لا توجد بلاغات أو شكاوى حاليا.') }}</span>
+                                    <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo opacity-60">{{ __('لا توجد بلاغات أو شكاوى حاليا.') }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -220,7 +220,7 @@
                             usePointStyle: true,
                             padding: 30,
                             font: { size: 10, family: 'Cairo', weight: '900' },
-                            color: '#94a3b8'
+                            color: 'currentColor'
                         }
                     },
                     tooltip: {
@@ -270,11 +270,11 @@
                     y: {
                         beginAtZero: true,
                         grid: { color: 'rgba(226, 232, 240, 0.4)', drawBorder: false },
-                        ticks: { font: { size: 9, family: 'Cairo', weight: 'bold' }, color: '#94a3b8', stepSize: 1 }
+                        ticks: { font: { size: 9, family: 'Cairo', weight: 'bold' }, color: 'currentColor', stepSize: 1 }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { font: { size: 9, family: 'Cairo', weight: 'bold' }, color: '#94a3b8' }
+                        ticks: { font: { size: 9, family: 'Cairo', weight: 'bold' }, color: 'currentColor' }
                     }
                 }
             }

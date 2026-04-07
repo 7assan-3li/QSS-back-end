@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-3xl font-Cairo shadow-lg shadow-emerald-500/5 font-Cairo">➕</span>
                 {{ __('بيانات باقة النقاط الجديدة') }}
             </h3>
@@ -30,7 +30,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-start font-Cairo">
                 <!-- Package Name -->
                 <div class="space-y-4 text-start font-Cairo">
-                    <label for="name" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                    <label for="name" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                         <span class="w-2 h-2 bg-brand-primary rounded-full shadow-sm"></span>
                         {{ __('اسم الباقة') }}
                     </label>
@@ -40,7 +40,7 @@
 
                 <!-- Points Amount -->
                 <div class="space-y-4 text-start font-Cairo">
-                    <label for="points" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                    <label for="points" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                         <span class="w-2 h-2 bg-amber-400 rounded-full shadow-sm"></span>
                         {{ __('عدد النقاط الأساسية') }}
                     </label>
@@ -53,7 +53,7 @@
 
                 <!-- Bonus Points -->
                 <div class="space-y-4 text-start font-Cairo">
-                    <label for="bonus_points" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                    <label for="bonus_points" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                         <span class="w-2 h-2 bg-indigo-500 rounded-full shadow-sm"></span>
                         {{ __('النقاط الإضافية (المكافأة)') }}
                     </label>
@@ -66,7 +66,7 @@
 
                 <!-- Price -->
                 <div class="space-y-4 text-start font-Cairo">
-                    <label for="price" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                    <label for="price" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                         <span class="w-2 h-2 bg-emerald-500 rounded-full shadow-sm"></span>
                         {{ __('سعر الباقة (ريال يمني)') }}
                     </label>
@@ -79,7 +79,7 @@
 
                 <!-- Expiry Date -->
                 <div class="space-y-4 md:col-span-2 text-start font-Cairo">
-                    <label for="expires_at" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                    <label for="expires_at" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                         <span class="w-2 h-2 bg-slate-300 rounded-full shadow-sm"></span>
                         {{ __('تاريخ انتهاء صلاحية العرض') }}
                     </label>

@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-2xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-2xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-brand-primary/5">📂</span>
                 {{ __('إدارة أقسام الخدمات') }}
             </h3>
@@ -33,7 +33,7 @@
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
                 <div class="flex flex-col text-start">
-                    <span class="text-3xl font-black text-slate-800 dark:text-white leading-none font-mono">{{ str_pad($categories->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-3xl font-black leading-none font-mono">{{ str_pad($categories->count(), 2, '0', STR_PAD_LEFT) }}</span>
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 font-Cairo">{{ __('عدد الأقسام') }}</span>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
                 </div>
                 <div class="flex flex-col text-start">
-                    <span class="text-3xl font-black text-slate-800 dark:text-white leading-none font-mono">{{ str_pad($categories->whereNull('category_id')->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-3xl font-black leading-none font-mono">{{ str_pad($categories->whereNull('category_id')->count(), 2, '0', STR_PAD_LEFT) }}</span>
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 font-Cairo">{{ __('الأقسام الرئيسية') }}</span>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     <!-- Enhanced Interaction Content -->
                     <div class="p-10 space-y-8 text-start">
                         <div class="min-h-[60px] text-start">
-                            <p class="text-xs font-black text-slate-500 dark:text-slate-400 leading-relaxed font-Cairo line-clamp-3 italic text-start">
+                            <p class="text-xs font-black leading-relaxed font-Cairo line-clamp-3 italic text-start">
                                 "{{ $category->description ?? __('لا يوجد وصف متاح لهذا القسم.') }}"
                             </p>
                         </div>
@@ -109,7 +109,7 @@
             <div class="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
             <div class="relative z-10 text-center">
                 <div class="w-24 h-24 bg-slate-100 dark:bg-slate-900 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 shadow-inner animate-bounce">📦</div>
-                <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo">{{ __('لا توجد أقسام') }}</h4>
+                <h4 class="text-2xl font-black font-Cairo">{{ __('لا توجد أقسام') }}</h4>
                 <p class="text-xs font-black text-slate-400 mt-4 max-w-sm mx-auto leading-relaxed">
                     {{ __('لا توجد أقسام خدمات حالياً. يمكنك إضافة قسم جديد من الزر أعلاه.') }}
                 </p>

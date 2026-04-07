@@ -15,17 +15,17 @@
                 <a href="{{ route('users.index') }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800 font-Cairo">
                     <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-2xl font-Cairo shadow-lg shadow-indigo-500/5 font-Cairo underline-offset-8 italic">✍️</span>
                     {{ __('تعديل حساب') }}: {{ $user->name }}
                 </h3>
             </div>
-            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start">
+            <div class="flex items-center gap-3 text-[10px] font-black mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
                 <span>{{ __('إدارة المستخدمين') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                 <span>{{ __('تعديل البيانات الأساسية') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-brand-primary">{{ __('مرجع التعديل') }} #{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-brand-primary opacity-100">{{ __('مرجع التعديل') }} #{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
                 
                 <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
                     <span class="w-3 h-10 bg-indigo-600 rounded-full shadow-lg shadow-indigo-600/30 font-Cairo"></span>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('تعديل المعلومات الأساسية') }}</h4>
+                    <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('تعديل المعلومات الأساسية') }}</h4>
                 </div>
 
                 <form action="{{ route('users.update', $user->id) }}" method="POST" class="space-y-10 text-start font-Cairo">
@@ -49,7 +49,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start font-Cairo">
                         <!-- Entity Name Node -->
                         <div class="space-y-4 text-start font-Cairo">
-                            <label for="name" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                            <label for="name" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                                 <span class="w-2 h-2 bg-indigo-500 rounded-full font-Cairo"></span>
                                 {{ __('الاسم الكامل') }}
                             </label>
@@ -62,7 +62,7 @@
 
                         <!-- Email Node -->
                         <div class="space-y-4 text-start font-Cairo">
-                            <label for="email" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                            <label for="email" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                                 <span class="w-2 h-2 bg-purple-500 rounded-full font-Cairo"></span>
                                 {{ __('البريد الإلكتروني الرسمي') }}
                             </label>
@@ -75,7 +75,7 @@
 
                         <!-- Role Calibration Node -->
                         <div class="space-y-4 md:col-span-2 text-start font-Cairo">
-                            <label for="role" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                            <label for="role" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                                 <span class="w-2 h-2 bg-emerald-500 rounded-full font-Cairo"></span>
                                 {{ __('صلاحيات الرتبة الإدارية') }}
                             </label>
@@ -109,8 +109,8 @@
                 <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
                     <span class="w-3 h-10 bg-amber-600 rounded-full shadow-lg shadow-amber-600/30 font-Cairo"></span>
                     <div class="text-start font-Cairo">
-                        <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('تغيير كلمة المرور') }}</h4>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 font-Cairo text-start font-Cairo">{{ __('اترك الحقول فارغة إذا كنت لا تريد تغيير كلمة المرور.') }}</p>
+                        <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('تغيير كلمة المرور') }}</h4>
+                        <p class="text-[10px] font-black uppercase tracking-widest mt-2 font-Cairo text-start font-Cairo opacity-60">{{ __('اترك الحقول فارغة إذا كنت لا تريد تغيير كلمة المرور.') }}</p>
                     </div>
                 </div>
 
@@ -119,7 +119,7 @@
                     @method('PUT')
                     
                     <div class="space-y-4 text-start font-Cairo">
-                        <label for="password" class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                        <label for="password" class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                             <span class="w-2 h-2 bg-amber-500 rounded-full font-Cairo"></span>
                             {{ __('الشفرة السرية الجديدة') }} (NEW_HASH)
                         </label>
@@ -145,7 +145,7 @@
             <div class="card-premium glass-panel p-10 rounded-[4rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo h-full shadow-emerald-500/5">
                 <div class="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/[0.04] rounded-tr-[8rem] -ml-16 -mb-16 font-Cairo"></div>
                 
-                <h4 class="font-black text-slate-400 text-[10px] uppercase tracking-[0.3em] mb-12 px-4 font-Cairo text-start">🛡️ {{ __('حالة تفعيل البريد') }}</h4>
+                <h4 class="font-black text-[10px] uppercase tracking-[0.3em] mb-12 px-4 font-Cairo text-start opacity-60">🛡️ {{ __('حالة تفعيل البريد') }}</h4>
 
                 <div class="space-y-10 text-start font-Cairo">
                     @if ($user->email_verified_at)
@@ -154,7 +154,7 @@
                                 <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                             </div>
                             <h5 class="text-lg font-black text-emerald-600 font-Cairo mb-3 text-center italic">{{ __('الهوية موثقة') }}</h5>
-                            <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 font-Cairo leading-relaxed mb-0 text-center italic">{{ __('تم التحقق من ملكية البريد الإلكتروني بنجاح.') }}</p>
+                            <p class="text-[10px] font-bold font-Cairo leading-relaxed mb-0 text-center italic opacity-60">{{ __('تم التحقق من ملكية البريد الإلكتروني بنجاح.') }}</p>
                         </div>
                     @else
                         <div class="p-10 bg-rose-500/5 rounded-[3rem] border-2 border-dashed border-rose-500/20 text-center text-start font-Cairo group">
@@ -162,7 +162,7 @@
                                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </div>
                             <h5 class="text-lg font-black text-rose-600 font-Cairo mb-4 text-center italic">{{ __('بانتظار التفعيل') }}</h5>
-                            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-Cairo leading-relaxed mb-8 text-center italic">{{ __('الحساب لم يقم بتفعيل البريد الإلكتروني بعد.') }}</p>
+                            <p class="text-[11px] font-bold font-Cairo leading-relaxed mb-8 text-center italic opacity-60">{{ __('الحساب لم يقم بتفعيل البريد الإلكتروني بعد.') }}</p>
                             
                             <form action="{{ route('users.verify.email', $user->id) }}" method="POST" class="text-start font-Cairo">
                                 @csrf

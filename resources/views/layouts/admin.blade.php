@@ -72,8 +72,8 @@
                 },
                 customClass: {
                     popup: `rounded-[2.5rem] border ${isDanger ? 'border-rose-500 shadow-rose-500/10' : 'border-slate-100 dark:border-slate-800 shadow-2xl'} font-Cairo`,
-                    title: 'font-black text-2xl font-Cairo !text-slate-800 dark:!text-white',
-                    htmlContainer: 'font-bold text-sm font-Cairo !text-slate-500 dark:!text-slate-400',
+                    title: 'font-black text-2xl font-Cairo !text-inherit',
+                    htmlContainer: 'font-bold text-sm font-Cairo opacity-60',
                     confirmButton: `px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 active:scale-95 font-Cairo shadow-lg ${isDanger ? 'shadow-rose-500/20' : 'shadow-indigo-500/20'}`,
                     cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 active:scale-95 font-Cairo'
                 }
@@ -101,6 +101,7 @@
     </style>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @stack('styles')
 </head>
 <body class="font-sans antialiased text-slate-900 dark:text-slate-100 h-screen flex overflow-hidden relative selection:bg-brand-primary selection:text-white">

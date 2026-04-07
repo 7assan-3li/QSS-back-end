@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-3xl font-Cairo shadow-lg shadow-brand-primary/5">💎</span>
                 {{ __('باقات التوثيق') }}
             </h3>
@@ -28,7 +28,7 @@
         <div class="card-premium glass-panel p-8 rounded-[2rem] shadow-2xl border border-white dark:border-slate-800/50 flex items-center gap-8 group hover:scale-[1.02] transition-all text-start">
             <div class="w-16 h-16 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📦</div>
             <div class="flex flex-col text-start">
-                <span class="text-3xl font-black text-slate-800 dark:text-white leading-none font-mono text-start">{{ str_pad($packages->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-3xl font-black leading-none font-mono text-start">{{ str_pad($packages->count(), 2, '0', STR_PAD_LEFT) }}</span>
                 <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('إجمالي الباقات') }}</span>
             </div>
         </div>
@@ -63,7 +63,7 @@
 
                     <!-- Identity & Pricing Node -->
                     <div class="mb-10 relative z-10 text-start">
-                        <h4 class="text-2xl font-black text-slate-800 dark:text-white mb-3 font-Cairo text-start italic">{{ $package->name }}</h4>
+                        <h4 class="text-2xl font-black mb-3 font-Cairo text-start italic">{{ $package->name }}</h4>
                         <div class="flex items-baseline gap-2 text-start">
                             <span class="text-4xl font-black text-brand-primary font-mono text-start">{{ number_format($package->price, 0) }}</span>
                             <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest font-Cairo text-start">{{ __('ريال') }}</span>
@@ -72,7 +72,7 @@
 
                     <!-- Feature Matrix Summary -->
                     <div class="space-y-6 mb-12 flex-grow relative z-10 text-start font-Cairo">
-                        <p class="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3 font-Cairo text-start">
+                        <p class="text-xs font-bold leading-relaxed line-clamp-3 font-Cairo text-start">
                             {{ $package->description ?? __('لا يوجد وصف متاح لهذه الباقة حالياً.') }}
                         </p>
                         <div class="flex items-center gap-4 text-emerald-500/60 text-start font-Cairo">

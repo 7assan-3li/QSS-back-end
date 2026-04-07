@@ -7,11 +7,11 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start font-Cairo">
         <div class="text-start font-Cairo">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-3xl font-Cairo shadow-lg shadow-emerald-500/5">🏦</span>
                 {{ __('إدارة البنوك') }}
             </h3>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo">
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo opacity-60">
                 {{ __('إدارة الحسابات البنكية المعتمدة لاستقبال وتحويل المدفوعات في المنصة.') }}
             </p>
         </div>
@@ -34,7 +34,7 @@
         @forelse($banks as $bank)
             <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-white dark:border-white/5 flex flex-col group hover:-translate-y-3 transition-all duration-700 text-start font-Cairo">
                 <!-- ID Micro-Badge -->
-                <div class="absolute top-8 left-8 px-3 py-1.5 bg-slate-100 dark:bg-slate-900 text-slate-500 rounded-xl text-[8px] font-black font-mono italic tracking-widest font-Cairo text-start">BANK_{{ str_pad($bank->id, 3, '0', STR_PAD_LEFT) }}</div>
+                <div class="absolute top-8 left-8 px-3 py-1.5 bg-slate-100 dark:bg-slate-900 rounded-xl text-[8px] font-black font-mono italic tracking-widest font-Cairo text-start opacity-60">BANK_{{ str_pad($bank->id, 3, '0', STR_PAD_LEFT) }}</div>
                 
                 <!-- Gateway Identity Sector -->
                 <div class="flex flex-col items-center text-center mb-10 pt-4 font-Cairo">
@@ -47,13 +47,13 @@
                             </div>
                         @endif
                     </div>
-                    <h4 class="mt-8 text-xl font-black text-slate-800 dark:text-white font-Cairo leading-none italic text-start">{{ $bank->bank_name }}</h4>
+                    <h4 class="mt-8 text-xl font-black font-Cairo leading-none italic text-start">{{ $bank->bank_name }}</h4>
                     <span class="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] mt-4 font-Cairo text-start italic">{{ __('بنك معتمد') }}</span>
                 </div>
 
                 <!-- Abstract Descriptor -->
                 <div class="flex-grow text-start font-Cairo">
-                    <p class="text-xs font-bold text-slate-500 dark:text-slate-500 font-Cairo leading-[1.8] line-clamp-3 text-center italic text-start font-Cairo">
+                    <p class="text-xs font-bold font-Cairo leading-[1.8] line-clamp-3 text-center italic text-start font-Cairo opacity-60">
                         {{ $bank->description ?? __('لا يوجد وصف متاح لهذا البنك حالياً.') }}
                     </p>
                 </div>
@@ -86,11 +86,9 @@
         @empty
             <div class="col-span-full py-40 text-center flex flex-col items-center opacity-30 gap-8 font-Cairo">
                 <div class="w-24 h-24 bg-slate-100 dark:bg-slate-900 rounded-[2rem] flex items-center justify-center text-6xl shadow-inner font-Cairo italic">🏦</div>
-                <p class="text-xs font-black text-slate-500 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('لا توجد بنوك مضافة حالياً.') }}</p>
+                <p class="text-xs font-black uppercase tracking-[0.3em] font-Cairo text-start opacity-60">{{ __('لا توجد بنوك مضافة حالياً.') }}</p>
             </div>
         @endforelse
     </div>
-</div>
-@endsection
 </div>
 @endsection

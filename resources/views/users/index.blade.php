@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-3xl font-Cairo shadow-lg shadow-indigo-500/5">👥</span>
                 {{ __('سجل المستخدمين') }}
             </h3>
@@ -23,12 +23,12 @@
     <!-- Statistics Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-start">
         <!-- Total Users -->
-        <div class="card-premium glass-panel p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden group border border-white dark:border-white/5 text-start">
+        <div class="card-premium glass-panel p-8 relative overflow-hidden group text-start">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start">
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('إجمالي المستخدمين') }}</span>
                 <div class="flex items-baseline gap-3 text-start">
-                    <span class="text-4xl font-black text-slate-800 dark:text-white leading-none font-mono italic text-start">{{ number_format($users->count()) }}</span>
+                    <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($users->count()) }}</span>
                     <span class="text-[10px] font-black text-indigo-500 font-Cairo italic text-start">{{ __('مستخدم') }}</span>
                 </div>
             </div>
@@ -39,12 +39,12 @@
         </div>
 
         <!-- Today's New Users -->
-        <div class="card-premium glass-panel p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden group border border-white dark:border-white/5 font-Cairo text-start">
+        <div class="card-premium glass-panel p-8 relative overflow-hidden group font-Cairo text-start">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start">
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('المستخدمين الجدد اليوم') }}</span>
                 <div class="flex items-baseline gap-3 text-start">
-                    <span class="text-4xl font-black text-slate-800 dark:text-white leading-none font-mono italic text-start">{{ number_format($todayUsers) }}</span>
+                    <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($todayUsers) }}</span>
                     <span class="text-[10px] font-black text-emerald-500 italic text-start font-Cairo">{{ __('عضو جديد') }}</span>
                 </div>
             </div>
@@ -54,12 +54,12 @@
         </div>
 
         <!-- Weekly New Users -->
-        <div class="card-premium glass-panel p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden group border border-white dark:border-white/5 font-Cairo text-start">
+        <div class="card-premium glass-panel p-8 relative overflow-hidden group font-Cairo text-start">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start font-Cairo">
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('منضمي هذا الأسبوع') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-Cairo">
-                    <span class="text-4xl font-black text-slate-800 dark:text-white leading-none font-mono italic text-start">{{ number_format($weekUsers) }}</span>
+                    <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($weekUsers) }}</span>
                     <span class="text-[10px] font-black text-amber-500 italic text-start font-Cairo">{{ __('مستخدم') }}</span>
                 </div>
             </div>
@@ -69,12 +69,12 @@
         </div>
 
         <!-- Monthly Growth -->
-        <div class="card-premium glass-panel p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden group border border-white dark:border-white/5 font-Cairo text-start">
+        <div class="card-premium glass-panel p-8 relative overflow-hidden group font-Cairo text-start">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start font-Cairo">
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('نسبة النمو الشهري') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-Cairo">
-                    <span class="text-4xl font-black text-slate-800 dark:text-white leading-none font-mono italic text-start">{{ $growth }}%</span>
+                    <span class="text-4xl font-black leading-none font-mono italic text-start">{{ $growth }}%</span>
                     <svg class="w-6 h-6 text-emerald-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
             </div>
@@ -86,10 +86,10 @@
 
     <!-- Growth & Role Analysis -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 font-Cairo text-start">
-        <div class="lg:col-span-8 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-white/5 text-start font-Cairo">
+        <div class="lg:col-span-8 card-premium glass-panel p-10 text-start font-Cairo">
             <div class="flex items-center justify-between mb-10 text-start font-Cairo">
                 <div class="text-start font-Cairo">
-                    <h4 class="text-xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('المسار البياني للنمو السنوي') }}</h4>
+                    <h4 class="text-xl font-black font-Cairo text-start italic">{{ __('المسار البياني للنمو السنوي') }}</h4>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 font-Cairo text-start">{{ __('تتبع انضمام المستخدمين خلال العام الجاري.') }}</p>
                 </div>
                 <div class="p-4 bg-indigo-500/10 rounded-2xl text-indigo-600 shadow-sm font-Cairo"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg></div>
@@ -99,10 +99,10 @@
             </div>
         </div>
 
-        <div class="lg:col-span-4 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-white/5 text-start font-Cairo">
+        <div class="lg:col-span-4 card-premium glass-panel p-10 text-start font-Cairo">
             <div class="flex items-center justify-between mb-10 text-start font-Cairo">
                 <div class="text-start font-Cairo">
-                    <h4 class="text-xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('توزيع الأدوار') }}</h4>
+                    <h4 class="text-xl font-black font-Cairo text-start italic">{{ __('توزيع الأدوار') }}</h4>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 font-Cairo text-start">{{ __('توزيع المستخدمين حسب نوع الحساب.') }}</p>
                 </div>
                 <div class="p-4 bg-purple-500/10 rounded-2xl text-purple-600 shadow-sm font-Cairo"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg></div>
@@ -117,7 +117,7 @@
     <div class="card-premium glass-panel rounded-[4.5rem] shadow-2xl border border-white dark:border-slate-800/50 overflow-hidden font-Cairo text-start">
         <div class="p-12 border-b border-slate-100 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-8 text-start">
             <div class="text-start">
-                <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('قائمة إدارة المستخدمين') }}</h4>
+                <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('قائمة إدارة المستخدمين') }}</h4>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('عرض وتعديل بيانات المستخدمين والتحكم في صلاحياتهم.') }}</p>
             </div>
             <div class="flex items-center gap-4 text-start font-Cairo">
@@ -129,11 +129,11 @@
             <table class="w-full text-start border-collapse font-Cairo">
                 <thead>
                     <tr class="bg-slate-50/40 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-800 text-start font-Cairo">
-                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('المسلسل') }}</th>
-                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('بيانات المستخدم') }}</th>
-                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('نوع الحساب / الدور') }}</th>
-                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('تاريخ التسجيل') }}</th>
-                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center font-Cairo">{{ __('الإجراءات') }}</th>
+                        <th class="table-header-cell">{{ __('المسلسل') }}</th>
+                        <th class="table-header-cell">{{ __('بيانات المستخدم') }}</th>
+                        <th class="table-header-cell">{{ __('نوع الحساب / الدور') }}</th>
+                        <th class="table-header-cell">{{ __('تاريخ التسجيل') }}</th>
+                        <th class="table-header-cell text-center">{{ __('الإجراءات') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 text-start font-Cairo">
@@ -144,11 +144,11 @@
                             </td>
                             <td class="px-10 py-8 text-start">
                                 <div class="flex items-center gap-5 text-start font-Cairo">
-                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-600 font-black text-xs border border-white dark:border-white/5 shadow-sm group-hover:scale-110 transition-transform font-mono italic">
+                                    <div class="w-12 h-12 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary font-black text-xs border border-white dark:border-white/5 shadow-sm group-hover:scale-110 transition-transform font-mono italic">
                                         {{ mb_substr($user->name, 0, 1) }}
                                     </div>
                                     <div class="flex flex-col text-start font-Cairo">
-                                        <span class="text-[13px] font-black text-slate-700 dark:text-slate-200 font-Cairo leading-none mb-2 italic text-start">{{ $user->name }}</span>
+                                        <span class="text-[13px] font-black font-Cairo leading-none mb-2 italic text-start">{{ $user->name }}</span>
                                         <span class="text-[10px] font-bold text-slate-400 font-mono tracking-wide text-start italic">{{ $user->email }}</span>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                 <div class="flex items-center justify-center gap-4 text-start font-Cairo">
                                     @can('view', $user)
                                         <a href="{{ route('users.show', $user->id) }}" class="btn-action btn-action-view" title="{{ __('عرض الملف الشخصي') }}">
-                                            <svg class="w-5 h-5 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                            <svg class="w-5 h-5 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
                                     @endcan
 

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\FinancialController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProviderRequestController;
@@ -36,8 +38,13 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
-Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class, 'switch'])->name('lang.switch');
+    Route::get('/admin/financial-report', [FinancialController::class, 'index'])->name('admin.financial.index');
+    Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class, 'switch'])->name('lang.switch');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+    // Provider Management Routes
+    Route::get('/admin/providers', [AdminProviderController::class, 'index'])->name('admin.providers.index');
+    Route::get('/admin/providers/{id}', [AdminProviderController::class, 'show'])->name('admin.providers.show');
 
     //user Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

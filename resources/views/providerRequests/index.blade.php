@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-3xl font-Cairo shadow-lg shadow-brand-primary/5">👨‍🔧</span>
                 {{ __('إدارة طلبات المزودين') }}
             </h3>
@@ -23,7 +23,7 @@
         <a href="{{ route('provider-requests.index') }}" class="card-premium glass-panel p-8 rounded-[3rem] border border-white dark:border-slate-800/50 flex flex-col items-center gap-4 group hover:scale-[1.05] transition-all bg-white/40 dark:bg-slate-900/40 shadow-2xl">
             <div class="w-16 h-16 bg-slate-500/10 text-slate-500 rounded-2xl flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform shadow-inner font-Cairo">📄</div>
             <div class="text-center font-Cairo">
-                <span class="text-3xl font-black text-slate-800 dark:text-white block font-mono leading-none">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-3xl font-black block font-mono leading-none">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
                 <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mt-3 font-Cairo">{{ __('إجمالي الطلبات') }}</span>
             </div>
         </a>
@@ -62,7 +62,7 @@
         <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl border border-white dark:border-slate-800/50 flex flex-col relative overflow-hidden text-start">
             <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-[5rem] font-Cairo"></div>
             <div class="flex items-center justify-between mb-12 text-start">
-                <h4 class="font-black text-slate-800 dark:text-white text-xs uppercase tracking-[0.3em] font-Cairo flex items-center gap-4 text-start">
+                <h4 class="font-black text-xs uppercase tracking-[0.3em] font-Cairo flex items-center gap-4 text-start">
                     <span class="w-1.5 h-8 bg-indigo-600 rounded-full font-Cairo"></span> {{ __('إحصائيات توزيع الحالات') }}
                 </h4>
             </div>
@@ -75,7 +75,7 @@
         <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl border border-white dark:border-slate-800/50 flex flex-col relative overflow-hidden text-start">
             <div class="absolute top-0 left-0 w-32 h-32 bg-brand-primary/5 rounded-br-[5rem] font-Cairo"></div>
             <div class="flex flex-col md:flex-row shadow-sm items-center justify-between mb-12 gap-6 text-start">
-                <h4 class="font-black text-slate-800 dark:text-white text-xs uppercase tracking-[0.3em] font-Cairo flex items-center gap-4 text-start">
+                <h4 class="font-black text-xs uppercase tracking-[0.3em] font-Cairo flex items-center gap-4 text-start">
                     <span class="w-1.5 h-8 bg-brand-primary rounded-full font-Cairo"></span> {{ __('مؤشر تدفق الطلبات') }}
                 </h4>
                 <div class="flex bg-slate-50 dark:bg-slate-900/80 p-2 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner font-Cairo">
@@ -94,7 +94,7 @@
     <div class="card-premium glass-panel rounded-[4.5rem] shadow-2xl border border-white dark:border-slate-800/50 overflow-hidden font-Cairo text-start">
         <div class="p-12 border-b border-slate-100 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-8 text-start">
             <div class="text-start">
-                <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('قائمة طلبات المزودين') }}</h4>
+                <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('قائمة طلبات المزودين') }}</h4>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('إدارة بيانات المتقدمين لطلبات الانضمام كمزود خدمة.') }}</p>
             </div>
         </div>
@@ -123,7 +123,7 @@
                                     <div class="w-11 h-11 bg-gradient-to-br from-brand-primary/20 to-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center text-xs font-black uppercase font-Cairo shadow-sm border border-brand-primary/10">
                                         {{ mb_substr($request->name, 0, 1) }}
                                     </div>
-                                    <span class="text-[13px] font-black text-slate-700 dark:text-slate-200 font-Cairo text-start">{{ $request->name }}</span>
+                                    <span class="text-[13px] font-black font-Cairo text-start">{{ $request->name }}</span>
                                 </div>
                             </td>
                             <td class="px-10 py-8">

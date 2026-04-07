@@ -7,11 +7,11 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-10 text-start font-Cairo">
         <div class="text-start font-Cairo">
-            <h3 class="font-black text-4xl text-slate-800 dark:text-white flex items-center gap-5 text-start font-Cairo shadow-indigo-500/10">
+            <h3 class="font-black text-4xl flex items-center gap-5 text-start font-Cairo shadow-indigo-500/10">
                 <span class="w-16 h-16 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 text-3xl font-Cairo shadow-lg shadow-indigo-600/5">⚙️</span>
                 {{ __('إعدادات العمولات والنسب') }}
             </h3>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mt-5 mr-24 text-start font-Cairo italic">
+            <p class="text-[11px] font-black uppercase tracking-[0.3em] mt-5 mr-24 text-start font-Cairo italic opacity-60">
                 {{ __('تعديل نسب العمولات، ثوابت الربح، والقواعد المالية العامة للمنصة.') }}
             </p>
         </div>
@@ -27,7 +27,7 @@
             <div class="w-16 h-16 bg-emerald-500 text-white rounded-[1.5rem] flex items-center justify-center shadow-2xl shadow-emerald-500/30 text-2xl ring-8 ring-emerald-500/10 font-Cairo italic">✨</div>
             <div class="text-start font-Cairo">
                 <h4 class="text-lg font-black text-emerald-700 dark:text-emerald-400 font-Cairo mb-2 text-start italic">{{ __('تم حفظ التغييرات بنجاح!') }}</h4>
-                <p class="text-[11px] font-bold text-emerald-600/80 font-Cairo text-start italic">{{ session('success') }}</p>
+                <p class="text-[11px] font-bold text-emerald-600 font-Cairo text-start italic opacity-80">{{ session('success') }}</p>
             </div>
         </div>
     @endif
@@ -46,7 +46,7 @@
                     
                     <div class="flex items-start justify-between mb-12 text-start font-Cairo">
                         <div class="text-start font-Cairo">
-                            <h4 class="text-base font-black text-slate-800 dark:text-slate-200 font-Cairo leading-none mb-4 italic text-start uppercase">{{ __($setting->display_name) }}</h4>
+                            <h4 class="text-base font-black font-Cairo leading-none mb-4 italic text-start uppercase">{{ __($setting->display_name) }}</h4>
                             <span class="px-4 py-1.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-[8px] font-black font-mono tracking-[0.3em] uppercase shadow-lg shadow-slate-950/20 italic">SETTING_{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                         </div>
                         <div class="w-14 h-14 bg-white dark:bg-slate-900 rounded-[1.5rem] flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-600/10 transition-all duration-700 shadow-sm border border-slate-100 dark:border-white/5 font-Cairo italic">
@@ -57,17 +57,17 @@
                     <!-- Input Engine Architecture -->
                     <div class="relative mt-auto text-start font-Cairo">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-10 pointer-events-none font-Cairo">
-                            <span class="text-[10px] font-black text-slate-400 font-Cairo tracking-[0.4em] uppercase italic">{{ __('القيمة') }}</span>
+                            <span class="text-[10px] font-black font-Cairo tracking-[0.4em] uppercase italic opacity-60">{{ __('القيمة') }}</span>
                         </div>
                         <input type="number" step="0.01" min="0" max="100" 
                             id="{{ $setting->key }}" name="{{ $setting->key }}" value="{{ $setting->value }}" required
-                            class="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-100 dark:border-slate-800 rounded-[2.5rem] px-14 py-8 text-4xl font-black text-slate-800 dark:text-white focus:border-brand-primary focus:ring-[20px] focus:ring-brand-primary/5 transition-all outline-none font-mono italic shadow-inner text-center">
+                            class="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-100 dark:border-slate-800 rounded-[2.5rem] px-14 py-8 text-4xl font-black focus:border-brand-primary focus:ring-[20px] focus:ring-brand-primary/5 transition-all outline-none font-mono italic shadow-inner text-center">
                         <div class="absolute left-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white rounded-2xl flex items-center justify-center font-black text-base shadow-2xl shadow-indigo-600/30 italic">%</div>
                     </div>
 
                     <!-- Micro-Intelligence Feedback -->
-                    <div class="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800/80 opacity-0 group-hover:opacity-100 transition-all duration-1000 transform translate-y-6 group-hover:translate-y-0 text-start font-Cairo">
-                        <p class="text-[10px] font-black text-slate-400 font-Cairo leading-[1.8] text-center italic">{{ __('ملاحظة: تعديل هذه القيمة سيؤثر على حساب العمولات والأرباح في كافة العمليات الجديدة في النظام.') }}</p>
+                    <div class="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800/80 opacity-0 group-hover:opacity-100 transition-all duration-1000 transform translate-y-6 group-hover:translate-y-0 text-start font-Cairo text-center">
+                        <p class="text-[10px] font-black font-Cairo leading-[1.8] italic opacity-60">{{ __('ملاحظة: تعديل هذه القيمة سيؤثر على حساب العمولات والأرباح في كافة العمليات الجديدة في النظام.') }}</p>
                     </div>
                 </div>
             @endforeach
@@ -82,9 +82,9 @@
                 <div class="text-start font-Cairo">
                     <div class="flex items-center gap-5 mb-5 text-start font-Cairo">
                         <span class="w-4 h-4 bg-emerald-500 rounded-full animate-pulse shadow-xl shadow-emerald-500/50 font-Cairo"></span>
-                        <h5 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic uppercase tracking-tighter">{{ __('حفظ إعدادات النظام') }}</h5>
+                        <h5 class="text-2xl font-black font-Cairo text-start italic uppercase tracking-tighter">{{ __('حفظ إعدادات النظام') }}</h5>
                     </div>
-                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 font-Cairo leading-[2.2] max-w-2xl text-start italic">
+                    <p class="text-xs font-bold font-Cairo leading-[2.2] max-w-2xl text-start italic opacity-60">
                         {{ __('عند حفظ هذه الإعدادات، سيتم تطبيق القيم المالية الجديدة فوراً على كافة المعاملات والعمليات المستقبلية في المنصة.') }}
                     </p>
                 </div>

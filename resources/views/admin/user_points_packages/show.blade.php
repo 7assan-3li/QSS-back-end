@@ -11,17 +11,17 @@
                 <a href="{{ route('admin.user-points-packages.index') }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800 font-Cairo">
                     <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl font-Cairo shadow-lg shadow-emerald-500/5 font-Cairo underline-offset-8 italic">📊</span>
                     {{ __('مراجعة طلب شحن النقاط') }}
                 </h3>
             </div>
-        <div class="flex items-center gap-3 text-[10px] font-black text-slate-500 mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start">
+        <div class="flex items-center gap-3 text-[10px] font-black mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
                 <span>{{ __('اقتصاد المنصة') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                 <span>{{ __('التحكم المالي') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-brand-primary">{{ __('رقم الطلب') }} #{{ str_pad($subscription->id, 6, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-brand-primary opacity-100">{{ __('رقم الطلب') }} #{{ str_pad($subscription->id, 6, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
 
@@ -57,16 +57,16 @@
                 
                 <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
                     <span class="w-3 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/30 font-Cairo"></span>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('بيانات الحوالة البنكية') }}</h4>
+                    <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('بيانات الحوالة البنكية') }}</h4>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-14 text-start font-Cairo">
                     <!-- Bank Name -->
-                    <div class="card-premium glass-panel p-8 rounded-[1.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
+                    <div class="card-premium glass-panel p-8 rounded-[1.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start font-Cairo">
                         <div class="w-16 h-16 bg-slate-100 dark:bg-slate-900 text-slate-500 rounded-[1.2rem] flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo italic">🏦</div>
-                        <div class="flex flex-col text-start">
-                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('البنك المُحول منه') }}</span>
-                            <span class="text-sm font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ $subscription->bank_name }}</span>
+                        <div class="flex flex-col text-start font-Cairo">
+                            <span class="text-[9px] font-black uppercase tracking-[0.3em] mb-2 font-Cairo text-start opacity-60">{{ __('البنك المُحول منه') }}</span>
+                            <span class="text-sm font-black font-Cairo text-start italic">{{ $subscription->bank_name }}</span>
                         </div>
                     </div>
 
@@ -74,7 +74,7 @@
                     <div class="card-premium glass-panel p-8 rounded-[1.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start font-Cairo shadow-amber-500/5">
                         <div class="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-[1.2rem] flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">🧾</div>
                         <div class="flex flex-col text-start font-Cairo">
-                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('رقم الحوالة / السند') }}</span>
+                            <span class="text-[9px] font-black uppercase tracking-[0.3em] mb-2 font-Cairo text-start opacity-60">{{ __('رقم الحوالة / السند') }}</span>
                             <span class="text-sm font-black text-amber-600 dark:text-amber-400 font-mono tracking-widest text-start">#{{ $subscription->bond_number }}</span>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
 
                 <!-- Transfer Bond Image -->
                 <div class="space-y-6 mb-14 text-start font-Cairo">
-                    <label class="flex items-center gap-3 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                    <label class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                         <span class="w-2 h-2 bg-slate-400 rounded-full shadow-sm font-Cairo"></span>
                         {{ __('صورة سند التحويل') }}
                     </label>
@@ -149,7 +149,7 @@
                     <div class="mt-14 p-12 bg-slate-50 dark:bg-slate-950/60 rounded-[2rem] border border-slate-100 dark:border-slate-800/80 shadow-inner text-start font-Cairo">
                         <div class="flex flex-col md:flex-row items-center justify-between gap-10 mb-12 text-start font-Cairo">
                             <div class="flex items-center gap-5 text-start font-Cairo">
-                                <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('حالة الطلب') }}</span>
+                                <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo text-start opacity-60">{{ __('حالة الطلب') }}</span>
                                 @if($subscription->status == 'approved')
                                     <span class="px-8 py-3 bg-emerald-500/10 text-emerald-600 rounded-[2rem] text-[11px] font-black border border-emerald-500/20 shadow-xl shadow-emerald-500/10 font-Cairo italic text-start">{{ __('تم القبول واعتماد الشحن') }} ✓</span>
                                 @else
@@ -157,14 +157,14 @@
                                 @endif
                             </div>
                             <div class="flex items-center gap-4 text-start font-Cairo">
-                                <span class="text-[9px] font-black text-slate-500 font-Cairo text-start italic">{{ __('المسؤول المراجع') }}:</span>
-                                <span class="text-xs font-black text-slate-900 dark:text-brand-primary font-Cairo underline decoration-brand-primary decoration-[3px] underline-offset-8 italic text-start font-Cairo">{{ $subscription->admin->name ?? __('مشرف النظام') }}</span>
+                                <span class="text-[9px] font-black font-Cairo text-start italic opacity-60">{{ __('المسؤول المراجع') }}:</span>
+                                <span class="text-xs font-black dark:text-brand-primary font-Cairo underline decoration-brand-primary decoration-[3px] underline-offset-8 italic text-start font-Cairo">{{ $subscription->admin->name ?? __('مشرف النظام') }}</span>
                             </div>
                         </div>
                         @if($subscription->admin_note)
                             <div class="space-y-4 bg-white dark:bg-slate-900 p-10 rounded-[1.5rem] border border-slate-100 dark:border-slate-800 shadow-sm text-start font-Cairo italic">
-                                <span class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] block font-Cairo text-start font-Cairo">{{ __('ملاحظات الإدارة') }}:</span>
-                                <p class="text-lg font-bold text-slate-600 dark:text-slate-300 font-Cairo leading-relaxed text-start">" {{ $subscription->admin_note }} "</p>
+                                <span class="text-[9px] font-black uppercase tracking-[0.3em] block font-Cairo text-start font-Cairo opacity-60">{{ __('ملاحظات الإدارة') }}:</span>
+                                <p class="text-lg font-bold font-Cairo leading-relaxed text-start opacity-70">" {{ $subscription->admin_note }} "</p>
                             </div>
                         @endif
                     </div>
@@ -177,14 +177,14 @@
             <!-- Beneficiary Anchor Card -->
             <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
                 <div class="absolute top-0 left-0 w-32 h-32 bg-indigo-500/[0.03] rounded-br-[2rem] -ml-10 -mt-10 font-Cairo"></div>
-                <h4 class="font-black text-slate-500 text-[10px] uppercase tracking-[0.3em] mb-10 px-4 font-Cairo text-start">👤 {{ __('بيانات صاحب الطلب') }}</h4>
+                <h4 class="font-black text-[10px] uppercase tracking-[0.3em] mb-10 px-4 font-Cairo text-start opacity-60">👤 {{ __('بيانات صاحب الطلب') }}</h4>
                 <div class="flex items-center gap-6 text-start font-Cairo">
                     <div class="w-20 h-20 bg-slate-950 dark:bg-brand-primary text-white rounded-[1.2rem] flex items-center justify-center text-3xl font-black shadow-2xl font-Cairo italic font-mono">
                         {{ mb_substr($subscription->user->name ?? 'U', 0, 1) }}
                     </div>
                     <div class="flex flex-col text-start font-Cairo">
-                        <span class="text-xl font-black text-slate-800 dark:text-white font-Cairo leading-tight text-start italic">{{ $subscription->user->name ?? __('مستخدم محذوف') }}</span>
-                        <span class="text-[10px] font-bold text-slate-500 font-mono mt-2 text-start italic">{{ $subscription->user->email ?? __('لا يوجد بريد') }}</span>
+                        <span class="text-xl font-black font-Cairo leading-tight text-start italic">{{ $subscription->user->name ?? __('مستخدم محذوف') }}</span>
+                        <span class="text-[10px] font-bold font-mono mt-2 text-start italic opacity-60">{{ $subscription->user->email ?? __('لا يوجد بريد') }}</span>
                     </div>
                 </div>
             </div>
@@ -192,20 +192,20 @@
             <!-- Package Details -->
             <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
                 <div class="absolute bottom-0 right-0 w-40 h-40 bg-brand-primary/[0.04] rounded-tl-[4rem] -mr-16 -mb-16 font-Cairo"></div>
-                <h4 class="font-black text-slate-500 text-[10px] uppercase tracking-[0.3em] mb-10 px-4 font-Cairo text-start font-Cairo">{{ __('💎 تفاصيل باقة النقاط') }}</h4>
+                <h4 class="font-black text-[10px] uppercase tracking-[0.3em] mb-10 px-4 font-Cairo text-start font-Cairo opacity-60">💎 {{ __('تفاصيل باقة النقاط') }}</h4>
                 
-                <h5 class="text-lg font-black text-slate-800 dark:text-slate-200 font-Cairo mb-8 text-start italic">{{ $subscription->package->name ?? __('باقة النقاط الأساسية') }}</h5>
+                <h5 class="text-lg font-black font-Cairo mb-8 text-start italic opacity-80">{{ $subscription->package->name ?? __('باقة النقاط الأساسية') }}</h5>
                 
-                <div class="p-12 bg-slate-950 dark:bg-white rounded-[2rem] text-center mb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] transform hover:scale-[1.05] transition-all duration-700 text-start group">
+                <div class="p-12 bg-slate-950 dark:bg-white rounded-[2rem] text-center mb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] transform hover:scale-[1.05] transition-all duration-700 text-start group font-Cairo">
                     <p class="text-6xl font-black text-brand-primary dark:text-slate-900 leading-none mb-4 font-mono group-hover:rotate-3 transition-transform text-center font-Cairo">{{ number_format(($subscription->package->points ?? 0) + ($subscription->package->bonus_points ?? 0)) }}</p>
-                    <p class="text-[10px] font-black text-white/40 dark:text-slate-500 uppercase tracking-[0.3em] font-Cairo text-center font-Cairo">{{ __('إجمالي النقاط المضافة') }}</p>
+                    <p class="text-[10px] font-black text-white/40 dark:text-slate-500 uppercase tracking-[0.3em] font-Cairo text-center font-Cairo opacity-40">{{ __('إجمالي النقاط المضافة') }}</p>
                 </div>
 
                 <div class="flex justify-between items-center px-6 text-start font-Cairo">
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('المبلغ المدفوع') }}:</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo text-start opacity-60">{{ __('المبلغ المدفوع') }}:</span>
                     <div class="text-start font-Cairo">
                         <span class="text-3xl font-black text-emerald-600 font-mono italic text-start font-Cairo">{{ number_format($subscription->package->price ?? 0, 0) }}</span>
-                        <span class="text-xs font-black text-slate-500 font-Cairo mr-2 tracking-widest text-start">{{ __('ريال') }}</span>
+                        <span class="text-xs font-black font-Cairo mr-2 tracking-widest text-start opacity-60">{{ __('ريال') }}</span>
                     </div>
                 </div>
             </div>

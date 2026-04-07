@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@@section('title', __('إضافة بنك جديد'))
+@section('title', __('إضافة بنك جديد'))
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
@@ -122,46 +122,4 @@
             </div>
         </div>
     </form>
-</div>
-
-<script>
-function previewImage(event) {
-    const preview = document.getElementById('preview');
-    const file = event.target.files[0];
-    if (file) {
-        preview.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.className = 'w-full h-full object-cover animate-fade-in rounded-[3rem]';
-        preview.appendChild(img);
-        preview.classList.remove('border-dashed');
-        preview.classList.add('border-solid', 'border-emerald-500/20');
-        preview.parentElement.classList.add('shadow-xl', 'shadow-emerald-500/5');
-    }
-}
-</script>
-@endsection
-              <a href="{{ route('banks.index') }}" class="w-full mt-6 py-6 border border-white/5 text-slate-500 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center hover:text-white hover:bg-white/5 transition-all font-Cairo italic font-Cairo">{{ __('إلغاء العملية') }}</a>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script>
-function previewImage(event) {
-    const preview = document.getElementById('preview');
-    const file = event.target.files[0];
-    if (file) {
-        preview.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.className = 'w-full h-full object-cover animate-fade-in rounded-[3rem]';
-        preview.appendChild(img);
-        preview.classList.remove('border-dashed');
-        preview.classList.add('border-solid', 'border-emerald-500/20');
-        preview.parentElement.classList.add('shadow-xl', 'shadow-emerald-500/5');
-    }
-}
-</script>
 @endsection

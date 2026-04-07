@@ -11,17 +11,17 @@
                 <a href="{{ route('admin.withdrawals.index') }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800 font-Cairo">
                     <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl font-Cairo shadow-lg shadow-emerald-500/5 font-Cairo underline-offset-8 italic">💸</span>
                     {{ __('تفاصيل تسوية أرباح المزود') }}
                 </h3>
             </div>
-            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start">
+            <div class="flex items-center gap-3 text-[10px] font-black mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
                 <span>{{ __('تصفية السيولة') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                 <span>{{ __('الميزانية الصادرة') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-brand-primary">{{ __('مرجع التسوية') }} #{{ str_pad($withdrawal->id, 6, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-brand-primary opacity-100">{{ __('مرجع التسوية') }} #{{ str_pad($withdrawal->id, 6, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
 
@@ -45,32 +45,32 @@
                 
                 <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
                     <span class="w-3 h-10 bg-emerald-600 rounded-full shadow-lg shadow-emerald-600/30 font-Cairo"></span>
-                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('بيانات طلب السحب') }}</h4>
+                    <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('بيانات طلب السحب') }}</h4>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-14 text-start font-Cairo">
                     <!-- Net Amount -->
                     <div class="space-y-6 text-start font-Cairo">
-                        <label class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">
+                        <label class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                             <span class="w-2 h-2 bg-rose-500 rounded-full shadow-sm"></span>
                             {{ __('المبلغ الصافي واجب التصفية') }}
                         </label>
                         <div class="flex items-baseline gap-4 p-8 bg-slate-50/50 dark:bg-slate-950/40 rounded-[2.5rem] border border-slate-100 dark:border-slate-800/60 shadow-inner text-start italic font-mono">
                             <span class="text-5xl font-black text-rose-600 dark:text-rose-400 tracking-tighter text-start">{{ number_format($withdrawal->amount, 0) }}</span>
-                            <span class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] font-Cairo italic text-start">{{ __('YER CURRENCY') }}</span>
+                            <span class="text-xs font-black uppercase tracking-[0.2em] font-Cairo italic text-start opacity-60">{{ __('YER CURRENCY') }}</span>
                         </div>
                     </div>
 
                     <!-- Submission Chronology -->
                     <div class="space-y-6 text-start font-Cairo">
-                        <label class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                        <label class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                             <span class="w-2 h-2 bg-indigo-500 rounded-full shadow-sm font-Cairo"></span>
                             {{ __('تاريخ استلام حزمة المتطلبات') }}
                         </label>
                         <div class="p-8 bg-slate-50/50 dark:bg-slate-950/40 rounded-[2.5rem] border border-slate-100 dark:border-slate-800/60 shadow-inner text-start font-mono italic">
                              <div class="flex flex-col gap-2 text-start font-Cairo">
-                                 <span class="text-xl font-black text-slate-800 dark:text-slate-200 text-start">{{ $withdrawal->created_at->format('Y-m-d') }}</span>
-                                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-start font-Cairo">{{ $withdrawal->created_at->format('H:i:s A - T') }}</span>
+                                 <span class="text-xl font-black text-start italic">{{ $withdrawal->created_at->format('Y-m-d') }}</span>
+                                 <span class="text-[10px] font-black uppercase tracking-widest text-start font-Cairo opacity-60">{{ $withdrawal->created_at->format('H:i:s A - T') }}</span>
                              </div>
                         </div>
                     </div>
@@ -78,14 +78,14 @@
 
                 @if($withdrawal->status == 'pending')
                     <div class="pt-14 border-t border-slate-100 dark:border-slate-800/50 text-start font-Cairo">
-                        <div class="mb-12 p-10 bg-amber-500/[0.03] dark:bg-amber-500/[0.05] rounded-[3.5rem] border-2 border-dashed border-amber-500/20 text-start relative overflow-hidden">
-                            <div class="absolute -top-10 -left-10 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl font-Cairo"></div>
-                            <div class="flex items-center gap-5 mb-5 text-start font-Cairo">
+                        <div class="mb-12 p-10 bg-amber-500/[0.03] dark:bg-amber-500/[0.05] rounded-[3.5rem] border-2 border-dashed border-amber-500/20 text-start relative ov                             <div class="flex items-center gap-5 mb-5 text-start font-Cairo">
                                 <span class="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-600 text-xl font-Cairo">⚡</span>
                                 <h5 class="text-xs font-black text-amber-600 uppercase tracking-[0.3em] font-Cairo text-start font-Cairo italic">{{ __('إثبات عملية التحويل الخارجي') }}</h5>
                             </div>
-                            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-Cairo leading-[1.8] mb-0 text-start italic font-Cairo">
+                            <p class="text-[11px] font-bold font-Cairo leading-[1.8] mb-0 text-start italic font-Cairo opacity-60">
                                 {{ __('يرجى مراجعة بيانات "الآيبان" للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}
+                            </p>
+بيانات "الآيبان" للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}
                             </p>
                         </div>
                         
@@ -95,7 +95,7 @@
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start font-Cairo">
                                 <div class="space-y-4 text-start font-Cairo">
-                                    <label class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                                    <label class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                                         <span class="w-2 h-2 bg-indigo-600 rounded-full font-Cairo"></span>
                                         {{ __('رقم السند البنكي الصادر') }}
                                     </label>
@@ -104,7 +104,7 @@
                                 </div>
 
                                 <div class="space-y-4 text-start font-Cairo">
-                                    <label class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
+                                    <label class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                                         <span class="w-2 h-2 bg-emerald-600 rounded-full font-Cairo"></span>
                                         {{ __('مستند الإثبات المالي') }} (IMAGE/PDF)
                                     </label>
@@ -173,7 +173,7 @@
                     <div class="mt-14 p-14 bg-slate-50 dark:bg-slate-950/60 rounded-[4.5rem] border border-slate-100 dark:border-slate-800/80 shadow-inner text-start font-Cairo">
                         <div class="flex flex-col md:flex-row items-center justify-between gap-10 mb-14 text-start font-Cairo">
                             <div class="flex items-center gap-6 text-start font-Cairo">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('الحالة النهائية للطلب') }}</span>
+                                <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo text-start opacity-60">{{ __('الحالة النهائية للطلب') }}</span>
                                 @if($withdrawal->status == 'approved')
                                     <span class="px-10 py-4 bg-emerald-500/10 text-emerald-600 rounded-[2.5rem] text-[11px] font-black border border-emerald-500/20 shadow-xl shadow-emerald-500/10 font-Cairo italic text-start">{{ __('تمت التصفية البنكية بنجاح') }} ✓</span>
                                 @else
@@ -181,8 +181,8 @@
                                 @endif
                             </div>
                             <div class="flex items-center gap-4 text-start font-Cairo">
-                                <span class="text-[10px] font-black text-slate-400 font-Cairo uppercase tracking-widest text-start italic">{{ __('المصادق') }}:</span>
-                                <span class="text-xs font-black text-slate-900 dark:text-emerald-500 font-Cairo underline decoration-emerald-500 decoration-[3px] underline-offset-8 italic text-start font-Cairo">{{ $withdrawal->admin->name ?? __('محقق الميزانية') }}</span>
+                                <span class="text-[10px] font-black font-Cairo uppercase tracking-widest text-start italic opacity-60">{{ __('المصادق') }}:</span>
+                                <span class="text-xs font-black dark:text-emerald-500 font-Cairo underline decoration-emerald-500 decoration-[3px] underline-offset-8 italic text-start font-Cairo">{{ $withdrawal->admin->name ?? __('محقق الميزانية') }}</span>
                             </div>
                         </div>
                         
@@ -190,20 +190,20 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-14 items-start text-start font-Cairo">
                                 <div class="space-y-10 text-start font-Cairo">
                                     <div class="space-y-4 text-start font-Cairo">
-                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo text-start italic">{{ __('المرجع المالي للتحويل') }}</span>
+                                        <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo text-start italic opacity-60">{{ __('المرجع المالي للتحويل') }}</span>
                                         <code class="text-lg font-black text-brand-primary block px-6 py-4 bg-brand-primary/5 rounded-2xl border border-brand-primary/10 tracking-[0.2em] font-mono italic text-start font-Cairo shadow-sm">{{ $withdrawal->bond_number }}</code>
                                     </div>
                                     @if($withdrawal->admin_note)
                                         <div class="space-y-4 text-start font-Cairo">
-                                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo text-start italic font-Cairo">{{ __('إفادة المصادقة النهائية') }}</span>
+                                            <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo text-start italic font-Cairo opacity-60">{{ __('إفادة المصادقة النهائية') }}</span>
                                             <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm text-start italic">
-                                                <p class="text-sm font-black text-slate-600 dark:text-slate-400 font-Cairo leading-relaxed text-start">" {{ $withdrawal->admin_note }} "</p>
+                                                <p class="text-sm font-black font-Cairo leading-relaxed text-start opacity-70">" {{ $withdrawal->admin_note }} "</p>
                                             </div>
                                         </div>
                                     @endif
                                 </div>
                                 <div class="space-y-6 text-start font-Cairo group">
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo block text-start italic">{{ __('أرشيف إثبات الحوالة') }}</span>
+                                    <span class="text-[10px] font-black uppercase tracking-[0.3em] font-Cairo block text-start italic opacity-60">{{ __('أرشيف إثبات الحوالة') }}</span>
                                     <div class="relative rounded-[3rem] overflow-hidden border-8 border-white dark:border-slate-900 shadow-2xl text-start font-Cairo bg-slate-950">
                                         <a href="{{ asset('storage/' . $withdrawal->bond_image) }}" target="_blank" class="block text-start font-Cairo">
                                             <img src="{{ asset('storage/' . $withdrawal->bond_image) }}" alt="Digital Evidence" class="w-full h-auto object-cover transform group-hover:scale-110 transition-transform duration-1000 opacity-90 group-hover:opacity-100">
@@ -216,8 +216,8 @@
                             </div>
                         @else
                             <div class="space-y-6 bg-rose-500/[0.03] p-12 rounded-[3.5rem] border border-rose-500/10 text-start font-Cairo italic shadow-inner">
-                                <span class="text-[10px] font-black text-rose-500 uppercase tracking-[0.3em] block font-Cairo text-start">{{ __('مسببات تجميد المطالبة المالية') }}:</span>
-                                <p class="text-xl font-bold text-slate-600 dark:text-slate-400 font-Cairo leading-[1.8] text-start font-Cairo">" {{ $withdrawal->admin_note }} "</p>
+                                <span class="text-[10px] font-black text-rose-500 uppercase tracking-[0.3em] block font-Cairo text-start opacity-60">{{ __('مسببات تجميد المطالبة المالية') }}:</span>
+                                <p class="text-xl font-bold font-Cairo leading-[1.8] text-start font-Cairo opacity-70">" {{ $withdrawal->admin_note }} "</p>
                             </div>
                         @endif
                     </div>
@@ -230,22 +230,22 @@
             <!-- Provider Profile -->
             <div class="card-premium glass-panel p-10 rounded-[4rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
                 <div class="absolute top-0 left-0 w-32 h-32 bg-brand-secondary/[0.04] rounded-br-[6rem] -ml-10 -mt-10 font-Cairo"></div>
-                <h4 class="font-black text-slate-400 text-[10px] uppercase tracking-[0.3em] mb-10 px-4 font-Cairo text-start">👤 {{ __('بيانات المزود') }}</h4>
+                <h4 class="font-black text-[10px] uppercase tracking-[0.3em] mb-10 px-4 font-Cairo text-start opacity-60">👤 {{ __('بيانات المزود') }}</h4>
                 <div class="flex items-center gap-6 mb-12 text-start font-Cairo">
                     <div class="w-20 h-20 bg-slate-950 dark:bg-white text-white dark:text-slate-950 rounded-[2rem] flex items-center justify-center text-3xl font-black shadow-2xl font-Cairo italic font-mono">
                         {{ mb_substr($withdrawal->user->name ?? 'P', 0, 1) }}
                     </div>
                     <div class="flex flex-col text-start font-Cairo">
-                        <span class="text-xl font-black text-slate-800 dark:text-white font-Cairo leading-tight text-start italic">{{ $withdrawal->user->name ?? __('مزود مفقود') }}</span>
-                        <span class="text-[10px] font-bold text-slate-400 font-mono mt-2 text-start italic">{{ $withdrawal->user->email ?? 'no-email-anchor' }}</span>
+                        <span class="text-xl font-black font-Cairo leading-tight text-start italic">{{ $withdrawal->user->name ?? __('مزود مفقود') }}</span>
+                        <span class="text-[10px] font-bold font-mono mt-2 text-start italic opacity-60">{{ $withdrawal->user->email ?? 'no-email-anchor' }}</span>
                     </div>
                 </div>
                 
                 <div class="space-y-4 p-8 bg-slate-50 dark:bg-slate-950/40 rounded-[2.5rem] border border-slate-100 dark:border-slate-800/80 shadow-inner text-start font-Cairo">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] block font-Cairo text-start italic">{{ __('رصيد الأرباح المحجوز حالياً') }}</span>
+                    <span class="text-[9px] font-black uppercase tracking-[0.3em] block font-Cairo text-start italic opacity-60">{{ __('رصيد الأرباح المحجوز حالياً') }}</span>
                     <div class="flex items-baseline gap-3 text-start font-Cairo font-mono">
                         <span class="text-4xl font-black text-emerald-600 italic text-start">{{ number_format($withdrawal->user->paid_points ?? 0, 0) }}</span>
-                        <span class="text-xs font-black text-slate-400 tracking-widest text-start font-Cairo">YER</span>
+                        <span class="text-xs font-black tracking-widest text-start font-Cairo opacity-60">YER</span>
                     </div>
                 </div>
             </div>

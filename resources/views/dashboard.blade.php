@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', __('لوحة التحكم الرئيسية'))
 
@@ -13,8 +13,8 @@
                 <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4 border border-emerald-500/20">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13.732 4c-.77.234-1.476.614-2.066 1.114M6.718 4c.77.234 1.476.614 2.066 1.114M12 7h.01"></path></svg>
                 </div>
-                <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{{ __('إجمالي المستخدمين') }}</p>
-                <h3 class="text-3xl font-black text-slate-800 dark:text-white mb-2">{{ number_format($usersCount) }}</h3>
+                <p class="text-xs font-black uppercase tracking-widest mb-1 opacity-60">{{ __('إجمالي المستخدمين') }}</p>
+                <h3 class="text-3xl font-black mb-2">{{ number_format($usersCount) }}</h3>
                 <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7-7m-7-7v18"></path></svg> 
                     {{ __('حالة الاتصال') }} <span class="font-bold opacity-60">{{ __('نشط') }}</span>
@@ -29,8 +29,8 @@
                 <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 border border-blue-500/20">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path></svg>
                 </div>
-                <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{{ __('أقسام السوق') }}</p>
-                <h3 class="text-3xl font-black text-slate-800 dark:text-white mb-2">{{ number_format($categoriesCount) }}</h3>
+                <p class="text-xs font-black uppercase tracking-widest mb-1 opacity-60">{{ __('أقسام السوق') }}</p>
+                <h3 class="text-3xl font-black mb-2">{{ number_format($categoriesCount) }}</h3>
                 <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-500/20">
                     <span>{{ __('قنوات الخدمة المفعلة') }}</span>
                 </p>
@@ -44,8 +44,8 @@
                 <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4 border border-amber-500/20">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{{ __('عدد الصفقات') }}</p>
-                <h3 class="text-3xl font-black text-slate-800 dark:text-white mb-2">{{ number_format($requestsCount ?? 0) }}</h3>
+                <p class="text-xs font-black uppercase tracking-widest mb-1 opacity-60">{{ __('عدد الصفقات') }}</p>
+                <h3 class="text-3xl font-black mb-2">{{ number_format($requestsCount ?? 0) }}</h3>
                 <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
                     <span class="font-bold opacity-60">{{ __('إجمالي المعاملات') }}</span>
                 </p>
@@ -90,22 +90,22 @@
                     <div class="flex justify-between items-start mb-3">
                         <div class="flex items-center gap-3">
                             <div class="w-3 h-3 bg-amber-500 rounded-full shadow-lg shadow-amber-500/20"></div>
-                            <p class="text-sm font-bold text-slate-800 dark:text-white">{{ __('توثيق الحسابات') }}</p>
+                            <p class="text-sm font-bold">{{ __('توثيق الحسابات') }}</p>
                         </div>
                         <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] px-2.5 py-1 rounded-lg font-black border border-amber-500/20 shadow-sm">{{ __('معلق') }}</span>
                     </div>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold italic">{{ __('هناك طلبات بانتظار المراجعة والتدقيق.') }}</p>
+                    <p class="text-[11px] font-bold italic opacity-60">{{ __('هناك طلبات بانتظار المراجعة والتدقيق.') }}</p>
                 </div>
                 
                 <div class="p-6 hover:bg-brand-primary/[0.02] dark:hover:bg-brand-primary/5 transition group cursor-pointer" onclick="window.location='{{ route('request-complaints.index') }}'">
                     <div class="flex justify-between items-start mb-3">
                         <div class="flex items-center gap-3">
                             <div class="w-3 h-3 bg-rose-500 rounded-full animate-pulse shadow-lg shadow-rose-500/20"></div>
-                            <p class="text-sm font-bold text-slate-800 dark:text-white">{{ __('نزاعات جديدة') }}</p>
+                            <p class="text-sm font-bold">{{ __('نزاعات جديدة') }}</p>
                         </div>
                         <span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[10px] px-2.5 py-1 rounded-lg font-black border border-rose-500/20 shadow-sm">{{ __('حرج') }}</span>
                     </div>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-bold italic">{{ __('نزاع مالي بين عميل ومزود يحتاج تدخل سريع.') }}</p>
+                    <p class="text-[11px] font-bold italic opacity-60">{{ __('نزاع مالي بين عميل ومزود يحتاج تدخل سريع.') }}</p>
                 </div>
             </div>
             <button class="m-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 rounded-2xl text-xs font-black transition-all hover:scale-[1.02] active:scale-95 shadow-xl hover:shadow-2xl" onclick="window.location='{{ route('settings.index') }}'">{{ __('مراجعة الإعدادات المركزية') }}</button>

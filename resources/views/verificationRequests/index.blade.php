@@ -8,7 +8,7 @@
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
             <h3
-                class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                 <span
                     class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-3xl font-Cairo shadow-lg shadow-emerald-500/5">🆔</span>
                 {{ __('توثيق الحسابات') }}
@@ -39,7 +39,7 @@
                 </div>
                 <div class="flex flex-col text-start">
                     <span
-                        class="text-3xl font-black text-slate-800 dark:text-white font-mono leading-none text-start">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
+                        class="text-3xl font-black font-mono leading-none text-start">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
                     <span
                         class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('إجمالي الطلبات') }}</span>
                 </div>
@@ -122,7 +122,7 @@
         <div
             class="lg:col-span-1 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo">
             <div class="flex items-center justify-between mb-10 text-start">
-                <h4 class="font-black text-slate-800 dark:text-white text-base flex items-center gap-3 font-Cairo text-start">
+                <h4 class="font-black text-base flex items-center gap-3 font-Cairo text-start">
                     <span class="w-2 h-6 bg-emerald-500 rounded-full shadow-lg shadow-emerald-500/20"></span>
                     {{ __('إحصائيات قرارات التوثيق') }}
                 </h4>
@@ -136,7 +136,7 @@
         <div
             class="lg:col-span-2 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 text-start">
-                <h4 class="font-black text-slate-800 dark:text-white text-base flex items-center gap-3 font-Cairo text-start">
+                <h4 class="font-black text-base flex items-center gap-3 font-Cairo text-start">
                     <span class="w-2 h-6 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/20"></span>
                     {{ __('تحليل عدد الطلبات يومياً') }}
                 </h4>
@@ -161,7 +161,7 @@
         class="card-premium glass-panel rounded-[2rem] overflow-hidden shadow-2xl relative border border-white dark:border-slate-800/50 text-start font-Cairo">
         <div
             class="px-12 py-8 border-b border-slate-100 dark:border-slate-800/50 bg-slate-50/40 dark:bg-slate-950/20 text-start">
-            <h4 class="font-black text-lg text-slate-800 dark:text-white font-Cairo text-start">
+            <h4 class="font-black text-lg font-Cairo text-start">
                 {{ __('سجل طلبات التوثيق') }}</h4>
         </div>
 
@@ -192,7 +192,7 @@
                                         {{ mb_substr($request->user->name ?? 'U', 0, 1) }}
                                     </div>
                                     <span
-                                        class="font-black text-[13px] text-slate-700 dark:text-white font-Cairo text-start">{{ $request->user->name ?? __('مستخدم غير معروف') }}</span>
+                                        class="font-black text-[13px] font-Cairo text-start">{{ $request->user->name ?? __('مستخدم غير معروف') }}</span>
                                 </div>
                             </td>
                             <td class="px-10 py-7 text-start">

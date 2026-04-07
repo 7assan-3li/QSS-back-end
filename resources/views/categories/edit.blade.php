@@ -7,14 +7,14 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
-            <h3 class="font-black text-2xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+            <h3 class="font-black text-2xl flex items-center gap-4 text-start font-Cairo">
                 <span class="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-brand-primary/5">📂</span>
                 {{ __('تعديل التصنيف') }}: {{ $category->name }}
             </h3>
-            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start">
+            <div class="flex items-center gap-3 text-[10px] font-black mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
                 <span>{{ __('إدارة الأقسام') }}</span>
                 <svg class="w-2 h-2 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-brand-primary">{{ __('تعديل البيانات') }}</span>
+                <span class="text-brand-primary opacity-100">{{ __('تعديل البيانات') }}</span>
             </div>
         </div>
         
@@ -51,13 +51,13 @@
             <div class="space-y-10 text-start">
                 <div class="flex items-center gap-4 mb-2 text-start">
                     <span class="w-2.5 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/40"></span>
-                    <h4 class="font-black text-2xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('تعديل بيانات القسم') }}</h4>
+                    <h4 class="font-black text-2xl font-Cairo text-start">{{ __('تعديل بيانات القسم') }}</h4>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-start">
                     <!-- Name -->
                     <div class="space-y-4 text-start">
-                        <label for="name" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('اسم القسم') }}</label>
+                        <label for="name" class="text-[9px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">{{ __('اسم القسم') }}</label>
                         <input type="text" id="name" name="name" value="{{ old('name', $category->name) }}" required
                                class="w-full px-8 py-6 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-800 rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-12 focus:ring-brand-primary/5 transition-all dark:text-white font-Cairo text-start">
                         @error('name')
@@ -67,7 +67,7 @@
 
                     <!-- Parent Choice -->
                     <div class="space-y-4 text-start">
-                        <label for="category_id" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('القسم الرئيسي (اختياري)') }}</label>
+                        <label for="category_id" class="text-[9px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">{{ __('القسم الرئيسي (اختياري)') }}</label>
                         <div class="relative text-start">
                             <select name="category_id" id="category_id" 
                                     class="w-full px-8 py-6 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-800 rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-12 focus:ring-brand-primary/5 appearance-none transition-all dark:text-white font-Cairo text-start">
@@ -90,11 +90,11 @@
             <div class="space-y-10 pt-12 border-t border-slate-100 dark:border-slate-800 text-start">
                 <div class="flex items-center gap-4 mb-2 text-start">
                     <span class="w-2.5 h-10 bg-amber-500 rounded-full shadow-lg shadow-amber-500/40"></span>
-                    <h4 class="font-black text-2xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('تعديل وصف القسم') }}</h4>
+                    <h4 class="font-black text-2xl font-Cairo text-start">{{ __('تعديل وصف القسم') }}</h4>
                 </div>
                 
                 <div class="space-y-4 text-start">
-                    <label for="description" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('وصف القسم') }}</label>
+                    <label for="description" class="text-[9px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">{{ __('وصف القسم') }}</label>
                     <textarea name="description" id="description" rows="5"
                                class="w-full px-8 py-8 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-800 rounded-[3rem] text-sm font-black outline-none focus:border-amber-500 focus:ring-12 focus:ring-amber-500/5 transition-all dark:text-white resize-none h-48 font-Cairo text-start">{{ old('description', $category->description) }}</textarea>
                 </div>
@@ -104,7 +104,7 @@
             <div class="space-y-10 pt-12 border-t border-slate-100 dark:border-slate-800 text-start">
                 <div class="flex items-center gap-4 mb-2 text-start">
                     <span class="w-2.5 h-10 bg-purple-500 rounded-full shadow-lg shadow-purple-500/40"></span>
-                    <h4 class="font-black text-2xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('تغيير صورة القسم') }}</h4>
+                    <h4 class="font-black text-2xl font-Cairo text-start">{{ __('تغيير صورة القسم') }}</h4>
                 </div>
 
                 <div class="flex flex-col xl:flex-row gap-12 items-center text-start">
@@ -114,8 +114,8 @@
                                 <div class="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center shadow-2xl mb-6 group-hover:scale-110 group-hover:-rotate-6 transition-transform">
                                     <svg class="w-8 h-8 text-slate-400 group-hover:text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 </div>
-                                <p class="mb-2 text-xs font-black text-slate-600 dark:text-slate-400 font-Cairo">{{ __('اختر صورة جديدة') }}</p>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-8">{{ __('سيتم استبدال الصورة الحالية عند اختيار ملف جديد.') }}</p>
+                                <p class="mb-2 text-xs font-black font-Cairo opacity-70">{{ __('اختر صورة جديدة') }}</p>
+                                <p class="text-[9px] font-black uppercase tracking-widest px-8 opacity-60">{{ __('سيتم استبدال الصورة الحالية عند اختيار ملف جديد.') }}</p>
                             </div>
                             <input type="file" id="imageInput" name="image" class="hidden" accept="image/*" onchange="previewImage(event)">
                         </label>
@@ -126,10 +126,10 @@
                         <img id="preview" src="{{ $category->image_path ? asset('storage/' . $category->image_path) : '' }}" 
                              class="w-full h-full object-cover scale-100 group-hover:scale-110 transition-transform duration-1000 {{ $category->image_path ? '' : 'hidden' }}">
                         <div id="preview-placeholder" class="text-center space-y-4 opacity-30 group-hover:scale-110 transition-transform {{ $category->image_path ? 'hidden' : '' }} text-center">
-                            <div class="w-20 h-20 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto">
+                             <div class="w-20 h-20 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto">
                                  <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                             </div>
-                            <span class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400 block font-Cairo">{{ __('معاينة الصورة') }}</span>
+                            <span class="text-[8px] font-black uppercase tracking-[0.3em] block font-Cairo opacity-60">{{ __('معاينة الصورة') }}</span>
                         </div>
                     </div>
                 </div>

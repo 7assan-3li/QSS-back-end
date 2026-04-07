@@ -11,17 +11,17 @@
                 <a href="{{ route('users.index') }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800 font-Cairo">
                     <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-2xl font-Cairo shadow-lg shadow-indigo-500/5 font-Cairo underline-offset-8 italic">👤</span>
                     {{ __('ملف الهوية الرقمية للكيان') }}
                 </h3>
             </div>
-            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start">
+            <div class="flex items-center gap-3 text-[10px] font-black mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
                 <span>{{ __('حوكمة المستخدمين') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                 <span>{{ __('البيانات التقنية للملف') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-brand-primary">{{ __('مرجع النظام') }} #{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-brand-primary opacity-100">{{ __('مرجع النظام') }} #{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
     </div>
@@ -47,9 +47,9 @@
             <!-- Profile Intelligence Sector -->
             <div class="flex-1 space-y-10 text-center lg:text-start font-Cairo">
                 <div class="space-y-4 text-start font-Cairo">
-                    <h2 class="text-4xl font-black text-slate-800 dark:text-white font-Cairo italic text-start">{{ $user->name }}</h2>
+                    <h2 class="text-4xl font-black font-Cairo italic text-start">{{ $user->name }}</h2>
                     <div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6 text-start font-Cairo">
-                        <span class="text-lg font-bold text-slate-400 font-mono tracking-wide text-start italic">{{ $user->email }}</span>
+                        <span class="text-lg font-bold font-mono tracking-wide text-start italic opacity-60">{{ $user->email }}</span>
                     </div>
                 </div>
 
@@ -71,7 +71,7 @@
                     <span class="inline-flex items-center px-6 py-3 rounded-2xl text-[10px] font-black {{ $roleColor }} border uppercase tracking-[0.2em] font-Cairo shadow-sm italic text-start">
                         {{ $roleInternalName }}
                     </span>
-                    <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] font-Cairo italic text-start">
+                    <div class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] font-Cairo italic text-start opacity-60">
                         <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         {{ __('الاستناد الزمني') }}: {{ $user->created_at->format('Y-m-d') }}
                     </div>
