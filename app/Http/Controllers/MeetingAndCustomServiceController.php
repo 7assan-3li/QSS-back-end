@@ -20,10 +20,10 @@ class MeetingAndCustomServiceController extends Controller
         $this->customServiceService = $customServiceService;
     }
 
-    public function getMeetingService()
+    public function getMeetingService($user_id)
     {
         $meetingService = Service::firstOrCreate(
-            ['provider_id' => Auth::user()->id, 'type' => ServiceType::MEETING],
+            ['provider_id' => $user_id, 'type' => ServiceType::MEETING],
             [
                 'distance_based_price' => true,
                 'price_per_km' => 0,
@@ -49,10 +49,10 @@ class MeetingAndCustomServiceController extends Controller
         ], 200);
     }
 
-    public function getCustomService()
+    public function getCustomService($user_id)
     {
         $customService = Service::firstOrCreate(
-            ['provider_id' => Auth::user()->id, 'type' => ServiceType::CUSTOM],
+            ['provider_id' => $user_id, 'type' => ServiceType::CUSTOM],
             [
                 'distance_based_price' => true,
                 'price_per_km' => 0,

@@ -53,7 +53,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::put('/users/{user}/verify-email', [UserController::class, 'verifyEmail'])->name('users.verify.email');
+    Route::put('/users/{user}/verify-email', [UserController::class, 'verifyEmailAdmin'])->name('users.verify.email');
 
 
     // Category Routes

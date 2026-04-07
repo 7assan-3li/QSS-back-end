@@ -61,6 +61,21 @@ class RequestService
 
     }
 
+    public function getAllSeekerRequests($seekerId){
+        $requests = RequestModel::with(['user', 'services'])->where('user_id', $seekerId)->get();
+        return $requests;
+    }
+        
+    
+
+    public function getAllProviderRequests($providerId){
+        // we use whereHas because a request is linked to a provider through its services
+        return RequestModel::with(['user', 'services'])
+            ->whereHas('services', function($q) use ($providerId) {
+                $q->where('provider_id', $providerId);
+            })->get();
+    }
+
     public function markPaid($data)
     {
         // تحديث حالة الطلب

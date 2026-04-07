@@ -171,7 +171,17 @@ public function index()
     {
         $this->authorize('view', $user);
 
-        return view('users.show', ['user' => $user]);
+        // Eager load everything for the Executive Identity Matrix
+        $user->load([
+            'profile',
+            'verificationRequests' => function($q) { $q->latest()->limit(5); }
+        ]);
+
+        $user->loadCount(['requests', 'services', 'verificationRequests']);
+
+        return view('users.show', [
+            'user' => $user,
+        ]);
     }
     public function edit(User $user)
     {
@@ -300,13 +310,8 @@ public function index()
         ])->onlyInput('email');
     }
 
-    public function verifyEmailAdmin( $id)
+    public function verifyEmailAdmin(User $user)
     {
-        $user = User::findOrFail($id);
-
-        if (!$user) {
-            return back()->with('error', 'المستخدم غير موجود');
-        }
         if($user->email_verified_at){
             return back()->with('info', 'المستخدم موثق بالفعل');
         }

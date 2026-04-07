@@ -26,6 +26,16 @@ class RequestController extends Controller
         $requests = RequestModel::with(['user', 'main_service', 'sub_services'])->get();
         return response()->json($requests);
     }
+    public function indexSeeker()
+    {
+        $requests = $this->requestService->getAllSeekerRequests(Auth::user()->id);
+        return response()->json($requests);
+    }
+    public function indexProvider()
+    {
+        $requests = $this->requestService->getAllProviderRequests(Auth::user()->id);
+        return response()->json($requests);
+    }
     public function store(Request $request)
     {
 

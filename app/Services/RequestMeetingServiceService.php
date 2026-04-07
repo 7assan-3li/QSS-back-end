@@ -34,6 +34,8 @@ class RequestMeetingServiceService
         return ['requests' => $requests];
     }
 
+    
+
     public function store($data)
     {
         // Find the active Meeting Service for the given provider
