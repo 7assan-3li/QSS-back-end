@@ -19,6 +19,7 @@ class ProfileResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'bio' => $this->bio,
+            'job_title' => $this->job_title,
             'image_path' => $this->image_path,
             'image_url' => $this->image_path ? Storage::url($this->image_path) : null,
             'latitude' => $this->latitude,
