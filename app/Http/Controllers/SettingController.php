@@ -18,12 +18,22 @@ class SettingController extends Controller
         $settingsData = $request->except(['_token', '_method']);
 
         foreach ($settingsData as $key => $value) {
-            // التحقق من أن القيمة رقمية وأن المفتاح موجود لتلافي أي أخطاء
-            if(is_numeric($value)) {
-                Setting::where('key', $key)->update(['value' => $value]);
+            $setting = Setting::where('key', $key)->first();
+            if ($setting) {
+                // Determine if we need to reset user policies (only if text changed)
+                if (in_array($key, ['seeker_policy_content', 'provider_policy_content']) && $setting->value !== $value) {
+                    if ($key === 'seeker_policy_content') {
+                        \App\Models\User::where('role', 'seeker')->update(['seeker_policy' => false]);
+                    } else {
+                        \App\Models\User::where('role', 'provider')->update(['provider_policy' => false]);
+                    }
+                }
+
+                // Update the setting value (handle both numeric and text)
+                $setting->update(['value' => $value]);
             }
         }
 
-        return redirect()->back()->with('success', 'تم حفظ وتحديث إعدادات النظام الحساسة بنجاح!');
+        return redirect()->back()->with('success', 'تم حفظ وتحديث إعدادات النظام الحساسة والسياسات العامة بنجاح!');
     }
 }
