@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QSS Admin | Analytics Concept (Ultra Detailed)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#0d9488', // Teal-600
+                            primaryHover: '#0f766e', // Teal-700
+                            secondary: '#0ea5e9', // Blue-500
+                            dark: '#0f172a', // Slate-900
+                            darker: '#020617', // Slate-950
+                            card: '#ffffff',
+                            darkcard: '#1e293b', // Slate-800
+                            bg: '#f8fafc', // Slate-50
+                            darkbg: '#0f172a', // Slate-900
+                            border: '#e2e8f0', // Slate-200
+                            darkborder: '#334155' // Slate-700
+                        }
+                    },
+                    fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'darksoft': '0 4px 20px -2px rgba(0, 0, 0, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+            --accent-glow: 0 0 15px rgba(13, 148, 136, 0.3);
+        }
+        .dark {
+            --glass-bg: rgba(15, 23, 42, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        body { font-family: 'Cairo', sans-serif; overflow: hidden; transition: background-color 0.4s ease; scroll-behavior: smooth; }
+        
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Sidebar enhanced */
+        .sidebar-item { 
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            margin: 0.25rem 0.75rem; 
+            border-radius: 0.85rem; 
+        }
+        .sidebar-item:hover:not(.active) { 
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff; 
+            transform: translateX(-4px); 
+        }
+        .sidebar-item.active { 
+            background: linear-gradient(135deg, #0d9488 0%, #0ea5e9 100%); 
+            color: white; 
+            box-shadow: 0 10px 20px -5px rgba(13, 148, 136, 0.4), var(--accent-glow);
+        }
+        .sidebar-item.active::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: #0d9488;
+            border-radius: 4px 0 0 4px;
+            box-shadow: 0 0 10px #0d9488;
+        }
+
+        /* Tab Animations */
+        .tab-content { 
+            display: none; 
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            opacity: 0; 
+        }
+        .tab-content.active { display: block; opacity: 1; }
+        
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px) scale(0.98); } 
+            to { opacity: 1; transform: translateY(0) scale(1); } 
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(13, 148, 136, 0.2); border-radius: 10px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(13, 148, 136, 0.5); }
+        .dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+
+        /* Card Glows */
+        .card-premium {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--glass-border);
+        }
+        .card-premium:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border-color: rgba(13, 148, 136, 0.3);
+        }
+        .dark .card-premium:hover {
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Floating header refined */
+        .floating-header { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            margin: 1.25rem 1.5rem 0.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+        
+        /* Stats Gradients */
+        .stat-gradient-1 { background: linear-gradient(135deg, #0d9488 0%, #059669 100%); }
+        .stat-gradient-2 { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); }
+        .stat-gradient-3 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .stat-gradient-4 { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+    </style>
+</head>
+<body class="text-slate-800 bg-brand-bg dark:bg-brand-darkbg dark:text-slate-200 antialiased h-screen flex">
+
+    <aside class="w-72 bg-[#020617] text-slate-400 flex flex-col z-20 transition-all duration-500 shadow-2xl flex-shrink-0 border-l border-slate-800/50">
+        <div class="h-24 flex items-center px-8 mb-4">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-tr from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg transform hover:rotate-6 transition-transform">Q</div>
+                <div class="flex flex-col leading-tight">
+                    <span class="text-2xl font-black text-white tracking-tight">QSS <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary" data-i18n="admin_title">Admin</span></span>
+                    <span class="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em]" data-i18n="marketplace_subtitle">Analytics System</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 space-y-2 overflow-y-auto px-4 pb-10 custom-scrollbar">
+            <p class="text-[10px] font-black text-slate-600 uppercase tracking-[0.15em] px-4 mb-4 mt-4" data-i18n="menu_main">التقارير والإدارة</p>
+            
+            <button onclick="switchTab('dashboard', this)" class="sidebar-item active w-full flex items-center gap-4 p-3.5 text-sm font-bold">
+                <div class="p-2 rounded-lg bg-slate-800/50 text-brand-primary"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
+                <span data-i18n="nav_dashboard">التحليلات العامة</span>
+            </button>
+            <button onclick="switchTab('users', this)" class="sidebar-item w-full flex items-center justify-between p-3.5 text-sm font-bold">
+                <div class="flex items-center gap-4">
+                    <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13.732 4c-.77.234-1.476.614-2.066 1.114M6.718 4c.77.234 1.476.614 2.066 1.114M12 7h.01"></path></svg></div>
+                    <span data-i18n="nav_users">المستخدمين</span>
+                </div>
+                <span class="bg-rose-500 text-[10px] font-black px-2.5 py-0.5 rounded-full text-white shadow-lg shadow-rose-500/20">3</span>
+            </button>
+            <button onclick="switchTab('marketplace', this)" class="sidebar-item w-full flex items-center gap-4 p-3.5 text-sm font-bold">
+                <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path></svg></div>
+                <span data-i18n="nav_market">أقسام السوق</span>
+            </button>
+            <button onclick="switchTab('transactions', this)" class="sidebar-item w-full flex items-center gap-4 p-3.5 text-sm font-bold">
+                <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                <span data-i18n="nav_escrow">الضمانات المالية</span>
+            </button>
+            <button onclick="switchTab('finance', this)" class="sidebar-item w-full flex items-center gap-4 p-3.5 text-sm font-bold">
+                <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg></div>
+                <span data-i18n="nav_finance">الخزينة والسحوبات</span>
+            </button>
+            
+            <p class="text-[10px] font-black text-slate-600 uppercase tracking-[0.15em] px-4 mb-4 mt-6" data-i18n="menu_system">العمليات والنظام</p>
+
+            <button onclick="switchTab('disputes', this)" class="sidebar-item w-full flex items-center justify-between p-3.5 text-sm font-bold">
+                <div class="flex items-center gap-4">
+                    <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+                    <span data-i18n="nav_support">النزاعات</span>
+                </div>
+                <span class="bg-amber-500 text-[10px] font-black px-2.5 py-0.5 rounded-full text-slate-900 shadow-lg shadow-amber-500/20">2</span>
+            </button>
+            <button onclick="switchTab('points', this)" class="sidebar-item w-full flex items-center gap-4 p-3.5 text-sm font-bold">
+                <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.898 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg></div>
+                <span data-i18n="nav_points">الباقات والنقاط</span>
+            </button>
+            <button onclick="switchTab('settings', this)" class="sidebar-item w-full flex items-center gap-4 p-3.5 text-sm font-bold">
+                <div class="p-2 rounded-lg bg-slate-800/50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg></div>
+                <span data-i18n="nav_settings">إعدادات المنصة</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative z-10 w-full overflow-hidden">
+        
+        <header class="floating-header h-20 flex items-center justify-between px-8 z-30 transition-all shadow-lg">
+            <div class="flex flex-col">
+                <h2 id="header-title" class="text-2xl font-black text-slate-800 dark:text-white tracking-tight" data-i18n="title_dashboard">التحليلات العامة</h2>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">لوحة التحكم الرئيسية</p>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center bg-slate-100 dark:bg-slate-800/50 p-1 rounded-xl border border-slate-200 dark:border-slate-700/50">
+                    <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all group">
+                        <span id="theme-icon" class="text-lg group-hover:rotate-12 transition-transform">🌙</span>
+                    </button>
+                    <button onclick="toggleLanguage()" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 font-black text-xs hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm transition-all" id="lang-btn">
+                        EN
+                    </button>
+                </div>
+                
+                <div class="w-px h-8 bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                
+                <div class="flex items-center gap-3 pl-2 group cursor-pointer">
+                    <div class="text-end hidden sm:block">
+                        <p class="text-sm font-black text-slate-800 dark:text-white leading-tight group-hover:text-brand-primary transition-colors" data-i18n="admin_name">أحمد المدير</p>
+                        <p class="text-[10px] font-bold text-slate-400 tracking-tighter" data-i18n="admin_role">مدير النظام</p>
+                    </div>
+                    <div class="relative">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0d9488&color=fff" class="w-11 h-11 rounded-2xl shadow-md border-2 border-white dark:border-slate-700 object-cover transform group-hover:scale-105 transition-transform">
+                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto px-4 md:px-8 pb-8">
+            
+            <section id="dashboard" class="tab-content active space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card-premium glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13.732 4c-.77.234-1.476.614-2.066 1.114M6.718 4c.77.234 1.476.614 2.066 1.114M12 7h.01"></path></svg>
+                            </div>
+                            <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1" data-i18n="stat_users">المستخدمين</p>
+                            <h3 class="text-3xl font-black text-slate-800 dark:text-white mb-2">14,230</h3>
+                            <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg> 
+                                12% <span class="font-bold opacity-60" data-i18n="stat_since_last">هذا الشهر</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-premium glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            </div>
+                            <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1" data-i18n="stat_providers">المزودين الموثقين</p>
+                            <h3 class="text-3xl font-black text-slate-800 dark:text-white mb-2">1,842</h3>
+                            <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400">
+                                <span data-i18n="stat_providers_sub">+42 مزود جديد</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card-premium glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <p class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1" data-i18n="stat_requests">الطلب المكتملة</p>
+                            <h3 class="text-3xl font-black text-slate-800 dark:text-white mb-2">28,450</h3>
+                            <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">
+                                94% <span class="font-bold opacity-60" data-i18n="stat_requests_sub">نسبة الإنجاز</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card-premium stat-gradient-1 p-6 rounded-[2rem] relative overflow-hidden group shadow-xl shadow-emerald-500/20 border-0">
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl transition-all group-hover:scale-125"></div>
+                        <div class="relative z-10 text-white">
+                            <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4 backdrop-blur-md">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <p class="text-xs font-black text-white/70 uppercase tracking-widest mb-1" data-i18n="stat_revenue">العمولات المحصلة</p>
+                            <h3 class="text-3xl font-black mb-2">152,000 <span class="text-sm font-bold opacity-70" data-i18n="currency">ر.س</span></h3>
+                            <p class="text-[10px] font-black inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/20">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg> 
+                                +8.4% <span class="font-bold opacity-70" data-i18n="stat_since_last">هذا الشهر</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                    <div class="bg-brand-card dark:bg-brand-darkcard p-6 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft lg:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-black text-slate-800 dark:text-white" data-i18n="chart_revenue">إيرادات المنصة (آخر 6 أشهر)</h3>
+                            <select class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold rounded-lg px-3 py-1.5 outline-none dark:text-white">
+                                <option>2026</option>
+                            </select>
+                        </div>
+                        <div class="relative h-64 w-full">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-brand-card dark:bg-brand-darkcard p-6 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft">
+                        <h3 class="font-black text-slate-800 dark:text-white mb-4" data-i18n="chart_users">توزيع المستخدمين النشطين</h3>
+                        <div class="relative h-48 w-full flex justify-center mt-6">
+                            <canvas id="usersChart"></canvas>
+                        </div>
+                        <div class="mt-6 flex justify-center gap-4 text-xs font-bold text-slate-600 dark:text-slate-300">
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-[#0ea5e9]"></span> <span data-i18n="role_client">عملاء</span></div>
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-[#0d9488]"></span> <span data-i18n="role_provider">مزودين</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-brand-card dark:bg-brand-darkcard p-6 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft lg:col-span-2">
+                        <h3 class="font-black text-slate-800 dark:text-white mb-4" data-i18n="chart_cats">أداء أقسام السوق (حجم الطلبات)</h3>
+                        <div class="relative h-64 w-full">
+                            <canvas id="categoriesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-card dark:bg-brand-darkcard rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft overflow-hidden">
+                        <div class="px-5 py-4 border-b border-brand-border dark:border-brand-darkborder">
+                            <h3 class="font-black text-slate-800 dark:text-white" data-i18n="alert_title">المهام العاجلة</h3>
+                        </div>
+                        <div class="divide-y divide-brand-border dark:divide-brand-darkborder">
+                            <div class="p-5 bg-amber-50/50 dark:bg-amber-900/10 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
+                                        <p class="text-sm font-bold text-slate-800 dark:text-white" data-i18n="alert_verify">توثيق الحسابات</p>
+                                    </div>
+                                    <span class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[10px] px-2 py-0.5 rounded font-bold">3</span>
+                                </div>
+                                <button onclick="switchTab('users', document.querySelectorAll('.sidebar-item')[1])" class="text-xs font-bold text-amber-600 dark:text-amber-400 underline mt-1" data-i18n="btn_review">مراجعة الآن</button>
+                            </div>
+                            <div class="p-5 bg-rose-50/50 dark:bg-rose-900/10 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></div>
+                                        <p class="text-sm font-bold text-slate-800 dark:text-white" data-i18n="alert_dispute">نزاعات جديدة</p>
+                                    </div>
+                                    <span class="bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 text-[10px] px-2 py-0.5 rounded font-bold">2</span>
+                                </div>
+                                <button onclick="switchTab('disputes', document.querySelectorAll('.sidebar-item')[5])" class="text-xs font-bold text-rose-600 dark:text-rose-400 underline mt-1" data-i18n="btn_intervene">تدخل وفصل</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="users" class="tab-content space-y-8">
+                <div class="card-premium glass-panel rounded-[2rem] overflow-hidden">
+                    <div class="px-8 py-6 border-b border-slate-200 dark:border-slate-800/50 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-black text-xl text-slate-800 dark:text-white" data-i18n="users_verify_title">طلبات التحقق من الهوية</h3>
+                            <p class="text-xs font-bold text-slate-400 mt-1" data-i18n="users_verify_desc">مراجعة الوثائق بدقة لضمان الأمان وتفعيل الباقات.</p>
+                        </div>
+                        <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 px-4 py-1.5 rounded-full text-xs font-black ring-1 ring-amber-500/20">3 طلبات معلقة</span>
+                    </div>
+                    <div class="p-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
+                        <div class="border border-slate-100 dark:border-slate-800/50 rounded-2xl p-6 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col md:flex-row justify-between items-center gap-6 transition-all hover:shadow-lg hover:border-brand-primary/30 group">
+                            <div class="flex items-center gap-5">
+                                <div class="relative">
+                                    <img src="https://ui-avatars.com/api/?name=Khalid+Abdullah&background=fde68a&color=b45309" class="w-16 h-16 rounded-2xl shadow-md transform group-hover:scale-105 transition-transform">
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white dark:border-slate-900">!</div>
+                                </div>
+                                <div>
+                                    <h4 class="font-black text-slate-900 dark:text-white text-base">خالد عبدالله</h4>
+                                    <div class="flex items-center gap-2 mt-1.5">
+                                        <span class="bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider" data-i18n="role_provider">مزود</span>
+                                        <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+                                        <span class="text-amber-600 dark:text-amber-400 text-xs font-black" data-i18n="pkg_gold">الباقة الذهبية</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 w-full md:w-auto">
+                                <button class="flex-1 md:flex-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl text-xs font-black hover:bg-slate-50 transition drop-shadow-sm" data-i18n="btn_view_docs">الوثائق</button>
+                                <button class="flex-1 md:flex-none bg-gradient-to-r from-brand-primary to-brand-primaryHover text-white px-5 py-2.5 rounded-xl text-xs font-black transition shadow-lg shadow-brand-primary/20" data-i18n="btn_accept">قبول</button>
+                                <button class="flex-1 md:flex-none bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 px-5 py-2.5 rounded-xl text-xs font-black hover:bg-rose-100 dark:hover:bg-rose-900/40 transition" data-i18n="btn_reject">رفض</button>
+                            </div>
+                        </div>
+                        <div class="border border-slate-100 dark:border-slate-800/50 rounded-2xl p-6 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col md:flex-row justify-between items-center gap-6 transition-all hover:shadow-lg hover:border-brand-primary/30 group">
+                            <div class="flex items-center gap-5">
+                                <div class="relative">
+                                    <img src="https://ui-avatars.com/api/?name=Omar+Ali&background=e0e7ff&color=4338ca" class="w-16 h-16 rounded-2xl shadow-md transform group-hover:scale-105 transition-transform">
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white dark:border-slate-900">!</div>
+                                </div>
+                                <div>
+                                    <h4 class="font-black text-slate-900 dark:text-white text-base">عمر علي</h4>
+                                    <div class="flex items-center gap-2 mt-1.5">
+                                        <span class="bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider" data-i18n="role_provider">مزود</span>
+                                        <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+                                        <span class="text-slate-500 dark:text-slate-400 text-xs font-black" data-i18n="pkg_basic">الباقة الأساسية</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 w-full md:w-auto">
+                                <button class="flex-1 md:flex-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl text-xs font-black hover:bg-slate-50 transition drop-shadow-sm" data-i18n="btn_view_docs">الوثائق</button>
+                                <button class="flex-1 md:flex-none bg-gradient-to-r from-brand-primary to-brand-primaryHover text-white px-5 py-2.5 rounded-xl text-xs font-black transition shadow-lg shadow-brand-primary/20" data-i18n="btn_accept">قبول</button>
+                                <button class="flex-1 md:flex-none bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 px-5 py-2.5 rounded-xl text-xs font-black hover:bg-rose-100 dark:hover:bg-rose-900/40 transition" data-i18n="btn_reject">رفض</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-premium glass-panel rounded-[2rem] overflow-hidden">
+                    <div class="px-8 py-6 border-b border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div>
+                            <h3 class="font-black text-xl text-slate-800 dark:text-white" data-i18n="users_list_title">قائمة المستخدمين</h3>
+                            <p class="text-xs font-bold text-slate-400 mt-1">إجمالي 14,230 مستخدم نشط</p>
+                        </div>
+                        <div class="flex gap-3 w-full md:w-auto">
+                            <div class="relative flex-1 md:w-56">
+                                <input type="text" class="w-full px-5 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-primary/30 transition-all dark:text-white pr-10" data-i18n-placeholder="search_user">
+                                <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <select class="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl text-xs font-black outline-none focus:ring-2 focus:ring-brand-primary/30 dark:text-white">
+                                <option data-i18n="filter_all">الكل</option>
+                                <option data-i18n="role_client">عميل</option>
+                                <option data-i18n="role_provider">مزود</option>
+                            </select>
+                            <button class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2.5 rounded-xl text-xs font-black shadow-lg" data-i18n="btn_export">تصدير</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-start">
+                            <thead class="bg-slate-50/50 dark:bg-slate-900/30 text-slate-500 dark:text-slate-400 font-black text-[10px] uppercase tracking-[0.1em] border-b border-slate-200 dark:border-slate-800/50">
+                                <tr>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_name">المستخدم</th>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_contact">التواصل</th>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_role">الدور</th>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_status">الحالة</th>
+                                    <th class="px-8 py-5 text-end" data-i18n="th_actions">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50">
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-brand-primary/5 transition-colors group">
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl shadow-sm overflow-hidden transform group-hover:scale-110 transition-transform">
+                                                <img src="https://ui-avatars.com/api/?name=Sara+Ahmed&background=0ea5e9&color=fff" class="w-full h-full object-cover">
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-900 dark:text-white font-black block">سارة أحمد</span>
+                                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">انضمت منذ 3 أيام</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="text-xs text-slate-600 dark:text-slate-300 font-bold">sara@email.com</div>
+                                        <div class="text-[10px] text-slate-400 font-mono">+966 500 000 001</div>
+                                    </td>
+                                    <td class="px-8 py-5"><span class="bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider" data-i18n="role_client">عميل</span></td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            <span class="text-emerald-600 dark:text-emerald-400 text-xs font-black" data-i18n="status_active">نشط</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-end">
+                                        <button class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-brand-primary hover:bg-brand-primary hover:text-white transition-all transform hover:rotate-12" data-i18n="btn_edit">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-brand-primary/5 transition-colors group border-b-0">
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl shadow-sm overflow-hidden transform group-hover:scale-110 transition-transform">
+                                                <img src="https://ui-avatars.com/api/?name=Mohamed+Ali&background=0d9488&color=fff" class="w-full h-full object-cover">
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-900 dark:text-white font-black block">محمد علي</span>
+                                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">انضم منذ شهر</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="text-xs text-slate-600 dark:text-slate-300 font-bold">mohamed@email.com</div>
+                                        <div class="text-[10px] text-slate-400 font-mono">+966 500 000 002</div>
+                                    </td>
+                                    <td class="px-8 py-5"><span class="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider" data-i18n="role_provider">مزود</span></td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-1.5">
+                                            <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                            <span class="text-emerald-600 dark:text-emerald-400 text-xs font-black" data-i18n="status_verified">موثق ✓</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-end">
+                                        <button class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-brand-primary hover:bg-brand-primary hover:text-white transition-all transform hover:rotate-12" data-i18n="btn_edit">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="marketplace" class="tab-content space-y-8">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                    <div>
+                        <h3 class="font-black text-2xl text-slate-800 dark:text-white" data-i18n="market_title">أقسام السوق</h3>
+                        <p class="text-xs font-bold text-slate-400 mt-1">إجمالي 12 قسم رئيسي و 85 خدمة فرعية</p>
+                    </div>
+                    <button class="w-full sm:w-auto bg-gradient-to-r from-brand-primary to-brand-secondary hover:shadow-lg hover:shadow-brand-primary/30 text-white px-8 py-3.5 rounded-[1.25rem] text-sm font-black transition-all transform hover:-translate-y-1" data-i18n="btn_add_category">+ إضافة قسم رئيسي</button>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card-premium glass-panel p-8 rounded-[2.5rem] relative overflow-hidden group">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-primary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        <div class="flex justify-between items-start mb-8 border-b border-slate-100 dark:border-slate-800/50 pb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-center justify-center text-3xl shadow-inner transform group-hover:rotate-12 transition-transform">💻</div>
+                                <div>
+                                    <h4 class="font-black text-slate-900 dark:text-white text-lg tracking-tight">برمجة وتطوير</h4>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+                                        <p class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest" data-i18n="status_active">نشط</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-brand-primary hover:bg-brand-primary/10 transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 group/item hover:border-brand-primary/30 transition-all">
+                                <span class="text-sm font-black text-slate-700 dark:text-slate-300">Laravel / PHP Ecosystem</span>
+                                <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] font-black">150 مزود</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 group/item hover:border-brand-primary/30 transition-all">
+                                <span class="text-sm font-black text-slate-700 dark:text-slate-300">Flutter cross-platform Apps</span>
+                                <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] font-black">80 مزود</span>
+                            </div>
+                            <button class="w-full border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-primary hover:border-brand-primary/50 hover:bg-brand-primary/5 px-6 py-4 rounded-2xl text-xs font-black transition-all mt-2" data-i18n="btn_add_service">+ إضافة خدمة فرعية</button>
+                        </div>
+                    </div>
+
+                    <div class="card-premium glass-panel p-8 rounded-[2.5rem] relative overflow-hidden group">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                        <div class="flex justify-between items-start mb-8 border-b border-slate-100 dark:border-slate-800/50 pb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-center justify-center text-3xl shadow-inner transform group-hover:rotate-12 transition-transform">🔧</div>
+                                <div>
+                                    <h4 class="font-black text-slate-900 dark:text-white text-lg tracking-tight">صيانة منزلية</h4>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+                                        <p class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest" data-i18n="status_active">نشط</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-brand-primary hover:bg-brand-primary/10 transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 group/item hover:border-brand-primary/30 transition-all">
+                                <span class="text-sm font-black text-slate-700 dark:text-slate-300">صيانة تكييف (سبليت/مركزي)</span>
+                                <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] font-black">320 مزود</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 group/item hover:border-brand-primary/30 transition-all">
+                                <span class="text-sm font-black text-slate-700 dark:text-slate-300">أعمال السباكة المتكاملة</span>
+                                <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-[10px] font-black">210 مزود</span>
+                            </div>
+                            <button class="w-full border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-primary hover:border-brand-primary/50 hover:bg-brand-primary/5 px-6 py-4 rounded-2xl text-xs font-black transition-all mt-2" data-i18n="btn_add_service">+ إضافة خدمة فرعية</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="transactions" class="tab-content space-y-8">
+                <div class="card-premium glass-panel rounded-[2rem] overflow-hidden">
+                    <div class="px-8 py-6 border-b border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div>
+                            <h3 class="font-black text-xl text-slate-800 dark:text-white mb-1" data-i18n="escrow_title">الطلبات والضمانات (Escrow)</h3>
+                            <p class="text-xs font-bold text-slate-400" data-i18n="escrow_desc">متابعة المبالغ المحجوزة لحفظ حقوق الأطراف وعمولات المنصة.</p>
+                        </div>
+                        <div class="relative w-full md:w-64">
+                            <input type="text" class="w-full px-5 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-primary/30 transition-all dark:text-white pr-10" data-i18n-placeholder="search_order">
+                            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-start">
+                            <thead class="bg-slate-50/50 dark:bg-slate-900/30 text-slate-500 dark:text-slate-400 font-black text-[10px] uppercase tracking-[0.1em] border-b border-slate-200 dark:border-slate-800/50">
+                                <tr>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_order">رقم الطلب / التاريخ</th>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_client_prov">العميل / المزود</th>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_service">الخدمة</th>
+                                    <th class="px-8 py-5 text-start" data-i18n="th_escrow_amt">الضمان</th>
+                                    <th class="px-8 py-5 text-start text-brand-primary" data-i18n="th_commission">عمولة المنصة</th>
+                                    <th class="px-8 py-5 text-end" data-i18n="th_status">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50">
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-brand-primary/5 transition-colors group">
+                                    <td class="px-8 py-5">
+                                        <p class="font-black text-slate-900 dark:text-white group-hover:text-brand-primary transition-colors">#REQ-8092</p>
+                                        <p class="text-[10px] text-slate-400 mt-1 font-bold">05 أبريل 2026</p>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-2 text-xs font-black">
+                                            <span class="text-blue-500 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded">سارة</span>
+                                            <svg class="w-3 h-3 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                            <span class="text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded">محمد</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-xs font-black text-slate-700 dark:text-slate-200">تصميم واجهات المستخدم (UI/UX)</td>
+                                    <td class="px-8 py-5">
+                                        <span class="text-lg font-black text-slate-900 dark:text-white">1,500</span> 
+                                        <span class="text-[10px] font-black text-slate-400" data-i18n="currency">ر.س</span>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex flex-col">
+                                            <span class="text-base font-black text-brand-primary">225 <span class="text-[10px]" data-i18n="currency">ر.س</span></span>
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">(15% عمولة)</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-end">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 ring-1 ring-amber-500/30" data-i18n="status_pending">قيد التنفيذ</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-brand-primary/5 transition-colors group">
+                                    <td class="px-8 py-5">
+                                        <p class="font-black text-slate-900 dark:text-white group-hover:text-brand-primary transition-colors">#REQ-8091</p>
+                                        <p class="text-[10px] text-slate-400 mt-1 font-bold">04 أبريل 2026</p>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-2 text-xs font-black">
+                                            <span class="text-blue-500 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded">أحمد</span>
+                                            <svg class="w-3 h-3 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                            <span class="text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded">خالد</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-xs font-black text-slate-700 dark:text-slate-200">صيانة تكييف مركزي</td>
+                                    <td class="px-8 py-5">
+                                        <span class="text-sm font-black text-slate-400 line-through">800</span> 
+                                        <span class="text-[10px] font-black text-slate-400" data-i18n="currency">ر.س</span>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/40"></div>
+                                            <span class="text-xs font-black text-emerald-600 dark:text-emerald-400" data-i18n="status_collected">تم تحصيل (120 ر.س)</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-end">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500/30" data-i18n="status_completed">مكتملة ✓</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="finance" class="tab-content space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    
+                    <div class="lg:col-span-3 card-premium glass-panel p-8 rounded-[2.5rem]">
+                        <div class="flex items-center justify-between mb-10">
+                            <div>
+                                <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="finance_withdrawals">طلبات سحب أرباح المزودين</h3>
+                                <p class="text-xs font-bold text-slate-400 mt-1">يجب مراجعة التحويلات البنكية يدوياً وتأكيدها.</p>
+                            </div>
+                            <span class="bg-brand-primary/10 text-brand-primary px-4 py-1.5 rounded-full text-xs font-black ring-1 ring-brand-primary/30">1 طلب معلق</span>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="border border-slate-100 dark:border-slate-800/50 rounded-3xl p-6 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm group hover:border-brand-primary/30 transition-all">
+                                <div class="flex gap-6 items-center">
+                                    <div class="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-3xl shadow-md border border-slate-100 dark:border-slate-700/50 transform group-hover:scale-110 transition-transform">🏦</div>
+                                    <div>
+                                        <h4 class="font-black text-slate-900 dark:text-white text-base">محمد علي</h4>
+                                        <p class="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest">البنك الأهلي السعودي (SNB)</p>
+                                        <p class="text-xs font-bold text-slate-500 mt-1 font-mono tracking-tighter">SA12 3456 7890 1234 5678 9012</p>
+                                        <div class="text-2xl font-black text-brand-primary mt-3 flex items-baseline gap-1">2,450 <span class="text-xs font-black uppercase tracking-widest opacity-60" data-i18n="currency">ر.س</span></div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3 w-full md:w-36">
+                                    <button class="w-full bg-slate-900 dark:bg-brand-primary text-white py-3 rounded-xl text-xs font-black hover:shadow-lg hover:shadow-brand-primary/30 transition-all transform hover:-translate-y-1" data-i18n="btn_mark_paid">تحويل وتسوية</button>
+                                    <button class="w-full bg-white dark:bg-slate-800 border-2 border-rose-100 dark:border-rose-900/30 text-rose-600 py-3 rounded-xl text-xs font-black hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all" data-i18n="btn_reject">رفض الطلب</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 card-premium glass-panel p-8 rounded-[2.5rem]">
+                        <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2 tracking-tight" data-i18n="finance_banks">حسابات المنصة البنكية</h3>
+                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-8 uppercase tracking-widest" data-i18n="finance_banks_desc">هذه الحسابات تظهر للمستخدمين للتحويل إليها.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="p-6 border border-slate-100 dark:border-slate-800/50 bg-white dark:bg-slate-900/50 rounded-3xl shadow-sm relative overflow-hidden group hover:border-brand-secondary transition-all">
+                                <div class="absolute top-0 right-0 w-3 h-full bg-brand-secondary shadow-[0_0_15px_rgba(14,165,233,0.4)]"></div>
+                                <div class="pr-6">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div class="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform">🇸🇦</div>
+                                        <div class="font-black text-base text-slate-800 dark:text-white">مصرف الراجحي</div>
+                                    </div>
+                                    <div class="text-xs font-bold text-slate-500 dark:text-slate-400 font-mono tracking-tighter bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50" dir="ltr">SA80 8000 0000 1234 5678 9012</div>
+                                    <div class="text-[10px] font-black text-slate-400 mt-4 uppercase tracking-[0.2em]">QSS Establishment For Services</div>
+                                </div>
+                            </div>
+                            <button class="w-full bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 text-brand-primary py-5 rounded-3xl text-sm font-black transition-all transform hover:-translate-y-1 mt-4" data-i18n="btn_add_bank">+ إضافة حساب بنكي جديد</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-card dark:bg-brand-darkcard p-6 md:p-8 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft">
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white mb-6" data-i18n="support_system">شكاوى النظام والدعم الفني</h3>
+                        <div class="space-y-3">
+                            <div class="p-5 border border-brand-border dark:border-brand-darkborder rounded-xl bg-brand-bg dark:bg-brand-darkbg shadow-sm">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-sm text-slate-900 dark:text-white">مشكلة في تسجيل الدخول (مزود)</p>
+                                        <p class="text-xs font-bold text-slate-500 dark:text-slate-400 mt-1">تطبيق الجوال لا يقبل رمز التحقق المرسل لرسائل SMS.</p>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400">أمس</span>
+                                </div>
+                                <button class="text-xs text-brand-primary font-bold mt-3 underline decoration-brand-primary/30 hover:decoration-brand-primary transition-all" data-i18n="btn_contact_user">مراسلة المستخدم للحل</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="points" class="tab-content space-y-6">
+                <div class="bg-brand-card dark:bg-brand-darkcard p-6 md:p-8 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-900 dark:text-white" data-i18n="points_title">إدارة باقات النقاط</h3>
+                            <p class="text-xs font-bold text-slate-500 mt-1" data-i18n="points_desc">الباقات المتاحة للشراء من قبل المستخدمين.</p>
+                        </div>
+                        <button class="bg-brand-primary hover:bg-brand-primaryHover text-white px-5 py-2.5 rounded-lg text-xs font-bold transition shadow-md shadow-brand-primary/20" data-i18n="btn_add_pkg">+ إضافة باقة جديدة</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="border border-brand-border dark:border-brand-darkborder p-6 rounded-xl text-center bg-brand-bg dark:bg-brand-darkbg shadow-sm">
+                            <h4 class="font-black text-lg text-slate-900 dark:text-white" data-i18n="pkg_basic">الباقة الأساسية</h4>
+                            <p class="text-3xl font-black text-amber-500 my-4">1,000 <span class="text-sm font-bold text-slate-400" data-i18n="points_word">نقطة</span></p>
+                            <p class="font-bold text-sm text-slate-600 dark:text-slate-400 mb-6">50 <span data-i18n="currency">ر.س</span></p>
+                            <div class="flex gap-2">
+                                <button class="flex-1 bg-white dark:bg-brand-darkcard border border-brand-border dark:border-brand-darkborder py-2.5 rounded-lg text-xs font-bold dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition" data-i18n="btn_edit">تعديل</button>
+                                <button class="w-10 bg-white dark:bg-brand-darkcard border border-rose-200 dark:border-rose-900/50 text-rose-500 rounded-lg flex items-center justify-center hover:bg-rose-50 dark:hover:bg-rose-900/20">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="border-2 border-brand-primary p-6 rounded-xl text-center bg-brand-primary/5 dark:bg-brand-primary/10 relative shadow-sm">
+                            <span class="absolute -top-3 rtl:right-1/2 rtl:translate-x-1/2 ltr:left-1/2 ltr:-translate-x-1/2 bg-brand-primary text-white px-3 py-1 rounded-full text-[10px] font-black shadow-md shadow-brand-primary/30" data-i18n="badge_popular">الأكثر مبيعاً</span>
+                            <h4 class="font-black text-lg text-slate-900 dark:text-white" data-i18n="pkg_pro">باقة المحترفين</h4>
+                            <p class="text-3xl font-black text-amber-500 my-4">5,500 <span class="text-sm font-bold text-slate-400" data-i18n="points_word">نقطة</span></p>
+                            <p class="font-bold text-sm text-slate-600 dark:text-slate-400 mb-6">250 <span data-i18n="currency">ر.س</span></p>
+                            <div class="flex gap-2">
+                                <button class="flex-1 bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-lg text-xs font-bold transition shadow-md shadow-brand-primary/20" data-i18n="btn_edit">تعديل</button>
+                                <button class="w-10 bg-white dark:bg-brand-darkcard border border-rose-200 dark:border-rose-900/50 text-rose-500 rounded-lg flex items-center justify-center hover:bg-rose-50 dark:hover:bg-rose-900/20">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-brand-card dark:bg-brand-darkcard rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft overflow-hidden">
+                    <div class="px-6 py-5 border-b border-brand-border dark:border-brand-darkborder">
+                        <h3 class="font-black text-lg text-slate-800 dark:text-white" data-i18n="points_ledger">سجل عمليات النقاط (Ledger)</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-start">
+                            <thead class="bg-brand-bg dark:bg-brand-darkbg text-slate-500 dark:text-slate-400 font-bold text-xs border-b border-brand-border dark:border-brand-darkborder">
+                                <tr>
+                                    <th class="px-6 py-4 text-start" data-i18n="th_date">التاريخ</th>
+                                    <th class="px-6 py-4 text-start" data-i18n="th_user">المستخدم</th>
+                                    <th class="px-6 py-4 text-start" data-i18n="th_action">نوع العملية</th>
+                                    <th class="px-6 py-4 text-start" data-i18n="th_amount">النقاط</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-brand-border dark:divide-brand-darkborder">
+                                <tr class="hover:bg-brand-bg/50 dark:hover:bg-brand-darkbg/50 transition-colors">
+                                    <td class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400">2026-04-05 14:30</td>
+                                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">خالد عبدالله</td>
+                                    <td class="px-6 py-4"><span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-1 rounded text-[10px] font-bold" data-i18n="action_buy">شراء باقة</span></td>
+                                    <td class="px-6 py-4 font-black text-emerald-600 dark:text-emerald-400">+1,000</td>
+                                </tr>
+                                <tr class="hover:bg-brand-bg/50 dark:hover:bg-brand-darkbg/50 transition-colors">
+                                    <td class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400">2026-04-05 11:15</td>
+                                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">محمد علي</td>
+                                    <td class="px-6 py-4"><span class="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-1 rounded text-[10px] font-bold" data-i18n="action_spend">تمييز خدمة</span></td>
+                                    <td class="px-6 py-4 font-black text-rose-500 dark:text-rose-400">-50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1 space-y-2">
+                        <button class="w-full text-start px-5 py-3 rounded-xl font-bold text-sm bg-brand-primary text-white shadow-md shadow-brand-primary/20" data-i18n="set_tab_general">عامة ومالية</button>
+                        <button class="w-full text-start px-5 py-3 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-400 hover:bg-brand-bg dark:hover:bg-brand-darkcard transition" data-i18n="set_tab_legal">الشروط والسياسات</button>
+                        <button class="w-full text-start px-5 py-3 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-400 hover:bg-brand-bg dark:hover:bg-brand-darkcard transition" data-i18n="set_tab_security">الأمان والإدارة</button>
+                    </div>
+
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-brand-card dark:bg-brand-darkcard p-6 md:p-8 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft">
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white mb-6 border-b border-brand-border dark:border-brand-darkborder pb-4" data-i18n="settings_financial">الإعدادات المالية</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-black text-slate-700 dark:text-slate-300 mb-2" data-i18n="settings_comm">نسبة عمولة المنصة (%)</label>
+                                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-3">تُخصم تلقائياً من كل طلب مكتمل.</p>
+                                    <div class="relative">
+                                        <input type="number" value="15" class="w-full p-3 bg-brand-bg dark:bg-brand-darkbg border border-brand-border dark:border-brand-darkborder dark:text-white rounded-lg font-black outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all">
+                                        <span class="absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-black text-slate-700 dark:text-slate-300 mb-2" data-i18n="settings_tax">ضريبة القيمة المضافة (%)</label>
+                                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-3">الضريبة المطبقة على العمولات والفواتير.</p>
+                                    <div class="relative">
+                                        <input type="number" value="15" class="w-full p-3 bg-brand-bg dark:bg-brand-darkbg border border-brand-border dark:border-brand-darkborder dark:text-white rounded-lg font-black outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all">
+                                        <span class="absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-brand-card dark:bg-brand-darkcard p-6 md:p-8 rounded-2xl border border-brand-border dark:border-brand-darkborder shadow-soft dark:shadow-darksoft">
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white mb-6 border-b border-brand-border dark:border-brand-darkborder pb-4" data-i18n="settings_contact_title">بيانات التواصل ودعم العملاء</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2" data-i18n="settings_email">البريد الإلكتروني للدعم</label>
+                                    <input type="email" value="support@qss.com" class="w-full p-3 bg-brand-bg dark:bg-brand-darkbg border border-brand-border dark:border-brand-darkborder dark:text-white rounded-lg font-bold outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all" dir="ltr">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2" data-i18n="settings_phone">رقم الهاتف (الخط الساخن)</label>
+                                    <input type="text" value="+966 50 000 0000" class="w-full p-3 bg-brand-bg dark:bg-brand-darkbg border border-brand-border dark:border-brand-darkborder dark:text-white rounded-lg font-bold outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all" dir="ltr">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                            <button class="bg-slate-900 dark:bg-brand-primary hover:bg-slate-800 dark:hover:bg-brand-primaryHover text-white px-10 py-3.5 rounded-lg text-sm font-black shadow-md transition-all transform hover:-translate-y-0.5" data-i18n="btn_save">حفظ الإعدادات بنجاح</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // === Chart.js Init ===
+        let revChart, usrChart, catChart;
+        
+        function initCharts() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : '#f1f5f9';
+
+            Chart.defaults.color = textColor;
+            Chart.defaults.font.family = "'Cairo', sans-serif";
+            Chart.defaults.font.weight = '700';
+
+            // Revenue Line Chart
+            const ctxRev = document.getElementById('revenueChart');
+            if(ctxRev) {
+                const gradient = ctxRev.getContext('2d').createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(13, 148, 136, 0.3)');
+                gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
+
+                revChart = new Chart(ctxRev.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                        datasets: [{
+                            label: 'العمولات',
+                            data: [12000, 19000, 15000, 22000, 28000, 34000],
+                            borderColor: '#0d9488',
+                            backgroundColor: gradient,
+                            borderWidth: 4,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#0d9488',
+                            pointBorderColor: isDark ? '#1e293b' : '#fff',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        scales: { 
+                            y: { grid: { color: gridColor, drawBorder: false }, ticks: { padding: 10 } }, 
+                            x: { grid: { display: false }, ticks: { padding: 10 } } 
+                        }, 
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: isDark ? '#1e293b' : '#fff',
+                                titleColor: isDark ? '#fff' : '#1e293b',
+                                bodyColor: isDark ? '#cbd5e1' : '#64748b',
+                                padding: 12,
+                                cornerRadius: 12,
+                                displayColors: false,
+                                borderColor: isDark ? '#334155' : '#e2e8f0',
+                                borderWidth: 1
+                            }
+                        } 
+                    }
+                });
+            }
+
+            // Users Doughnut Chart
+            const ctxUsr = document.getElementById('usersChart');
+            if(ctxUsr) {
+                usrChart = new Chart(ctxUsr.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['عملاء', 'مزودين'],
+                        datasets: [{ 
+                            data: [75, 25], 
+                            backgroundColor: ['#0ea5e9', '#0d9488'], 
+                            hoverBackgroundColor: ['#0284c7', '#0f766e'],
+                            borderWidth: 8,
+                            borderColor: isDark ? '#1e293b' : '#fff',
+                            hoverOffset: 15
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        cutout: '75%', 
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: { enabled: true, cornerRadius: 10, padding: 10 }
+                        } 
+                    }
+                });
+            }
+
+            // Categories Bar Chart
+            const ctxCat = document.getElementById('categoriesChart');
+            if(ctxCat) {
+                catChart = new Chart(ctxCat.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['التكييف', 'النظافة', 'البرمجة', 'السباكة', 'التصميم'],
+                        datasets: [{ 
+                            label: 'الطلبات', 
+                            data: [4500, 3200, 1800, 2100, 950], 
+                            backgroundColor: '#0ea5e9', 
+                            borderRadius: 10,
+                            hoverBackgroundColor: '#0284c7',
+                            barThickness: 30
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        scales: { 
+                            y: { grid: { color: gridColor }, beginAtZero: true }, 
+                            x: { grid: { display: false } } 
+                        }, 
+                        plugins: { legend: { display: false } } 
+                    }
+                });
+            }
+        }
+
+        function updateChartsTheme() {
+            if(!revChart) return;
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : '#f1f5f9';
+            
+            Chart.defaults.color = textColor;
+            
+            // Update Line Chart Gradient
+            const ctxRev = document.getElementById('revenueChart');
+            const gradient = ctxRev.getContext('2d').createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(13, 148, 136, 0.3)');
+            gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
+            
+            revChart.data.datasets[0].backgroundColor = gradient;
+            revChart.data.datasets[0].pointBorderColor = isDark ? '#1e293b' : '#fff';
+            revChart.options.scales.y.grid.color = gridColor;
+            revChart.options.plugins.tooltip.backgroundColor = isDark ? '#1e293b' : '#fff';
+            revChart.options.plugins.tooltip.titleColor = isDark ? '#fff' : '#1e293b';
+            revChart.update();
+            
+            usrChart.data.datasets[0].borderColor = isDark ? '#1e293b' : '#fff';
+            usrChart.update();
+            
+            catChart.options.scales.y.grid.color = gridColor;
+            catChart.update();
+        }
+
+        // === Full Translation Dictionary ===
+        const translations = {
+            ar: {
+                admin_title: "Admin", marketplace_subtitle: "Analytics", menu_main: "التقارير والإدارة", menu_system: "العمليات والنظام", admin_name: "أحمد المدير", admin_role: "مدير النظام",
+                nav_dashboard: "التحليلات العامة", nav_users: "المستخدمين", nav_market: "أقسام السوق", nav_escrow: "الضمانات المالية",
+                nav_finance: "الخزينة والسحوبات", nav_support: "النزاعات", nav_points: "الباقات والنقاط", nav_settings: "إعدادات المنصة",
+                title_dashboard: "التحليلات العامة", btn_maintenance: "وضع الصيانة",
+                stat_users: "المستخدمين", stat_since_last: "هذا الشهر", stat_providers: "المزودين الموثقين", stat_providers_sub: "مزود جديد",
+                stat_requests: "الطلبات المكتملة", stat_requests_sub: "نسبة الإنجاز", stat_revenue: "العمولات المحصلة", currency: "ر.س",
+                chart_revenue: "إيرادات المنصة (آخر 6 أشهر)", chart_users: "توزيع المستخدمين النشطين", chart_cats: "أداء أقسام السوق (حجم الطلبات)",
+                alert_title: "المهام العاجلة", alert_verify: "توثيق الحسابات", alert_verify_sub: "3 بانتظار المراجعة", btn_review: "مراجعة الآن", alert_dispute: "نزاعات جديدة", alert_dispute_sub: "2 نزاع", btn_intervene: "تدخل وفصل",
+                
+                // Users
+                users_verify_title: "طلبات التحقق من الهوية", users_verify_desc: "مراجعة وثائق الهوية بدقة لتفعيل الباقات.", role_provider: "مزود", pkg_gold: "باقة ذهبية", pkg_basic: "باقة أساسية",
+                btn_view_docs: "الوثائق", btn_accept: "اعتماد", btn_reject: "رفض", users_list_title: "قائمة المستخدمين", search_user: "ابحث عن مستخدم...",
+                filter_all: "الكل", btn_export: "تصدير", th_name: "المستخدم", th_contact: "التواصل", th_role: "الدور", th_status: "الحالة", th_actions: "الإجراءات", 
+                role_client: "عميل", status_active: "نشط", btn_edit: "تعديل", status_verified: "موثق ✓", 
+                
+                // Marketplace
+                market_title: "أقسام السوق", btn_add_category: "+ إضافة قسم رئيسي", btn_add_service: "+ إضافة خدمة فرعية",
+                
+                // Transactions
+                escrow_title: "الطلبات والضمانات (Escrow)", escrow_desc: "متابعة المبالغ المحجوزة لحفظ حقوق الأطراف وعمولات المنصة.", search_order: "بحث برقم الطلب...",
+                th_order: "رقم الطلب / التاريخ", th_client_prov: "العميل / المزود", th_service: "الخدمة", th_escrow_amt: "الضمان", th_commission: "عمولة المنصة", 
+                status_pending: "قيد التنفيذ", status_completed: "مكتملة", status_collected: "تم التحصيل",
+                
+                // Finance
+                finance_withdrawals: "طلبات سحب أرباح المزودين", btn_mark_paid: "تحويل وتسوية", finance_banks: "حسابات المنصة البنكية", finance_banks_desc: "هذه الحسابات تظهر للمستخدمين للتحويل إليها.", btn_add_bank: "+ إضافة حساب بنكي",
+                
+                // Disputes
+                support_disputes: "إدارة النزاعات النشطة", badge_urgent: "عاجل", plaintiff: "المشتكي: العميل", defendant: "المشتكى عليه: المزود", btn_chat: "فتح المحادثة", btn_refund: "إرجاع الضمان للعميل", btn_release: "تحرير الضمان للمزود",
+                support_system: "شكاوى النظام والدعم الفني", btn_contact_user: "مراسلة المستخدم للحل",
+                
+                // Points
+                points_title: "إدارة باقات النقاط", points_desc: "الباقات المتاحة للشراء من قبل المستخدمين.", btn_add_pkg: "+ إضافة باقة جديدة", pkg_basic: "الباقة الأساسية", points_word: "نقطة", badge_popular: "الأكثر مبيعاً", pkg_pro: "باقة المحترفين",
+                points_ledger: "سجل عمليات النقاط (Ledger)", th_date: "التاريخ", th_user: "المستخدم", th_action: "نوع العملية", th_amount: "النقاط", action_buy: "شراء باقة", action_spend: "تمييز خدمة",
+                
+                // Settings
+                settings_title: "ثوابت النظام الأساسية", set_tab_general: "عامة ومالية", set_tab_legal: "الشروط والسياسات", set_tab_security: "الأمان والإدارة",
+                settings_financial: "الإعدادات المالية", settings_comm: "نسبة عمولة المنصة (%)", settings_tax: "ضريبة القيمة المضافة (%)",
+                settings_contact_title: "بيانات التواصل ودعم العملاء", settings_email: "البريد الإلكتروني للدعم", settings_phone: "رقم الهاتف (الخط الساخن)", btn_save: "حفظ الإعدادات بنجاح"
+            },
+            en: {
+                admin_title: "Admin", marketplace_subtitle: "Analytics", menu_main: "Reports & Mgmt", menu_system: "System Ops", admin_name: "Ahmed Admin", admin_role: "System Admin",
+                nav_dashboard: "Analytics", nav_users: "Users", nav_market: "Marketplace", nav_escrow: "Escrow",
+                nav_finance: "Finance", nav_support: "Disputes", nav_points: "Points", nav_settings: "Settings",
+                title_dashboard: "Analytics", btn_maintenance: "Maintenance",
+                stat_users: "Total Users", stat_since_last: "this month", stat_providers: "Verified Providers", stat_providers_sub: "new providers",
+                stat_requests: "Completed Requests", stat_requests_sub: "Completion Rate", stat_revenue: "Collected Comms", currency: "SAR",
+                chart_revenue: "Platform Revenue (Last 6 Mos)", chart_users: "Active Users Distribution", chart_cats: "Categories Performance (Volume)",
+                alert_title: "Urgent Tasks", alert_verify: "Account Verification", alert_verify_sub: "3 waiting", btn_review: "Review Now", alert_dispute: "New Disputes", alert_dispute_sub: "2 active", btn_intervene: "Action Required",
+                
+                // Users
+                users_verify_title: "Verification Requests", users_verify_desc: "Review ID documents to activate packages.", role_provider: "Provider", pkg_gold: "Gold Pkg", pkg_basic: "Basic Pkg",
+                btn_view_docs: "Docs", btn_accept: "Accept", btn_reject: "Reject", users_list_title: "Users List", search_user: "Search users...",
+                filter_all: "All", btn_export: "Export", th_name: "User", th_contact: "Contact", th_role: "Role", th_status: "Status", th_actions: "Actions", 
+                role_client: "Client", status_active: "Active", btn_edit: "Edit", status_verified: "Verified ✓", 
+                
+                // Marketplace
+                market_title: "Marketplace Categories", btn_add_category: "+ Main Category", btn_add_service: "+ Sub Service",
+                
+                // Transactions
+                escrow_title: "Escrow & Requests", escrow_desc: "Monitor held funds and platform commissions.", search_order: "Search by ID...",
+                th_order: "Order ID / Date", th_client_prov: "Client / Provider", th_service: "Service", th_escrow_amt: "Escrow", th_commission: "Platform Fee", 
+                status_pending: "Pending", status_completed: "Completed", status_collected: "Collected",
+                
+                // Finance
+                finance_withdrawals: "Provider Withdrawals", btn_mark_paid: "Settle", finance_banks: "Platform Banks", finance_banks_desc: "Visible to users for bank transfers.", btn_add_bank: "+ Add Bank Account",
+                
+                // Disputes
+                support_disputes: "Active Disputes", badge_urgent: "Urgent", plaintiff: "Plaintiff: Client", defendant: "Defendant: Provider", btn_chat: "Open Chat", btn_refund: "Refund Client", btn_release: "Release to Provider",
+                support_system: "System Tickets", btn_contact_user: "Contact User",
+                
+                // Points
+                points_title: "Points Packages", points_desc: "Available packages for users to purchase.", btn_add_pkg: "+ New Package", pkg_basic: "Basic Pkg", points_word: "Pts", badge_popular: "Popular", pkg_pro: "Pro Pkg",
+                points_ledger: "Points Ledger", th_date: "Date", th_user: "User", th_action: "Action", th_amount: "Points", action_buy: "Buy Package", action_spend: "Feature Service",
+                
+                // Settings
+                settings_title: "Global Settings", set_tab_general: "General & Finance", set_tab_legal: "Legal & Policies", set_tab_security: "Security",
+                settings_financial: "Financial Settings", settings_comm: "Commission Rate (%)", settings_tax: "VAT Tax (%)",
+                settings_contact_title: "Contact & Support", settings_email: "Support Email", settings_phone: "Hotline Phone", btn_save: "Save Settings"
+            }
+        };
+
+        let currentLang = 'ar';
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            if (localStorage.theme === 'dark') toggleTheme();
+            if (localStorage.lang === 'en') toggleLanguage();
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+            document.getElementById('theme-icon').innerText = html.classList.contains('dark') ? '☀️' : '🌙';
+            updateChartsTheme();
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            localStorage.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.getElementById('lang-btn').innerText = currentLang === 'ar' ? 'EN' : 'AR';
+
+            document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = translations[currentLang][el.getAttribute('data-i18n')]);
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = translations[currentLang][el.getAttribute('data-i18n-placeholder')]);
+            updateHeaderTitles();
+            if(revChart){ updateChartsTheme(); }
+        }
+
+        let activeTabId = 'dashboard';
+        function switchTab(tabId, btnElement) {
+            activeTabId = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            btnElement.classList.add('active');
+            updateHeaderTitles();
+        }
+
+        function updateHeaderTitles() {
+            const map = {
+                dashboard: 'title_dashboard', users: 'nav_users', marketplace: 'market_title',
+                transactions: 'escrow_title', finance: 'nav_finance', disputes: 'nav_support',
+                points: 'points_title', settings: 'settings_title'
+            };
+            document.getElementById('header-title').innerText = translations[currentLang][map[activeTabId]];
+        }
+    </script>
+</body>
+</html>

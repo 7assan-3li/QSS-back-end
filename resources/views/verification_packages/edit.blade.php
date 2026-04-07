@@ -1,85 +1,129 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'تعديل باقة توثيق')
+@section('title', __('تعديل بيانات الباقة') . ': ' . $package->name)
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/verification_packages/create.css') }}">
-
-<div class="container">
-
-    <!-- Breadcrumb -->
-    <div style="margin-bottom:20px;font-size:14px;color:#6b7280">
-        لوحة التحكم / باقات التوثيق / <strong>تعديل الباقة</strong>
+<div class="max-w-4xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
+        <div class="text-start">
+            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <span class="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-600 text-3xl font-Cairo shadow-lg shadow-amber-500/5 font-Cairo">✍️</span>
+                {{ __('تعديل بيانات الباقة') }}
+            </h3>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo">
+                {{ __('تحديث تفاصيل الباقة، السعر، أو حالة التفعيل للباقة: ') }}<strong class="text-amber-600 font-black italic">{{ $package->name }}</strong>
+            </p>
+        </div>
+        <a href="{{ route('verification-packages.show', $package->id) }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800 font-Cairo">
+            <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        </a>
     </div>
 
-    <div class="page-header">
-        <h1>تعديل الباقة: {{ $package->name }}</h1>
-        <p>تحديث بيانات الباقة وسعرها ومدتها</p>
-    </div>
+    <!-- Calibration Form Matrix -->
+    <form action="{{ route('verification-packages.update', $package->id) }}" method="POST" class="space-y-12 text-start font-Cairo">
+        @csrf
+        @method('PUT')
 
-    <div class="form-card">
+        <!-- Technical & Financial Re-calibration -->
+        <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/[0.03] rounded-bl-[10rem] -mr-20 -mt-20 blur-3xl opacity-60"></div>
+            
+            <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
+                <span class="w-3 h-10 bg-amber-500 rounded-full shadow-lg shadow-amber-500/30"></span>
+                <h4 class="text-xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('تعديل البيانات الأساسية') }}</h4>
+            </div>
 
-        <form action="{{ route('verification-packages.update', $package->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <!-- Basic Info -->
-            <div class="form-section">
-                <h3>📌 المعلومات الأساسية</h3>
-
-                <div class="form-group">
-                    <label>اسم الباقة</label>
-                    <input type="text" name="name" value="{{ old('name', $package->name) }}" required>
-                    @error('name') <span class="error-text">{{ $message }}</span> @enderror
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10 text-start font-Cairo">
+                <!-- Package Identity Calibration -->
+                <div class="flex flex-col gap-4 text-start">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('اسم الباقة') }}</label>
+                    <div class="relative group text-start font-Cairo">
+                        <input type="text" name="name" value="{{ old('name', $package->name) }}" placeholder="{{ __('أدخل اسم الباقة الجديد...') }}" 
+                            class="w-full bg-slate-50/50 dark:bg-slate-950/40 border-2 border-slate-100 dark:border-slate-800 rounded-[1.2rem] px-8 py-5 text-sm font-black text-slate-700 dark:text-white focus:border-amber-500 focus:ring-[12px] focus:ring-amber-500/5 transition-all outline-none shadow-inner font-Cairo text-start" required>
+                        <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-hover:text-amber-500 transition-all font-Cairo">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                        </div>
+                    </div>
+                    @error('name') <span class="text-[10px] font-black text-rose-500 px-3 font-Cairo">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="form-group">
-                    <label>السعر (ر.س)</label>
-                    <input type="number" step="0.01" name="price" value="{{ old('price', $package->price) }}" required>
-                    @error('price') <span class="error-text">{{ $message }}</span> @enderror
+                <!-- Monetary Re-valuation -->
+                <div class="flex flex-col gap-4 text-start font-Cairo">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('السعر (ريال)') }}</label>
+                    <div class="relative group text-start font-Cairo">
+                        <input type="number" step="0.01" name="price" value="{{ old('price', $package->price) }}" placeholder="0.00" 
+                            class="w-full bg-slate-50/50 dark:bg-slate-950/40 border-2 border-slate-100 dark:border-slate-800 rounded-[1.2rem] px-8 py-5 text-sm font-black text-slate-700 dark:text-white focus:border-emerald-500 focus:ring-[12px] focus:ring-emerald-500/5 transition-all outline-none shadow-inner font-Cairo font-mono text-start" required>
+                        <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-hover:text-emerald-500 transition-all font-Cairo">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16V15"></path></svg>
+                        </div>
+                    </div>
+                    @error('price') <span class="text-[10px] font-black text-rose-500 px-3 font-Cairo">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="form-group">
-                    <label>المدة (بالأيام)</label>
-                    <input type="number" name="duration_days" value="{{ old('duration_days', $package->duration_days) }}" required>
-                    @error('duration_days') <span class="error-text">{{ $message }}</span> @enderror
+                <!-- Temporal Adjustment -->
+                <div class="flex flex-col gap-4 text-start font-Cairo">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('مدة الصلاحية (بالأيام)') }}</label>
+                    <div class="relative group text-start font-Cairo">
+                        <input type="number" name="duration_days" value="{{ old('duration_days', $package->duration_days) }}" placeholder="30" 
+                            class="w-full bg-slate-50/50 dark:bg-slate-950/40 border-2 border-slate-100 dark:border-slate-800 rounded-[1.2rem] px-8 py-5 text-sm font-black text-slate-700 dark:text-white focus:border-brand-primary focus:ring-[12px] focus:ring-brand-primary/5 transition-all outline-none shadow-inner font-Cairo font-mono text-start" required>
+                        <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-hover:text-brand-primary transition-all font-Cairo">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                    @error('duration_days') <span class="text-[10px] font-black text-rose-500 px-3 font-Cairo">{{ $message }}</span> @enderror
+                </div>
+            </div>
+        </div>
+
+        <!-- Narrative & Features Modification -->
+        <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-white dark:border-slate-800/50 text-start font-Cairo">
+            <div class="flex items-center gap-5 mb-10 text-start font-Cairo">
+                <span class="w-3 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/30 font-Cairo"></span>
+                <h4 class="text-xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('تعديل الوصف والمميزات') }}</h4>
+            </div>
+
+            <div class="flex flex-col gap-4 text-start font-Cairo">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('الوصف') }}</label>
+                <textarea name="description" rows="6" placeholder="{{ __('تعديل وصف الباقة ومميزاتها...') }}" 
+                    class="w-full bg-slate-50/50 dark:bg-slate-950/40 border-2 border-slate-100 dark:border-slate-800 rounded-[1.5rem] px-10 py-8 text-sm font-bold text-slate-700 dark:text-white focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all outline-none resize-none leading-relaxed font-Cairo shadow-inner text-start italic">{{ old('description', $package->description) }}</textarea>
+                @error('description') <span class="text-[10px] font-black text-rose-500 px-3 font-Cairo">{{ $message }}</span> @enderror
+            </div>
+        </div>
+
+        <!-- Executive Calibration Terminal -->
+        <div class="card-premium glass-panel p-12 rounded-[2.5rem] shadow-2xl relative border border-white dark:border-slate-800/50 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden text-start font-Cairo">
+            <div class="absolute inset-0 bg-brand-primary/[0.04] pointer-events-none font-Cairo"></div>
+            
+            <div class="flex items-center gap-8 relative z-10 text-start font-Cairo">
+                <div class="w-20 h-20 bg-white dark:bg-slate-900 rounded-[1.5rem] flex items-center justify-center text-brand-primary shadow-xl border border-slate-100 dark:border-slate-800 font-Cairo">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div class="flex flex-col text-start font-Cairo">
+                    <h4 class="text-xl font-black text-slate-800 dark:text-white font-Cairo leading-none mb-3 text-start italic">{{ __('حالة تفعيل الباقة') }}</h4>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed text-start italic">
+                        {{ __('تحديد ما إذا كانت الباقة ستظهر للمشتركين أم لا.') }}
+                    </span>
                 </div>
             </div>
 
-            <!-- Description -->
-            <div class="form-section">
-                <h3>📝 الوصف</h3>
-
-                <div class="form-group">
-                    <textarea name="description" rows="4"
-                        placeholder="وصف مختصر للباقة ومميزاتها">{{ old('description', $package->description) }}</textarea>
-                    @error('description') <span class="error-text">{{ $message }}</span> @enderror
+            <div class="flex flex-col items-center md:items-end gap-10 relative z-10 text-start font-Cairo">
+                <label class="relative inline-flex items-center cursor-pointer group text-start font-Cairo">
+                    <input type="hidden" name="is_active" value="0">
+                    <input type="checkbox" name="is_active" value="1" class="sr-only peer" {{ old('is_active', $package->is_active) ? 'checked' : '' }}>
+                    <div class="w-20 h-11 bg-slate-200 peer-focus:outline-none dark:bg-slate-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-9 after:w-9 after:transition-all dark:border-gray-600 peer-checked:bg-gradient-to-r peer-checked:from-brand-primary peer-checked:to-indigo-600 rounded-full group-hover:scale-110 transition-all shadow-inner font-Cairo"></div>
+                </label>
+                
+                <div class="flex flex-wrap justify-center gap-6 text-start font-Cairo">
+                    <button type="submit" class="px-12 py-5 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[1.2rem] text-[11px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-10px_rgba(var(--brand-primary-rgb),0.4)] hover:scale-[1.05] active:scale-95 transition-all duration-500 font-Cairo text-start">
+                        {{ __('حفظ التعديلات 💾') }}
+                    </button>
+                    <a href="{{ route('verification-packages.show', $package->id) }}" class="px-12 py-5 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 rounded-[1.2rem] text-[11px] font-black uppercase tracking-[0.3em] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-Cairo border border-slate-100 dark:border-slate-800 text-start">
+                        {{ __('إلغاء') }}
+                    </a>
                 </div>
             </div>
-
-            <!-- Status -->
-            <div class="form-section">
-                <h3>⚙️ حالة الباقة</h3>
-
-                <div class="form-group">
-                    <label class="switch-label">
-                        <input type="hidden" name="is_active" value="0">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', $package->is_active) ? 'checked' : '' }}>
-                        تفعيل الباقة (متاحة للمستخدمين)
-                    </label>
-                    @error('is_active') <span class="error-text">{{ $message }}</span> @enderror
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="form-actions">
-                <button type="submit" class="btn-primary">تحديث الباقة</button>
-                <a href="{{ route('verification-packages.show', $package->id) }}" class="btn-secondary">إلغاء</a>
-            </div>
-
-        </form>
-
-    </div>
-
+        </div>
+    </form>
 </div>
 @endsection

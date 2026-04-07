@@ -330,7 +330,7 @@ class RequestController extends Controller
 
         $requestModel = RequestModel::findOrFail($request_id);
 
-        if ($requestModel->user_id !== Auth::id()) {
+        if ($requestModel->serviceProvider()->id !== Auth::id()) {
             return response()->json(['message' => 'غير مصرح للقيام بعملية الدفع لهذا الطلب'], 403);
         }
 

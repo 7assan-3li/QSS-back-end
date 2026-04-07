@@ -1,138 +1,258 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', __('تفاصيل بلاغ النظام'))
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/systemComplaints/show.css') }}">
-
-    <div class="complaint-show">
-
-        <!-- ===== Header ===== -->
-        <div class="header-card">
-            <div>
-                <h1>{{ $systemComplaint->title }}</h1>
-                <p>نوع الشكوى: <strong>{{ $systemComplaint->type }}</strong></p>
+<div class="max-w-7xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
+        <div class="text-start">
+            <div class="flex items-center gap-5 mb-5 text-start">
+                <a href="{{ route('system-complaints.index') }}" class="w-14 h-14 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-slate-200 dark:border-slate-800">
+                    <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                    <span class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-600 text-2xl font-Cairo shadow-lg shadow-rose-500/5">🚩</span>
+                    {{ __('معالجة بلاغ النظام') }}
+                </h3>
             </div>
-
-            <span class="badge {{ $systemComplaint->status }}">
-                {{ __($systemComplaint->status) }}
+            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start">
+                <span>{{ __('تفاصيل البلاغ') }}</span>
+                <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <span>{{ __('التحليل النوعي') }}</span>
+                <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <span class="text-rose-600">{{ __('البلاغ') }} #{{ str_pad($systemComplaint->id, 5, '0', STR_PAD_LEFT) }}</span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+             <span class="px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] font-Cairo text-start shadow-xl
+                @if($systemComplaint->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20 shadow-amber-500/5
+                @elseif($systemComplaint->status == 'in_progress') bg-blue-500/10 text-blue-600 border border-blue-500/20 shadow-blue-500/5
+                @else bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 shadow-emerald-500/5 @endif text-start">
+                {{ __('حالة النظام') }}: {{ __($systemComplaint->status) }}
             </span>
         </div>
+    </div>
 
-        <!-- ===== Stepper ===== -->
-        <div class="stepper-card">
-            <ul class="stepper">
-                @foreach ($statusSteps as $step)
-                    <li class="
-                            {{ $systemComplaint->status == $step ? 'active' : '' }}
-                            {{ array_search($systemComplaint->status, $statusSteps) > array_search($step, $statusSteps) ? 'completed' : '' }}
-                        ">
-                        {{ __($step) }}
-                    </li>
-                @endforeach
-            </ul>
+    <!-- Processing Status -->
+    <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl border border-white dark:border-slate-800/50 overflow-hidden relative text-start font-Cairo">
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/[0.04] to-transparent pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-12 text-start font-Cairo">
+            @foreach ($statusSteps as $step)
+                @php
+                    $isCurrent = $systemComplaint->status == $step;
+                    $isCompleted = array_search($systemComplaint->status, $statusSteps) > array_search($step, $statusSteps);
+                @endphp
+                <div class="flex-1 flex flex-col items-center gap-5 group relative text-center font-Cairo">
+                    <div class="w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-700 relative z-10 font-Cairo
+                        @if($isCurrent) bg-rose-600 text-white shadow-[0_20px_40px_-5px_rgba(225,29,72,0.4)] scale-110 ring-8 ring-rose-500/10
+                        @elseif($isCompleted) bg-emerald-500 text-white shadow-lg shadow-emerald-500/20
+                        @else bg-slate-100 dark:bg-slate-900/60 text-slate-400 border border-slate-200 dark:border-slate-800/80 shadow-inner @endif font-black text-lg">
+                        @if($isCompleted)
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                        @else
+                            {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                        @endif
+                    </div>
+                    <div class="flex flex-col items-center text-center font-Cairo">
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em] font-Cairo mb-2
+                            @if($isCurrent) text-rose-600 @elseif($isCompleted) text-emerald-600 @else text-slate-400/80 @endif">
+                            {{ $step == 'pending' ? __('المرحلة') . ': ' . __('قيد الانتظار') : ($step == 'in_progress' ? __('المرحلة') . ': ' . __('قيد المعالجة') : __('المرحلة') . ': ' . __('تم الحل')) }}
+                        </span>
+                        <span class="text-xs font-black text-slate-800 dark:text-white font-Cairo">
+                            {{ __($step) }}
+                        </span>
+                    </div>
+                    
+                    @if(!$loop->last)
+                        <div class="hidden md:block absolute h-[2px] w-[calc(100%-4rem)] top-8 -right-[calc(50%-2rem)] bg-slate-100 dark:bg-slate-800/50 -z-0 overflow-hidden text-start">
+                            <div class="h-full bg-emerald-500 transition-all duration-1000" style="width: {{ $isCompleted ? '100%' : '0%' }}"></div>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Report Details -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 text-start font-Cairo">
+        <!-- Content & Source Space -->
+        <div class="lg:col-span-8 space-y-12 text-start">
+            <div class="card-premium glass-panel p-14 rounded-[4.5rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-rose-500/[0.03] rounded-bl-[10rem] -mr-20 -mt-20 blur-3xl opacity-60"></div>
+                
+                <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
+                    <span class="w-3 h-10 bg-rose-600 rounded-full shadow-lg shadow-rose-600/30"></span>
+                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start">{{ __('محتوى البلاغ') }}</h4>
+                </div>
+                
+                <div class="bg-slate-50/50 dark:bg-slate-950/40 p-12 rounded-[3.5rem] border border-slate-100 dark:border-slate-800/80 mb-16 relative group text-start font-Cairo shadow-inner">
+                    <div class="absolute -top-8 -right-8 w-20 h-20 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl flex items-center justify-center text-4xl group-hover:rotate-12 transition-all duration-500 font-Cairo">💬</div>
+                    <p class="text-xl font-bold text-slate-700 dark:text-slate-200 leading-[2.2] font-Cairo italic text-start font-Cairo">
+                        " {{ $systemComplaint->content }} "
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start font-Cairo">
+                    <!-- Metadata Node: Source -->
+                    <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
+                        <div class="w-16 h-16 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📱</div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('قناة الوارد') }}</span>
+                            <span class="text-sm font-black text-indigo-600 font-Cairo text-start">
+                                {{ $systemComplaint->app_source === 'provider' ? __('تطبيق المزود') : __('تطبيق العميل') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Metadata Node: User Identity -->
+                    <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
+                        <div class="w-16 h-16 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">👤</div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('هوية المُبلغ') }}</span>
+                            <span class="text-sm font-black text-slate-800 dark:text-white font-Cairo text-start">{{ $systemComplaint->user->name }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Metadata Node: Communication -->
+                    <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start font-Cairo">
+                        <div class="w-16 h-16 bg-blue-500/10 text-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">✉️</div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('قنوات الاتصال') }}</span>
+                            <span class="text-[11px] font-black text-slate-700 dark:text-slate-300 font-mono tracking-tight text-start">{{ $systemComplaint->user->email }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Metadata Node: Chronology -->
+                    <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-white dark:border-white/5 flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start font-Cairo">
+                        <div class="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo font-mono">📅</div>
+                        <div class="flex flex-col text-start">
+                            <span class="inline-flex items-center gap-3 px-6 py-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-[10px] font-black text-slate-500 font-mono text-start">
+                                <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                                {{ __('توقيت الدخول') }}: {{ $systemComplaint->created_at->format('Y-m-d H:i') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- ===== Content ===== -->
-        <div class="content-grid">
-
-            <div class="info-card">
-                <h3>تفاصيل الشكوى</h3>
-
-                <p class="content">
-                    {{ $systemComplaint->content }}
-                </p>
-
-                <ul class="meta">
-                    <li>📱 المصدر: 
-                        @if($systemComplaint->app_source === 'provider')
-                            <span style="background-color: #6366f1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">تطبيق المزود</span>
-                        @else
-                            <span style="background-color: #ec4899; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">تطبيق الطالب</span>
-                        @endif
-                    </li>
-                    <li>👤 المستخدم: {{ $systemComplaint->user->name }}</li>
-                    <li>📧 البريد: {{ $systemComplaint->user->email }}</li>
-                    <li>📅 التاريخ: {{ $systemComplaint->created_at->format('Y-m-d H:i') }}</li>
-                </ul>
-            </div>
-
-            <!-- ===== Actions ===== -->
-            <div class="action-card">
-                <h3>إدارة الحالة</h3>
+        <!-- Administrative Actions Sidebar -->
+        <div class="lg:col-span-4 space-y-12 text-start font-Cairo">
+            <!-- Status Control Terminal -->
+            <div class="card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo overflow-hidden relative">
+                 <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-600 opacity-60 font-Cairo"></div>
+                 
+                <div class="flex items-center gap-4 mb-10 text-start font-Cairo">
+                    <span class="w-2 h-8 bg-rose-600 rounded-full shadow-md font-Cairo"></span>
+                    <h4 class="font-black text-slate-800 dark:text-white font-Cairo text-sm uppercase tracking-[0.2em] text-start">{{ __('تحديث حالة البلاغ') }}</h4>
+                </div>
 
                 @if(session('success'))
-                    <div class="alert success">{{ session('success') }}</div>
+                    <div class="p-6 bg-emerald-500/10 text-emerald-600 text-[11px] font-black rounded-[2rem] mb-10 border border-emerald-500/20 text-center animate-pulse font-Cairo shadow-sm">
+                         ⚠️ {{ __('نظام') }}: {{ session('success') }}
+                    </div>
                 @endif
 
-                <form method="POST" action="{{ route('system-complaints.update-status', $systemComplaint) }}">
+                <form method="POST" action="{{ route('system-complaints.update-status', $systemComplaint) }}" class="space-y-10 text-start font-Cairo">
                     @csrf
                     @method('PATCH')
 
-                    <label>تغيير الحالة</label>
-                    <select name="status">
-                        @foreach (\App\constant\SystemComplaintStatus::all() as $status)
-                            <option value="{{ $status }}" {{ $systemComplaint->status == $status ? 'selected' : '' }}>
-                                {{ __($status) }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="space-y-4 text-start font-Cairo">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] px-3 font-Cairo text-start">{{ __('الحالة الجديدة') }}</label>
+                        <div class="relative text-start font-Cairo">
+                            <select name="status" class="w-full px-10 py-6 bg-slate-50 dark:bg-slate-950 border-2 border-slate-100 dark:border-slate-800/80 rounded-[2.5rem] text-sm font-black outline-none focus:border-rose-600 focus:ring-[12px] focus:ring-rose-500/5 appearance-none font-Cairo transition-all dark:text-white text-center shadow-inner">
+                                @foreach (\App\constant\SystemComplaintStatus::all() as $status)
+                                    <option value="{{ $status }}" {{ $systemComplaint->status == $status ? 'selected' : '' }}>
+                                        {{ __($status) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="absolute left-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
 
-                    <button type="submit">تحديث الحالة</button>
+                    <div class="pt-6 text-start font-Cairo">
+                        <button type="submit" class="w-full py-6 bg-gradient-to-r from-rose-600 to-pink-700 text-white rounded-[2.5rem] text-[11px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-10px_rgba(225,29,72,0.4)] hover:scale-[1.03] active:scale-95 hover:shadow-rose-600/50 transition-all duration-500 font-Cairo flex items-center justify-center gap-4">
+                            {{ __('حفظ التغييرات') }} 💾
+                        </button>
+                    </div>
                 </form>
             </div>
 
+            <!-- Processing Efficiency -->
+            <div class="card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-white dark:border-slate-800/50 text-start font-Cairo">
+                <div class="flex items-center gap-4 mb-10 text-start font-Cairo">
+                    <span class="w-2 h-8 bg-indigo-500 rounded-full shadow-md font-Cairo"></span>
+                    <h4 class="font-black text-slate-800 dark:text-white font-Cairo text-sm uppercase tracking-[0.2em] text-start font-Cairo">{{ __('إحصائيات المعالجة') }}</h4>
+                </div>
+                <div class="relative h-64 text-start font-Cairo font-mono">
+                    <canvas id="complaintChart"></canvas>
+                </div>
+                <div class="mt-10 grid grid-cols-2 gap-6 text-start font-Cairo">
+                    <div class="bg-amber-500/10 p-6 rounded-[2rem] border border-amber-500/20 text-center group hover:bg-amber-500/15 transition-all text-start">
+                        <span class="block text-[8px] font-black text-amber-600 uppercase tracking-[0.3em] mb-2 font-Cairo">{{ __('وقت الانتظار') }}</span>
+                        <span class="text-lg font-black text-slate-800 dark:text-white font-mono">{{ $waitingHours }}h</span>
+                    </div>
+                    <div class="bg-emerald-500/10 p-6 rounded-[2rem] border border-emerald-500/20 text-center group hover:bg-emerald-500/15 transition-all text-start">
+                        <span class="block text-[8px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-2 font-Cairo">{{ __('وقت المعالجة') }}</span>
+                        <span class="text-lg font-black text-slate-800 dark:text-white font-mono">{{ $processingHours }}h</span>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- ===== Analytics ===== -->
-        <div class="chart-card">
-            <h3>تحليل الشكوى</h3>
-            <canvas id="complaintChart"></canvas>
-        </div>
-
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        const ctx = document.getElementById('complaintChart');
-
-        const waitingHours = @json($waitingHours);
-        const processingHours = @json($processingHours);
-
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['مدة الانتظار (بالساعات)', 'مدة المعالجة (بالساعات)'],
-                    datasets: [{
-                        data: [waitingHours, processingHours],
-                        backgroundColor: ['#facc15', '#22c55e'],
-                        borderRadius: 8,
-                        barThickness: 40
-                    }]
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const complaintCtx = document.getElementById('complaintChart');
+    if (complaintCtx) {
+        new Chart(complaintCtx, {
+            type: 'bar',
+            data: {
+                labels: ['{{ __("الانتظار") }}', '{{ __("المعالجة") }}'],
+                datasets: [{
+                    data: [{{ $waitingHours }}, {{ $processingHours }}],
+                    backgroundColor: ['#f59e0b', '#10b981'],
+                    borderRadius: 20,
+                    barThickness: 45,
+                    borderWidth: 0,
+                    hoverBackgroundColor: ['#d97706', '#059669']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleFont: { family: 'Cairo', size: 12 },
+                        bodyFont: { family: 'Cairo', size: 11 },
+                        padding: 15,
+                        cornerRadius: 15,
+                        displayColors: false
+                    }
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return context.raw + ' ساعة';
-                                }
-                            }
-                        }
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(226, 232, 240, 0.4)', drawBorder: false },
+                        ticks: { font: { size: 10, family: 'Cairo' }, color: '#94a3b8', callback: v => v + 'h' }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: value => value + 'h'
-                            }
-                        }
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11, family: 'Cairo', weight: '900' }, color: '#64748b' }
                     }
                 }
-            });
-        }
-    </script>
-
+            }
+        });
+    }
+</script>
+@endpush
 @endsection

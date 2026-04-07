@@ -1,94 +1,153 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'إضافة تصنيف')
+@section('title', 'إضافة تصنيف جديد')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/categories/create.css') }}">
-
-<div class="container">
-
-    <!-- Breadcrumb -->
-    <div style="margin-bottom:20px;font-size:14px;color:#6b7280">
-        لوحة التحكم / التصنيفات / <strong>إضافة تصنيف</strong>
+<div class="max-w-5xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
+        <div class="text-start">
+            <div class="flex items-center gap-4 mb-3 text-start">
+                <a href="{{ route('categories.index') }}" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all shadow-sm">
+                    <svg class="w-5 h-5 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h3 class="font-black text-2xl text-slate-800 dark:text-white flex items-center gap-3 text-start font-Cairo">
+                    <span class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-600 text-xl font-Cairo">➕</span>
+                    {{ __('إضافة تصنيف جديد') }}
+                </h3>
+            </div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mr-14 text-start font-Cairo">
+                {{ __('أدخل بيانات التصنيف الجديد ليتم تنظيمه وعرضه في المنصة.') }}
+            </p>
+        </div>
+        <div class="flex items-center gap-4">
+             <a href="{{ route('categories.index') }}" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-Cairo">
+                {{ __('العودة للقائمة') }}
+             </a>
+        </div>
     </div>
 
-    <div class="page-header">
-        <h1>إضافة تصنيف جديد</h1>
-        <p>إنشاء تصنيف جديد وربطه بالتصنيفات الأخرى بسهولة</p>
-    </div>
-
-    <div class="form-card">
-
-        <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
+    <!-- Strategic Asset Blueprint Form -->
+    <div class="card-premium glass-panel p-10 md:p-16 rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
+        <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-12 text-start">
             @csrf
 
-            <!-- Basic Info -->
-            <div class="form-section">
-                <h3>📌 المعلومات الأساسية</h3>
-
-                <div class="form-group">
-                    <label>اسم التصنيف</label>
-                    <input type="text" name="name" value="{{ old('name') }}" required>
-                    @error('name') <span class="error-text">{{ $message }}</span> @enderror
+            <!-- Section 1: Identity & Taxonomy -->
+            <div class="space-y-10 text-start">
+                <div class="flex items-center gap-4 mb-2 text-start">
+                    <span class="w-2 h-8 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/40"></span>
+                    <h4 class="font-black text-xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('بيانات القسم والنوع') }}</h4>
                 </div>
 
-                <div class="form-group">
-                    <label>التصنيف الأب</label>
-                    <select name="category_id">
-                        <option value="">— تصنيف رئيسي —</option>
-                        @include('categories.partials.category-options', [
-                            'categories' => $categories,
-                            'prefix' => '',
-                        ])
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start">
+                    <!-- Title -->
+                    <div class="space-y-3 text-start">
+                        <label for="name" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] px-2 font-Cairo text-start">{{ __('اسم القسم') }}</label>
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" required placeholder="{{ __('مثال: التصميم المعماري...') }}"
+                               class="w-full px-8 py-5 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-8 focus:ring-brand-primary/5 transition-all dark:text-white font-Cairo text-start">
+                        @error('name')
+                            <span class="text-[9px] font-black text-rose-500 px-4 tracking-tight font-Cairo block mt-2 text-start">⚠️ {{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Taxonomy Node -->
+                    <div class="space-y-3 text-start">
+                        <label for="category_id" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] px-2 font-Cairo text-start">{{ __('القسم الرئيسي (اختياري)') }}</label>
+                        <div class="relative text-start">
+                            <select name="category_id" id="category_id" 
+                                    class="w-full px-8 py-5 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-8 focus:ring-brand-primary/5 appearance-none transition-all dark:text-white font-Cairo text-start">
+                                <option value="">— {{ __('قسم رئيسي') }} —</option>
+                                @include('categories.partials.category-options', [
+                                    'categories' => $categories,
+                                    'prefix' => '',
+                                ])
+                            </select>
+                            <div class="absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Description -->
-            <div class="form-section">
-                <h3>📝 الوصف</h3>
-
-                <div class="form-group">
-                    <textarea name="description" rows="4"
-                        placeholder="وصف مختصر للتصنيف">{{ old('description') }}</textarea>
+            <!-- Section 2: Narrative Description -->
+            <div class="space-y-10 pt-10 border-t border-slate-100 dark:border-slate-800 text-start">
+                <div class="flex items-center gap-4 mb-2 text-start">
+                    <span class="w-2 h-8 bg-amber-500 rounded-full shadow-lg shadow-amber-500/40"></span>
+                    <h4 class="font-black text-xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('وصف القسم') }}</h4>
+                </div>
+                
+                <div class="space-y-3 text-start">
+                    <label for="description" class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] px-2 font-Cairo text-start">{{ __('وصف موجز للقسم') }}</label>
+                    <textarea name="description" id="description" rows="4" placeholder="{{ __('اكتب وصفاً للقسم ليظهر للمستخدمين...') }}"
+                               class="w-full px-8 py-6 bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-800 rounded-[2.5rem] text-sm font-black outline-none focus:border-amber-500 focus:ring-8 focus:ring-amber-500/5 transition-all dark:text-white resize-none h-40 font-Cairo text-start">{{ old('description') }}</textarea>
+                    <p class="text-[9px] font-black text-slate-400 px-4 italic font-Cairo text-start">* {{ __('يظهر هذا الوصف في واجهة المستخدم النهائية تحت اسم القسم.') }}</p>
                 </div>
             </div>
 
-            <!-- Image -->
-            <div class="form-section">
-                <h3>🖼 صورة التصنيف</h3>
+            <!-- Section 3: Visual Identity Assets -->
+            <div class="space-y-10 pt-10 border-t border-slate-100 dark:border-slate-800 text-start">
+                <div class="flex items-center gap-4 mb-2 text-start">
+                    <span class="w-2 h-8 bg-purple-500 rounded-full shadow-lg shadow-purple-500/40"></span>
+                    <h4 class="font-black text-xl text-slate-800 dark:text-white font-Cairo text-start">{{ __('صورة القسم') }}</h4>
+                </div>
 
-                <label class="file-upload">
-                    <input type="file" name="image_path" accept="image/*" onchange="previewImage(event)">
-                    <span>اضغط لاختيار صورة</span>
-                </label>
+                <div class="flex flex-col xl:flex-row gap-12 items-start text-start">
+                    <div class="flex-1 w-full text-start">
+                        <label class="group relative flex flex-col items-center justify-center w-full h-64 border-4 border-dashed border-slate-100 dark:border-slate-800 rounded-[3rem] bg-slate-50/50 dark:bg-slate-950/30 hover:border-brand-primary/40 hover:bg-white dark:hover:bg-slate-900 transition-all cursor-pointer overflow-hidden text-center">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 relative z-10 text-center">
+                                <div class="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center shadow-2xl mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform">
+                                    <svg class="w-8 h-8 text-slate-400 group-hover:text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                </div>
+                                <p class="mb-2 text-xs font-black text-slate-600 dark:text-slate-400 font-Cairo">{{ __('اختر صورة القسم') }}</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">SVG, PNG, JPG (MAX. 5MB)</p>
+                            </div>
+                            <input type="file" name="image_path" class="hidden" accept="image/*" onchange="previewImage(event)">
+                        </label>
+                        @error('image_path')
+                            <span class="text-[9px] font-black text-rose-500 px-4 mt-3 block tracking-tight font-Cairo text-start">⚠️ {{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <img id="preview" class="image-preview">
-
-                @error('image_path')
-                    <span class="error-text">{{ $message }}</span>
-                @enderror
+                    <!-- Enhanced Preview Node -->
+                    <div class="w-full xl:w-72 h-64 rounded-[3rem] border-2 border-slate-100 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/50 flex items-center justify-center overflow-hidden relative group shadow-inner text-center">
+                        <img id="preview" class="w-full h-full object-cover hidden scale-100 group-hover:scale-110 transition-transform duration-700">
+                        <div id="preview-placeholder" class="text-center space-y-3 opacity-30 group-hover:scale-110 transition-transform text-center">
+                            <div class="w-16 h-16 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <span class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-500 block font-Cairo">{{ __('معاينة الصورة') }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Actions -->
-            <div class="form-actions">
-                <button class="btn-primary">حفظ التصنيف</button>
-                <a href="{{ route('categories.index') }}" class="btn-secondary">إلغاء</a>
+            <!-- Global Action Terminal -->
+            <div class="pt-12 flex flex-col sm:flex-row items-center gap-6 text-start">
+                <button type="submit" class="w-full sm:w-auto px-16 py-6 bg-brand-primary text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/30 hover:scale-[1.05] active:scale-95 transition-all font-Cairo flex items-center justify-center gap-3">
+                    {{ __('حفظ القسم 💾') }}
+                </button>
+                <a href="{{ route('categories.index') }}" class="w-full sm:w-auto px-16 py-6 bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all text-center font-Cairo">
+                    {{ __('إلغاء') }}
+                </a>
             </div>
-
         </form>
-
     </div>
-
 </div>
 @endsection
 
-@section('js')
+@push('scripts')
 <script>
 function previewImage(event) {
     const preview = document.getElementById('preview');
-    preview.src = URL.createObjectURL(event.target.files[0]);
-    preview.style.display = 'block';
+    const placeholder = document.getElementById('preview-placeholder');
+    const file = event.target.files[0];
+    
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    }
 }
 </script>
-@endsection
+@endpush

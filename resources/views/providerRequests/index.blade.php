@@ -1,165 +1,279 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', __('طلبات انضمام المزودين'))
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/providerRequests/index.css') }}">
-
-    <div class="provider-requests">
-
-        <!-- ===== Stats ===== -->
-        <div class="stats-grid">
-
-            <a href="{{ route('provider-requests.index') }}" class="stat-card">
-                <h4>إجمالي الطلبات</h4>
-                <span>{{ $stats['total'] }}</span>
-            </a>
-
-            <a href="{{ route('provider-requests.index', ['status' => 'pending']) }}" class="stat-card warning">
-                <h4>قيد المراجعة</h4>
-                <span>{{ $stats['pending'] }}</span>
-            </a>
-
-            <a href="{{ route('provider-requests.index', ['status' => 'accepted']) }}" class="stat-card success">
-                <h4>مقبولة</h4>
-                <span>{{ $stats['accepted'] }}</span>
-            </a>
-
-            <a href="{{ route('provider-requests.index', ['status' => 'rejected']) }}" class="stat-card danger">
-                <h4>مرفوضة</h4>
-                <span>{{ $stats['rejected'] }}</span>
-            </a>
-
+<div class="max-w-7xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
+        <div class="text-start">
+            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <span class="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-3xl font-Cairo shadow-lg shadow-brand-primary/5">👨‍🔧</span>
+                {{ __('إدارة طلبات المزودين') }}
+            </h3>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo">
+                {{ __('مراجعة طلبات الانضمام، التحقق من الوثائق، واعتماد مزودي الخدمة الجدد.') }}
+            </p>
         </div>
+    </div>
 
-        <!-- ===== Charts ===== -->
+    <!-- Statistics Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Total Requests -->
+        <a href="{{ route('provider-requests.index') }}" class="card-premium glass-panel p-8 rounded-[3rem] border border-white dark:border-slate-800/50 flex flex-col items-center gap-4 group hover:scale-[1.05] transition-all bg-white/40 dark:bg-slate-900/40 shadow-2xl">
+            <div class="w-16 h-16 bg-slate-500/10 text-slate-500 rounded-2xl flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform shadow-inner font-Cairo">📄</div>
+            <div class="text-center font-Cairo">
+                <span class="text-3xl font-black text-slate-800 dark:text-white block font-mono leading-none">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mt-3 font-Cairo">{{ __('إجمالي الطلبات') }}</span>
+            </div>
+        </a>
 
-        <div class="charts-grid">
+        <!-- Pending Requests -->
+        <a href="{{ route('provider-requests.index', ['status' => 'pending']) }}" class="card-premium glass-panel p-8 rounded-[3rem] border border-amber-500/20 flex flex-col items-center gap-4 group hover:scale-[1.05] transition-all bg-amber-50/20 dark:bg-amber-950/10 shadow-2xl">
+            <div class="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform shadow-inner font-Cairo">⏳</div>
+            <div class="text-center font-Cairo">
+                <span class="text-3xl font-black text-amber-600 block font-mono leading-none">{{ str_pad($stats['pending'], 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-[9px] font-black text-amber-500/60 uppercase tracking-[0.3em] mt-3 font-Cairo">{{ __('بانتظار المراجعة') }}</span>
+            </div>
+        </a>
 
-            <div class="chart-card">
-                <h3>توزيع حالات الطلبات</h3>
+        <!-- Accepted Requests -->
+        <a href="{{ route('provider-requests.index', ['status' => 'accepted']) }}" class="card-premium glass-panel p-8 rounded-[3rem] border border-emerald-500/20 flex flex-col items-center gap-4 group hover:scale-[1.05] transition-all bg-emerald-50/20 dark:bg-emerald-950/10 shadow-2xl">
+            <div class="w-16 h-16 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform shadow-inner font-Cairo font-mono">✅</div>
+            <div class="text-center font-Cairo">
+                <span class="text-3xl font-black text-emerald-600 block font-mono leading-none">{{ str_pad($stats['accepted'], 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-[9px] font-black text-emerald-500/60 uppercase tracking-[0.3em] mt-3 font-Cairo">{{ __('تمت الموافقة') }}</span>
+            </div>
+        </a>
+
+        <!-- Rejected Requests -->
+        <a href="{{ route('provider-requests.index', ['status' => 'rejected']) }}" class="card-premium glass-panel p-8 rounded-[3rem] border border-rose-500/20 flex flex-col items-center gap-4 group hover:scale-[1.05] transition-all bg-rose-50/20 dark:bg-rose-950/10 shadow-2xl font-mono">
+            <div class="w-16 h-16 bg-rose-500/10 text-rose-600 rounded-2xl flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform shadow-inner font-Cairo">❌</div>
+            <div class="text-center font-Cairo">
+                <span class="text-3xl font-black text-rose-600 block font-mono leading-none">{{ str_pad($stats['rejected'], 2, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-[9px] font-black text-rose-500/60 uppercase tracking-[0.3em] mt-3 font-Cairo">{{ __('طلبات مرفوضة') }}</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Analytics Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 font-Cairo">
+        <!-- Distribution Statistics -->
+        <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl border border-white dark:border-slate-800/50 flex flex-col relative overflow-hidden text-start">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-[5rem] font-Cairo"></div>
+            <div class="flex items-center justify-between mb-12 text-start">
+                <h4 class="font-black text-slate-800 dark:text-white text-xs uppercase tracking-[0.3em] font-Cairo flex items-center gap-4 text-start">
+                    <span class="w-1.5 h-8 bg-indigo-600 rounded-full font-Cairo"></span> {{ __('إحصائيات توزيع الحالات') }}
+                </h4>
+            </div>
+            <div class="relative flex-grow flex items-center justify-center min-h-[350px] font-Cairo">
                 <canvas id="statusChart"></canvas>
             </div>
-            <div class="chart-card">
-                <div class="chart-actions">
-                    <a href="?days=7" class="{{ $days == 7 ? 'active' : '' }}">7 أيام</a>
-                    <a href="?days=30" class="{{ $days == 30 ? 'active' : '' }}">30 يوم</a>
-                    <a href="?days=90" class="{{ $days == 90 ? 'active' : '' }}">90 يوم</a>
-                </div>
-                <h3>الطلبات خلال آخر 7 أيام</h3>
-                <canvas id="dailyChart"></canvas>
-            </div>
-
         </div>
 
+        <!-- Requests Trend -->
+        <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl border border-white dark:border-slate-800/50 flex flex-col relative overflow-hidden text-start">
+            <div class="absolute top-0 left-0 w-32 h-32 bg-brand-primary/5 rounded-br-[5rem] font-Cairo"></div>
+            <div class="flex flex-col md:flex-row shadow-sm items-center justify-between mb-12 gap-6 text-start">
+                <h4 class="font-black text-slate-800 dark:text-white text-xs uppercase tracking-[0.3em] font-Cairo flex items-center gap-4 text-start">
+                    <span class="w-1.5 h-8 bg-brand-primary rounded-full font-Cairo"></span> {{ __('مؤشر تدفق الطلبات') }}
+                </h4>
+                <div class="flex bg-slate-50 dark:bg-slate-900/80 p-2 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner font-Cairo">
+                    <a href="?days=7" class="px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all {{ $days == 7 ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-slate-400 hover:text-slate-600' }} font-Cairo">W</a>
+                    <a href="?days=30" class="px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all {{ $days == 30 ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-slate-400 hover:text-slate-600' }} font-Cairo">M</a>
+                    <a href="?days=90" class="px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all {{ $days == 90 ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-slate-400 hover:text-slate-600' }} font-Cairo">Q</a>
+                </div>
+            </div>
+            <div class="relative flex-grow min-h-[350px] font-Cairo font-mono">
+                <canvas id="dailyChart"></canvas>
+            </div>
+        </div>
+    </div>
 
+    <!-- Requests List -->
+    <div class="card-premium glass-panel rounded-[4.5rem] shadow-2xl border border-white dark:border-slate-800/50 overflow-hidden font-Cairo text-start">
+        <div class="p-12 border-b border-slate-100 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-8 text-start">
+            <div class="text-start">
+                <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start italic">{{ __('قائمة طلبات المزودين') }}</h4>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('إدارة بيانات المتقدمين لطلبات الانضمام كمزود خدمة.') }}</p>
+            </div>
+        </div>
 
-
-        <!-- ===== Table ===== -->
-        <div class="table-card">
-            <h2>طلبات مزودي الخدمات</h2>
-
-            <table>
+        <div class="overflow-x-auto text-start font-Cairo">
+            <table class="w-full text-start">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>الاسم</th>
-                        <th>المستخدم</th>
-                        <th>الحالة</th>
-                        <th>المشرف</th>
-                        <th>التاريخ</th>
-                        <th>التحكم</th>
+                    <tr class="bg-slate-50/40 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-800 text-start">
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('رقم الطلب') }}</th>
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('اسم المتقدم') }}</th>
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('المستخدم المرتبط') }}</th>
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center font-Cairo">{{ __('الحالة') }}</th>
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('المدقق') }}</th>
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-start font-Cairo">{{ __('تاريخ التقديم') }}</th>
+                        <th class="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center font-Cairo">{{ __('الإجراءات') }}</th>
                     </tr>
                 </thead>
-
-                <tbody>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 text-start font-Cairo">
                     @forelse ($requests as $request)
-                        <tr class="row-{{ $request->status }}">
-                            <td data-label="#"> {{ $request->id }}</td>
-                            <td data-label="الاسم">{{ $request->name }}</td>
-                            <td data-label="المستخدم">{{ $request->user->name }}</td>
-
-                            <td data-label="الحالة">
-                                <span class="badge {{ $request->status }}">
+                        <tr class="hover:bg-brand-primary/[0.02] dark:hover:bg-brand-primary/[0.03] transition-all group font-Cairo">
+                            <td class="px-10 py-8">
+                                <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl text-[9px] font-black font-mono shadow-sm">#{{ str_pad($request->id, 4, '0', STR_PAD_LEFT) }}</span>
+                            </td>
+                            <td class="px-10 py-8">
+                                <div class="flex items-center gap-5 text-start">
+                                    <div class="w-11 h-11 bg-gradient-to-br from-brand-primary/20 to-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center text-xs font-black uppercase font-Cairo shadow-sm border border-brand-primary/10">
+                                        {{ mb_substr($request->name, 0, 1) }}
+                                    </div>
+                                    <span class="text-[13px] font-black text-slate-700 dark:text-slate-200 font-Cairo text-start">{{ $request->name }}</span>
+                                </div>
+                            </td>
+                            <td class="px-10 py-8">
+                                <div class="flex flex-col gap-1 text-start">
+                                    <span class="text-[11px] font-bold text-slate-400 font-Cairo flex items-center gap-2 text-start">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                        {{ $request->user->name }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-10 py-8 text-center">
+                                <span class="px-4 py-2 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] shadow-sm font-Cairo
+                                    @if($request->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20
+                                    @elseif($request->status == 'accepted') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20
+                                    @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif text-start font-Cairo">
                                     {{ __($request->status) }}
                                 </span>
                             </td>
-
-                            <td data-label="المشرف">
-                                {{ $request->admin->name ?? '—' }}
+                            <td class="px-10 py-8">
+                                <span class="text-[10px] font-black text-slate-400 font-Cairo italic text-start">{{ $request->admin->name ?? '— ' . __('النظام') . ' —' }}</span>
                             </td>
-
-                            <td data-label="التاريخ">
-                                {{ $request->created_at->format('Y-m-d') }}
+                            <td class="px-10 py-8">
+                                <span class="text-[10px] font-black text-slate-400 font-mono text-start">{{ $request->created_at->format('Y-m-d') }}</span>
                             </td>
-
-                            <td data-label="التحكم" class="actions">
-                                <a href="{{ route('provider-requests.show', $request->id) }}">عرض</a>
+                            <td class="px-10 py-8 text-center font-Cairo">
+                                <a href="{{ route('provider-requests.show', $request->id) }}" class="w-12 h-12 bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-white hover:bg-brand-primary rounded-2xl flex items-center justify-center mx-auto transition-all shadow-sm border border-slate-100 dark:border-slate-800 font-Cairo">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="empty">لا توجد طلبات</td>
+                            <td colspan="7" class="px-10 py-32 text-center font-Cairo">
+                                <div class="flex flex-col items-center opacity-30 gap-8 font-Cairo text-start">
+                                    <div class="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-[2.5rem] flex items-center justify-center text-slate-300 shadow-inner font-Cairo text-4xl italic">🔭</div>
+                                    <span class="text-xs font-black text-slate-400 uppercase tracking-[0.3em] font-Cairo text-start">{{ __('قائمة الطلبات فارغة حالياً.') }}</span>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        /* ===== Status Chart ===== */
-        new Chart(document.getElementById('statusChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['قيد المراجعة', 'مقبولة', 'مرفوضة'],
-                datasets: [{
-                    data: [
-                                    {{ $stats['pending'] }},
-                                    {{ $stats['accepted'] }},
-                        {{ $stats['rejected'] }}
-                    ],
-                    backgroundColor: [
-                        '#facc15', // pending
-                        '#22c55e', // accepted
-                        '#ef4444'  // rejected
-                    ]
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
-
-        /* ===== Daily Chart ===== */
-        new Chart(document.getElementById('dailyChart'), {
-            type: 'line',
-            data: {
-                labels: @json($labels),
-                datasets: [{
-                    label: 'عدد الطلبات',
-                    data: @json($data),
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37,99,235,.15)',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1 }
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const textColor = isDark ? '#94a3b8' : '#64748b';
+        
+        /* Status Distribution Doughnut Chart */
+        const statusChartCtx = document.getElementById('statusChart');
+        if (statusChartCtx) {
+            new Chart(statusChartCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["{{ __('قيد المراجعة') }}", "{{ __('مقبولة') }}", "{{ __('مرفوضة') }}"],
+                    datasets: [{
+                        data: [{{ $stats['pending'] }}, {{ $stats['accepted'] }}, {{ $stats['rejected'] }}],
+                        backgroundColor: ['#f59e0b', '#10b981', '#f43f5e'],
+                        borderWidth: 0,
+                        hoverOffset: 30,
+                        hoverBackgroundColor: ['#d97706', '#059669', '#e11d48']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 40,
+                                font: { family: 'Cairo', weight: '900', size: 11 },
+                                color: textColor,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Cairo', size: 13 },
+                            bodyFont: { family: 'Cairo', size: 11 },
+                            padding: 15,
+                            cornerRadius: 15
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        }
+
+        /* Daily Trends Area Chart */
+        const dailyChartCtx = document.getElementById('dailyChart');
+        if (dailyChartCtx) {
+            const ctx = dailyChartCtx.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
+            gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: @json($labels),
+                    datasets: [{
+                        label: "{{ __('تدفق الطلبات') }}",
+                        data: @json($data),
+                        borderColor: '#4f46e5',
+                        borderWidth: 5,
+                        pointBackgroundColor: '#4f46e5',
+                        pointBorderColor: isDark ? '#0f172a' : '#ffffff',
+                        pointBorderWidth: 4,
+                        pointRadius: 6,
+                        pointHoverRadius: 9,
+                        tension: 0.5,
+                        fill: true,
+                        backgroundColor: gradient
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleFont: { family: 'Cairo', size: 12 },
+                            bodyFont: { family: 'Cairo', size: 11 },
+                            padding: 15,
+                            cornerRadius: 15
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', drawBorder: false },
+                            ticks: { color: textColor, font: { family: 'Cairo', size: 10, weight: 'bold' }, stepSize: 1 }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: textColor, font: { family: 'Cairo', size: 11, weight: '900' } }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush
 @endsection

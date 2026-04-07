@@ -42,7 +42,7 @@ class SystemComplaintController extends Controller
             $complaintsQuery->where('status', $status);
         }
 
-        $complaints = $complaintsQuery->get();
+        $complaints = $complaintsQuery->paginate(10);
 
         // ===== Stats =====
         $stats = [

@@ -2,20 +2,38 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title')</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>QSS | @yield('title', 'Admin')</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- CSS & JS -->
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script>
+        // Init theme
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     @yield('css')
 </head>
 
-<body>
-    <div class="admin-layout">
+<body class="font-Cairo antialiased text-slate-900 dark:text-slate-100 h-screen flex overflow-hidden relative bg-[var(--main-bg)] selection:bg-brand-primary selection:text-white">
+
+    <div class="admin-layout w-full h-full flex">
 
         <!-- Sidebar -->
-        <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar w-64 h-full bg-[var(--sidebar-bg)] border-l border-slate-200 dark:border-white/5 flex flex-col transition-all duration-500">
 
             <div class="sidebar-header">
                 <h2>Admin Panel</h2>

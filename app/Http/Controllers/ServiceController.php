@@ -382,7 +382,7 @@ class ServiceController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $services = Service::with(['category', 'provider'])->latest()->where('parent_service_id', null)->get();
+        $services = Service::with(['category', 'provider', 'children'])->latest()->where('parent_service_id', null)->paginate(10);
         $stats = [
             'total' => Service::where('parent_service_id', null)->count(),
             'available' => Service::where('is_available', true)->where('parent_service_id', null)->count(),

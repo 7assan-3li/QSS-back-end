@@ -1,149 +1,265 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', __('تفاصيل الطلب #') . $request->id)
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/requests/show.css') }}">
-
-    <div class="page-container">
-
-        {{-- Breadcrumb --}}
-        <div class="breadcrumb">
-            <a href="{{ route('dashboard') }}">الرئيسية</a>
-            <span>/</span>
-            <a href="{{ route('requests.index') }}">الطلبات</a>
-            <span>/</span>
-            طلب #{{ $request->id }}
-        </div>
-
-        {{-- Request Info --}}
-        <div class="card">
-
-            <div class="card-header">
-                <h2>📄 معلومات الطلب</h2>
-                <span class="status {{ $request->status }}">
-                    {{ $request->status }}
-                </span>
+<div class="max-w-6xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
+        <div class="text-start">
+            <h3 class="font-black text-3xl text-slate-800 dark:text-white flex items-center gap-4 text-start font-Cairo">
+                <span class="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-3xl font-Cairo shadow-lg shadow-brand-primary/5">📄</span>
+                {{ __('بيانات الطلب والتقرير المالي') }}
+            </h3>
+            <div class="flex items-center gap-3 text-[10px] font-black text-slate-400 mt-3 mr-20 uppercase tracking-[0.2em] font-Cairo text-start">
+                <span>{{ __('سجل المدفوعات') }}</span>
+                <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <span>{{ __('متابعة العمولات') }}</span>
+                <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <span class="text-brand-primary">{{ __('رقم المعاملة') }} #{{ str_pad($request->id, 4, '0', STR_PAD_LEFT) }}</span>
             </div>
-
-            <div class="info-grid">
-                <div><strong>العميل:</strong> {{ $request->user->name }}</div>
-                <div><strong>تاريخ الطلب:</strong> {{ $request->created_at->format('Y-m-d') }}</div>
-                <div><strong>الإجمالي:</strong> {{ number_format($request->total_price, 2) }} ر.ي</div>
-                <div><strong>العمولة (10%):</strong> {{ number_format($commission, 2) }} ر.ي</div>
-                <div>
-                    <strong>حالة العمولة:</strong>
-                    @if ($request->commission_paid)
-                        <span class="paid">مدفوعة</span>
-                    @else
-                        <span class="unpaid">غير مدفوعة</span>
-                    @endif
-                </div>
-
-            </div>
-            @if (!$request->commission_paid)
-                <div class="payment-card">
-                    <div class="payment-info">
-                        <h4>💰 حالة العمولة</h4>
-                        <p>
-                            العمولة لم يتم تأكيد دفعها بعد.
-                            <br>
-                            عند التأكيد، سيتم اعتبار الطلب مدفوع نهائيًا.
-                        </p>
-                    </div>
-
-                    <form action="{{ route('requests.markPaid', $request->id) }}" method="POST"
-                        onsubmit="return confirmPayment()">
-                        @csrf
-                        @method('PATCH')
-
-                        <button type="submit" class="btn-paid">
-                            ✔️ تأكيد الدفع
-                        </button>
-                    </form>
-                </div>
-            @endif
-
         </div>
+        
+        <div class="flex items-center gap-4">
+             <span class="px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] font-Cairo text-start 
+                @if($request->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20
+                @elseif($request->status == 'completed') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20
+                @elseif($request->status == 'canceled') bg-rose-500/10 text-rose-600 border border-rose-500/20
+                @else bg-slate-100 text-slate-600 border border-slate-200 @endif text-start">
+                {{ __('حالة الطلب') }}: {{ __($request->status) }}
+            </span>
+            <a href="{{ route('requests.index') }}" class="w-12 h-12 flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl hover:text-brand-primary transition-all shadow-sm">
+                <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </a>
+        </div>
+    </div>
 
-        {{-- Services --}}
-        <div class="card">
-            <h3>🛠️ الخدمات</h3>
-
-            <div class="services-list">
-                @foreach ($request->services as $service)
-                    <div class="service-item">
-                        <div>
-                            <strong>{{ $service->name }}</strong>
-                            @if ($service->pivot->is_main)
-                                <span class="main">رئيسية</span>
-                            @endif
+    <!-- Overview Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 text-start">
+        <!-- Main Request Analysis Space -->
+        <div class="lg:col-span-2 space-y-12 text-start">
+            <!-- Information Matrix Card -->
+            <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] relative border border-white dark:border-slate-800/50 text-start font-Cairo">
+                <div class="flex items-center gap-4 mb-14 text-start">
+                    <span class="w-2.5 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/30"></span>
+                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start">{{ __('المعلومات الأساسية للطلب') }}</h4>
+                </div>
+ beach_access                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-12 gap-x-10 text-start">
+                    <div class="flex items-center gap-5 group text-start">
+                        <div class="w-14 h-14 bg-indigo-500/10 text-indigo-600 rounded-[1.3rem] flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm font-Cairo">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </div>
-                        <div>الكمية: {{ $service->pivot->quantity }}</div>
-                        <div>السعر: {{ number_format($service->price, 2) }} ر.ي</div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 font-Cairo text-start">{{ __('صاحب الطلب (العميل)') }}</span>
+                            <span class="text-lg font-black text-slate-800 dark:text-white font-Cairo text-start">{{ $request->user->name }}</span>
+                        </div>
                     </div>
-                @endforeach
+
+                    <div class="flex items-center gap-5 group text-start">
+                        <div class="w-14 h-14 bg-emerald-500/10 text-emerald-600 rounded-[1.3rem] flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm font-Cairo">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 font-Cairo text-start">{{ __('وقت إنشاء المعاملة') }}</span>
+                            <span class="text-lg font-black text-slate-800 dark:text-white font-mono text-start">{{ $request->created_at->format('Y/m/d - H:i') }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-5 group text-start">
+                        <div class="w-14 h-14 bg-amber-500/10 text-amber-600 rounded-[1.3rem] flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm font-Cairo">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16V15"></path></svg>
+                        </div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 font-Cairo text-start">{{ __('إجمالي قيمة الخدمات') }}</span>
+                            <div class="flex items-baseline gap-1 text-start">
+                                <span class="text-2xl font-black text-slate-800 dark:text-white font-mono text-start">{{ number_format($request->total_price, 2) }}</span>
+                                <span class="text-[10px] font-black text-slate-400 font-Cairo text-start">YER</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-5 group text-start">
+                        <div class="w-14 h-14 bg-brand-primary/10 text-brand-primary rounded-[1.3rem] flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm font-Cairo">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        <div class="flex flex-col text-start">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 font-Cairo text-start">{{ __('عمولة المنصة (10%)') }}</span>
+                             <div class="flex items-baseline gap-1 text-start">
+                                <span class="text-2xl font-black text-brand-primary font-mono text-start">{{ number_format($request->total_price * 0.10, 2) }}</span>
+                                <span class="text-[10px] font-black text-slate-400 font-Cairo text-start">YER</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-14 pt-10 border-t border-slate-100 dark:border-slate-800/50 text-start">
+                    <div class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.1em] font-Cairo text-start
+                        @if ($request->commission_paid) bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 @else bg-rose-500/10 text-rose-600 border border-rose-500/20 animate-pulse @endif text-start">
+                        <span class="w-3 h-3 rounded-full @if($request->commission_paid) bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)] @else bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.5)] @endif"></span>
+                        {{ __('حالة سداد العمولة: ') }}{{ $request->commission_paid ? __('تم الاستلام بنجاح') : __('بانتظار التحصيل المالي') }}
+                    </div>
+                </div>
             </div>
-        </div>
 
-        {{-- Commission Bonds --}}
-        <div class="card">
-            <h3>💳 سندات العمولة</h3>
-
-            @if ($request->commissionBonds->count())
-                <div class="bonds-grid">
-                    @foreach ($request->commissionBonds as $bond)
-                        <div class="bond-card">
-                            <img src="{{ asset('storage/' . $bond->image_path) }}">
-
-                            <div class="bond-info">
-                                <div><strong>رقم السند:</strong> {{ $bond->bond_number ?? '—' }}</div>
-                                <div><strong>الوصف:</strong> {{ $bond->description ?? '—' }}</div>
-                                <div>
-                                    <strong>الحالة:</strong>
-                                    <span class="bond-status {{ $bond->status }}">
-                                        {{ $bond->status }}
-                                    </span>
-
-
+            <!-- Asset manifestation Matrix (Services) -->
+            <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl relative border border-white dark:border-slate-800/50 overflow-hidden text-start font-Cairo">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none"></div>
+                <div class="flex items-center gap-4 mb-12 text-start">
+                    <span class="w-2.5 h-10 bg-indigo-600 rounded-full shadow-lg shadow-indigo-600/30"></span>
+                    <h4 class="text-2xl font-black text-slate-800 dark:text-white font-Cairo text-start">{{ __('تفاصيل الخدمات المطلوبة') }}</h4>
+                </div>
+ beach_access
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-start">
+                    @foreach ($request->services as $service)
+                        <div class="flex flex-col gap-6 p-8 bg-white/40 dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-100 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-500 group shadow-sm text-start">
+                            <div class="flex items-center gap-5 text-start">
+                                <div class="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-hover:text-brand-primary group-hover:scale-110 transition-all shadow-inner font-Cairo">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>
+                                </div>
+                                <div class="flex flex-col text-start">
+                                    <h5 class="font-black text-slate-800 dark:text-white text-base font-Cairo text-start">{{ $service->name }}</h5>
+                                    <div class="flex items-center gap-3 mt-2 text-start">
+                                        @if ($service->pivot->is_main)
+                                            <span class="text-[8px] font-black bg-indigo-500 text-white px-2 py-1 rounded-lg uppercase tracking-widest font-Cairo text-start">{{ __('خدمة أساسية') }}</span>
+                                        @endif
+                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-[9px] font-black text-slate-500 lowercase font-Cairo text-start">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                            {{ __('الكمية المطلوبة') }}: {{ str_pad($service->pivot->quantity, 2, '0', STR_PAD_LEFT) }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-6 border-t border-slate-50 dark:border-slate-800/50 flex justify-between items-center text-start">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] font-Cairo text-start font-Cairo">{{ __('سعر الخدمة الفردي') }}</span>
+                                <div class="flex items-baseline gap-1 text-start">
+                                    <span class="text-xl font-black text-brand-primary font-mono text-start">{{ number_format($service->price, 2) }}</span>
+                                    <span class="text-[8px] font-black text-slate-400 font-Cairo text-start">YER</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="bond-actions">
-
-                            @if ($bond->status === 'pending')
-                                <form action="{{ route('commission-bonds.approve', $bond) }}" method="POST"
-                                    onsubmit="return confirm('هل أنت متأكد من قبول السند؟')">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button class="btn-approve">قبول</button>
-                                </form>
-
-                                <form action="{{ route('commission-bonds.reject', $bond) }}" method="POST"
-                                    onsubmit="return confirm('هل أنت متأكد من رفض السند؟')">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button class="btn-reject">رفض</button>
-                                </form>
-                            @endif
-
-                        </div>
                     @endforeach
                 </div>
-            @else
-                <p class="empty">لا توجد سندات عمولة لهذا الطلب</p>
-            @endif
+            </div>
         </div>
 
+        <!-- Audit & Compliance Sidebar -->
+        <div class="space-y-12 text-start">
+            @if (!$request->commission_paid)
+                <div class="card-premium glass-panel p-10 rounded-[3rem] shadow-2xl border border-rose-500/20 relative overflow-hidden group text-start font-Cairo">
+                    <div class="absolute inset-0 bg-gradient-to-br from-rose-500/[0.05] to-transparent pointer-events-none animate-pulse"></div>
+                    <div class="relative z-10 space-y-8 text-start">
+                        <div class="flex items-center gap-4 text-start">
+                            <div class="w-12 h-12 bg-rose-500/10 text-rose-600 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/10 font-Cairo">
+                                <svg class="w-6 h-6 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h4 class="font-black text-slate-800 dark:text-white text-lg font-Cairo text-start">{{ __('تأكيد استلام العمولة') }}</h4>
+                        </div>
+                        <p class="text-[11px] font-black text-slate-500 dark:text-slate-400 leading-[1.8] font-Cairo text-start" dir="rtl">
+                            ⚠️ تنبيه الإدارة: الضغط على الزر أدناه يعني أن المنصة قد استلمت مبلغ العمولة نقدياً أو بنكياً بشكل نهائي.
+                        </p>
+                        
+                        <form id="mark-paid-form" action="{{ route('requests.markPaid', $request->id) }}" method="POST" class="text-start">
+                            @csrf
+                            @method('PATCH')
+                            <button type="button" 
+                                onclick="confirmCommissionPayment()"
+                                class="w-full py-5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-[1.5rem] text-[10px] font-black shadow-[0_20px_40px_-5px_rgba(16,185,129,0.3)] hover:scale-[1.05] active:scale-95 transition-all font-Cairo flex items-center justify-center gap-3">
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                {{ __('تأكيد استلام المبلغ وإغلاق الملف') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Audit Trail: Financial Bonds -->
+            <div class="card-premium glass-panel p-10 rounded-[3rem] shadow-2xl border border-white dark:border-slate-800/40 text-start font-Cairo">
+                <div class="flex items-center gap-4 mb-10 text-start">
+                    <span class="w-2 h-8 bg-slate-400 rounded-full shadow-sm"></span>
+                    <h4 class="font-black text-slate-800 dark:text-white text-sm font-Cairo uppercase tracking-[0.2em] text-start">{{ __('سندات الدفع المرفقة') }}</h4>
+                </div>
+
+                @if ($request->commissionBonds->count())
+                    <div class="space-y-10 text-start">
+                        @foreach ($request->commissionBonds as $bond)
+                            <div class="group/bond space-y-6 text-start font-Cairo">
+                                <div class="relative aspect-video rounded-[2rem] overflow-hidden shadow-inner border border-slate-100 dark:border-slate-800 group-hover/bond:shadow-xl transition-all duration-500 text-start">
+                                    <img src="{{ asset('storage/' . $bond->image_path) }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover/bond:scale-110">
+                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover/bond:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                                        <a href="{{ asset('storage/' . $bond->image_path) }}" target="_blank" class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-white backdrop-blur-xl hover:scale-110 transition-transform">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 px-2 text-start">
+                                    <div class="flex justify-between items-center text-start">
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest font-Cairo text-start">{{ __('رقم الإيصال / السند') }}</span>
+                                        <span class="text-[11px] font-black text-slate-800 dark:text-white font-mono text-start"># {{ $bond->bond_number ?? '—' }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-start">
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest font-Cairo text-start">{{ __('حالة مراجعة السند') }}</span>
+                                        <span class="px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter font-Cairo text-start
+                                            @if($bond->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20
+                                            @elseif($bond->status == 'approved') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20
+                                            @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif text-start">
+                                            {{ __($bond->status) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                @if ($bond->status === 'pending')
+                                    <div class="grid grid-cols-2 gap-4 pt-4 text-start font-Cairo">
+                                        <form id="approve-bond-{{ $bond->id }}" action="{{ route('commission-bonds.approve', $bond) }}" method="POST" class="text-start">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="button" 
+                                                onclick="confirmAction('approve-bond-{{ $bond->id }}', {
+                                                    title: '{{ __('قبول السند المالي') }}',
+                                                    text: '{{ __('هل تأكدت من صحة بيانات السند البنكي؟ سيتم اعتماد التحصيل المالي لهذا السجل.') }}',
+                                                    icon: 'success',
+                                                    confirmButtonText: '{{ __('تأكيد القبول') }}'
+                                                })"
+                                                class="w-full py-4 bg-emerald-500/10 text-emerald-600 rounded-[1.2rem] text-[9px] font-black hover:bg-emerald-500 hover:text-white transition-all font-Cairo shadow-sm">{{ __('موافقــــــــة') }}</button>
+                                        </form>
+                                        <form id="reject-bond-{{ $bond->id }}" action="{{ route('commission-bonds.reject', $bond) }}" method="POST" class="text-start">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="button" 
+                                                onclick="confirmAction('reject-bond-{{ $bond->id }}', {
+                                                    title: '{{ __('رفض السند المالي') }}',
+                                                    text: '{{ __('هل أنت متأكد من عدم صحة هذا السند؟ سيتم إخطار الطرف الأخر بالرفض.') }}',
+                                                    icon: 'error',
+                                                    confirmButtonText: '{{ __('تأكيد الرفض') }}'
+                                                })"
+                                                class="w-full py-4 bg-rose-500/10 text-rose-600 rounded-[1.2rem] text-[9px] font-black hover:bg-rose-500 hover:text-white transition-all font-Cairo shadow-sm">{{ __('رفــــــــض') }}</button>
+                                        </form>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="py-16 text-center opacity-30 flex flex-col items-center justify-center text-start" dir="rtl">
+                        <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-3xl mb-4 font-Cairo">🔕</div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] font-Cairo text-start" dir="rtl">لا توجد سندات مرفقة</span>
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
+</div>
 @endsection
 
-@section('js')
+@push('scripts')
     <script>
-        function confirmPayment() {
-            return confirm(
-                "⚠️ تأكيد الدفع\n\n" +
-                "هل أنت متأكد أن العمولة تم دفعها بالفعل؟\n" +
-                "لا يمكن التراجع بعد التأكيد."
-            );
+        function confirmCommissionPayment() {
+            confirmAction('mark-paid-form', {
+                title: '{{ __('تأكيد استلام العمولة') }}',
+                text: '{{ __('هل تؤكد استلام مبلغ العمولة نقدياً أو بنكياً؟ سيتم تحديث حالة الطلب إلى -مدفوع- نهائياً.') }}',
+                icon: 'warning',
+                confirmButtonText: '{{ __('تأكيد التحصيل') }}'
+            });
         }
     </script>
-@endsection
+@endpush
