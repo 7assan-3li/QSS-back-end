@@ -186,17 +186,61 @@ public function index()
     public function edit(User $user)
     {
         $this->authorize('update', $user);
+        $user->load('profile');
         return view('users.edit', ['user' => $user]);
     }
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
-        $validated = $request->validate([
+        
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'role' => 'required|string|in:employee,seeker,provider',
-        ]);
-        $user->update($validated);
+        ];
+
+        // Add provider-specific rules
+        if ($request->role === Role::PROVIDER) {
+            $rules = array_merge($rules, [
+                'job_title' => 'nullable|string|max:255',
+                'bio' => 'nullable|string',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+                'commission' => 'nullable|numeric|min:0|max:100',
+                'provider_verified_until' => 'nullable|date',
+            ]);
+        }
+
+        $validated = $request->validate($rules);
+
+        // Core User Update
+        $userFields = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role'],
+        ];
+
+        if ($request->role === Role::PROVIDER) {
+            $userFields['commission'] = $validated['commission'] ?? null;
+            $userFields['no_commission'] = $request->has('no_commission');
+            $userFields['provider_verified_until'] = $validated['provider_verified_until'] ?? null;
+        }
+
+        $user->update($userFields);
+
+        // Profile Update (Providers/Seekers often have profiles)
+        if ($request->role === Role::PROVIDER) {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'job_title' => $request->job_title,
+                    'bio' => $request->bio,
+                    'latitude' => $request->latitude,
+                    'longitude' => $request->longitude,
+                ]
+            );
+        }
+
         return to_route('users.index')->with('success', 'تم تحديث بيانات المستخدم بنجاح');
     }
 

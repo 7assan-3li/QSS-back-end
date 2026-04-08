@@ -7,6 +7,7 @@
 @source "../**/*.vue";
 
 @theme {
+    --font-Cairo: 'Cairo', sans-serif;
     --font-sans: 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     
     --color-brand-primary: #0d9488;

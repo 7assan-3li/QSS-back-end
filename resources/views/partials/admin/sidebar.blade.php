@@ -18,57 +18,90 @@
 
     <!-- Navigation Scroll Area -->
     <nav class="flex-1 space-y-3 overflow-y-auto px-6 pb-40 custom-scrollbar relative z-10 font-Cairo">
-        <!-- Dashboard Section -->
-        <div class="mb-8">
-            <p
-                class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('نظرة عامة') }}</p>
-            <a href="{{ route('dashboard') }}"
-                class="sidebar-item {{ Request::routeIs('dashboard') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                <div
-                    class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('dashboard') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                        </path>
-                    </svg>
-                </div>
-                <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('الرئيسية') }}</span>
-            </a>
-        </div>
-
-        <!-- Human Resources Section -->
+        <!-- Overview Section -->
         <div class="mb-8 font-Cairo">
             <p
                 class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('المستخدمين والشركاء') }}</p>
+                {{ __('نظرة عامة والتحليل') }}</p>
             <div class="space-y-2 font-Cairo">
-                <a href="{{ route('users.index') }}"
-                    class="sidebar-item {{ Request::routeIs('users.index') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                <a href="{{ route('dashboard') }}"
+                    class="sidebar-item {{ Request::routeIs('dashboard') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('users.index') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('dashboard') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13.732 4c-.77.234-1.476.614-2.066 1.114M6.718 4c.77.234 1.476.614 2.066 1.114M12 7h.01">
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                             </path>
                         </svg>
                     </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('إدارة المستخدمين') }}</span>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('الرئيسية') }}</span>
                 </a>
 
-                <a href="{{ route('admin.providers.index') }}"
-                    class="sidebar-item {{ Request::routeIs('admin.providers.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                <a href="{{ route('admin.financial.index') }}"
+                    class="sidebar-item {{ Request::routeIs('admin.financial.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.providers.*') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.financial.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                             </path>
                         </svg>
                     </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('مزودي الخدمات') }}</span>
+                    <span
+                        class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('التقارير المالية') }}</span>
+                    @if(isset($pending_withdrawals_count) && $pending_withdrawals_count > 0)
+                        <span class="ms-auto bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-emerald-500/20 italic">{{ $pending_withdrawals_count }}</span>
+                    @endif
+                </a>
+            </div>
+        </div>
+
+        <!-- Supervision Section -->
+        <div class="mb-8 font-Cairo">
+            <p
+                class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
+                {{ __('الإشراف والرقابة') }}</p>
+            <div class="space-y-2 font-Cairo">
+                <a href="{{ route('request-complaints.index') }}"
+                    class="sidebar-item {{ Request::routeIs('request-complaints.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('request-complaints.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('نزاعات الطلبات') }}</span>
+                    @if(isset($pending_complaints_count) && $pending_complaints_count > 0)
+                        <span class="ms-auto bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-amber-500/20 italic">{{ $pending_complaints_count }}</span>
+                    @endif
                 </a>
 
+                <a href="{{ route('system-complaints.index') }}"
+                    class="sidebar-item {{ Request::routeIs('system-complaints.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('system-complaints.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z">
+                            </path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('شكاوى النظام') }}</span>
+                    @if(isset($pending_system_complaints_count) && $pending_system_complaints_count > 0)
+                        <span class="ms-auto bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-rose-500/20 italic">{{ $pending_system_complaints_count }}</span>
+                    @endif
+                </a>
+            </div>
+        </div>
+
+        <!-- Partners & Verification Section -->
+        <div class="mb-8 font-Cairo">
+            <p
+                class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
+                {{ __('إدارة الشركاء والتوثيق') }}</p>
+            <div class="space-y-2 font-Cairo">
                 <a href="{{ route('provider-requests.index') }}"
                     class="sidebar-item {{ Request::routeIs('provider-requests.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
@@ -80,94 +113,59 @@
                         </svg>
                     </div>
                     <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('طلبات الشراكة') }}</span>
+                    @if(isset($pending_provider_requests_count) && $pending_provider_requests_count > 0)
+                        <span class="ms-auto bg-brand-primary text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-brand-primary/20 italic">{{ $pending_provider_requests_count }}</span>
+                    @endif
                 </a>
 
                 <a href="{{ route('verification-requests.index') }}"
                     class="sidebar-item {{ Request::routeIs('verification-requests.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('verification-requests.*') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('verification-requests.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
                             </path>
                         </svg>
                     </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('توثيق الحسابات') }}</span>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('توثيق الهوية') }}</span>
+                    @if(isset($pending_id_verifications_count) && $pending_id_verifications_count > 0)
+                        <span class="ms-auto bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-amber-500/20 italic">{{ $pending_id_verifications_count }}</span>
+                    @endif
+                </a>
+
+                <a href="{{ route('admin.providers.index') }}"
+                    class="sidebar-item {{ Request::routeIs('admin.providers.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.providers.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('قائمة المزودين') }}</span>
                 </a>
             </div>
         </div>
 
-        <!-- Economic Operations Section -->
+        <!-- Marketplace & Users Section -->
         <div class="mb-8 font-Cairo">
             <p
                 class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('المبيعات والاشتراكات') }}</p>
+                {{ __('إدارة السوق والمستخدمين') }}</p>
             <div class="space-y-2 font-Cairo">
-                <a href="{{ route('admin.points-packages.index') }}"
-                    class="sidebar-item {{ Request::routeIs('admin.points-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                <a href="{{ route('users.index') }}"
+                    class="sidebar-item {{ Request::routeIs('users.index') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.points-packages.*') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('users.index') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4">
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13.732 4c-.77.234-1.476.614-2.066 1.114M6.718 4c.77.234 1.476.614 2.066 1.114M12 7h.01">
                             </path>
                         </svg>
                     </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('إدارة باقات النقاط') }}</span>
-                </a>
-
-                <a href="{{ route('admin.user-points-packages.index') }}"
-                    class="sidebar-item {{ Request::routeIs('admin.user-points-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.user-points-packages.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('طلبات شحن النقاط') }}</span>
-                </a>
-
-                <a href="{{ route('admin.withdrawals.index') }}"
-                    class="sidebar-item {{ Request::routeIs('admin.withdrawals.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.withdrawals.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('طلبات سحب الأرباح') }}</span>
-                </a>
-
-                <a href="{{ route('user-verification-packages.index') }}"
-                    class="sidebar-item {{ Request::routeIs('user-verification-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('user-verification-packages.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span
-                        class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('اشتراكات التوثيق') }}</span>
-                </a>
-
-                <a href="{{ route('admin.financial.index') }}"
-                    class="sidebar-item {{ Request::routeIs('admin.financial.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.financial.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span
-                        class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('التقارير المالية') }}</span>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('إدارة المستخدمين') }}</span>
                 </a>
 
                 <a href="{{ route('requests.index') }}"
@@ -182,61 +180,7 @@
                     </div>
                     <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('سجل طلبات الخدمات') }}</span>
                 </a>
-            </div>
-        </div>
 
-        <!-- Technical & Financial Section -->
-        <div class="mb-8 font-Cairo">
-            <p
-                class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('إدارة الخدمات') }}</p>
-            <div class="space-y-2 font-Cairo">
-                <a href="{{ route('banks.index') }}"
-                    class="sidebar-item {{ Request::routeIs('banks.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('banks.*') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('الحسابات البنكية') }}</span>
-                </a>
-
-                <a href="{{ route('services.index') }}"
-                    class="sidebar-item {{ Request::routeIs('services.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('services.*') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('إدارة الخدمات') }}</span>
-                </a>
-
-                <a href="{{ route('verification-packages.index') }}"
-                    class="sidebar-item {{ Request::routeIs('verification-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
-                    <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('verification-packages.*') ? 'bg-white/20 text-white' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('حزم التوثيق') }}</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Infrastructure Section -->
-        <div class="mb-8 font-Cairo">
-            <p
-                class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('البنية التحتية') }}</p>
-            <div class="space-y-2 font-Cairo">
                 <a href="{{ route('categories.index') }}"
                     class="sidebar-item {{ Request::routeIs('categories.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
@@ -249,26 +193,18 @@
                     </div>
                     <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('أقسام السوق') }}</span>
                 </a>
-            </div>
-        </div>
 
-        <!-- Governance Section -->
-        <div class="mb-8 font-Cairo">
-            <p
-                class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('مركز الشكاوى') }}</p>
-            <div class="space-y-2 font-Cairo">
-                <a href="{{ route('request-complaints.index') }}"
-                    class="sidebar-item {{ Request::routeIs('request-complaints.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                <a href="{{ route('services.index') }}"
+                    class="sidebar-item {{ Request::routeIs('services.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('request-complaints.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('services.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100 group-hover:rotate-12' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                             </path>
                         </svg>
                     </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('نزاعات الطلبات') }}</span>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('إدارة الخدمات') }}</span>
                 </a>
             </div>
         </div>
@@ -277,19 +213,44 @@
         <div class="mb-8 font-Cairo">
             <p
                 class="text-[10px] font-black uppercase tracking-[0.3em] px-4 mb-5 italic font-Cairo text-start subpixel-antialiased opacity-60">
-                {{ __('إعدادات المنصة') }}</p>
+                {{ __('إعدادات المنصة والتهيئة') }}</p>
             <div class="space-y-2 font-Cairo">
-                <a href="{{ route('system-complaints.index') }}"
-                    class="sidebar-item {{ Request::routeIs('system-complaints.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                <a href="{{ route('admin.points-packages.index') }}"
+                    class="sidebar-item {{ Request::routeIs('admin.points-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                     <div
-                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('system-complaints.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.points-packages.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z">
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4">
                             </path>
                         </svg>
                     </div>
-                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('شكاوى النظام') }}</span>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('باقات النقاط') }}</span>
+                </a>
+
+                <a href="{{ route('verification-packages.index') }}"
+                    class="sidebar-item {{ Request::routeIs('verification-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('verification-packages.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('حزم التوثيق') }}</span>
+                </a>
+
+                <a href="{{ route('banks.index') }}"
+                    class="sidebar-item {{ Request::routeIs('banks.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('banks.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('الحسابات البنكية') }}</span>
                 </a>
 
                 <a href="{{ route('settings.index') }}"

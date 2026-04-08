@@ -16,6 +16,7 @@ use App\Http\Controllers\VerificationRequestController;
 use App\Http\Controllers\PointsPackageController;
 use App\Http\Controllers\UserPointsPackageController;
 use App\Http\Controllers\WithdrawRequestController;
+use App\Http\Controllers\RequestComplaintController;
 use App\Models\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
@@ -41,8 +42,10 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/financial-report', [FinancialController::class, 'index'])->name('admin.financial.index');
     Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class, 'switch'])->name('lang.switch');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+    Route::patch('/admin/reviews/{id}/toggle', [\App\Http\Controllers\ReviewController::class, 'toggleVisibilityAdmin'])->name('admin.reviews.toggle');
 
     // Provider Management Routes
+    Route::get('/admin/providers/export', [AdminProviderController::class, 'exportDetailed'])->name('admin.providers.export');
     Route::get('/admin/providers', [AdminProviderController::class, 'index'])->name('admin.providers.index');
     Route::get('/admin/providers/{id}', [AdminProviderController::class, 'show'])->name('admin.providers.show');
 
@@ -98,6 +101,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         ->name('requests.markPaid');
 
     //request commission bonds
+    Route::get('/commission-bonds', [RequestCommissionBondController::class, 'indexAdmin'])->name('commission-bonds.index');
     Route::patch('/request-commission-bonds/{bond}/approve', [RequestCommissionBondController::class, 'approve'])
         ->name('commission-bonds.approve');
 
@@ -145,11 +149,13 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::patch('/admin/withdrawals/{id}/approve', [WithdrawRequestController::class, 'approveWebAdmin'])->name('admin.withdrawals.approve');
     Route::patch('/admin/withdrawals/{id}/reject', [WithdrawRequestController::class, 'rejectWebAdmin'])->name('admin.withdrawals.reject');
     // System Complaints
+    Route::get('/system-complaints/export', [SystemComplaintController::class, 'exportDetailed'])->name('system-complaints.export');
     Route::get('/system-complaints', [SystemComplaintController::class, 'indexAdmin'])->name('system-complaints.index');
     Route::get('/system-complaints/{systemComplaint}', [SystemComplaintController::class, 'showAdmin'])->name('system-complaints.show');
     Route::patch('/system-complaints/{systemComplaint}/status', [SystemComplaintController::class, 'updateStatus'])->name('system-complaints.update-status');
 
     // Request Complaints
+    Route::get('/request-complaints/export', [RequestComplaintController::class, 'exportDetailed'])->name('request-complaints.export');
     Route::get('/request-complaints', [\App\Http\Controllers\RequestComplaintController::class, 'indexAdmin'])->name('request-complaints.index');
     Route::get('/request-complaints/{requestComplaint}', [\App\Http\Controllers\RequestComplaintController::class, 'showAdmin'])->name('request-complaints.show');
     Route::patch('/request-complaints/{requestComplaint}/status', [\App\Http\Controllers\RequestComplaintController::class, 'updateStatus'])->name('request-complaints.update-status');

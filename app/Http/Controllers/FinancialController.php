@@ -33,10 +33,12 @@ class FinancialController extends Controller
 
         // Calculate Percentage Trends
         $trends = [
-            'inflow' => $this->calculateTrend($metrics['totalInflow'], $prevMetrics['totalInflow']),
-            'outflow' => $this->calculateTrend($metrics['totalOutflow'], $prevMetrics['totalOutflow']),
-            'profit' => $this->calculateTrend($metrics['totalProfit'], $prevMetrics['totalProfit']),
-            'verification' => $this->calculateTrend($metrics['verificationRevenue'], $prevMetrics['verificationRevenue']),
+            'totalInflow' => $this->calculateTrend($metrics['totalInflow'], $prevMetrics['totalInflow']),
+            'pointsRevenue' => $this->calculateTrend($metrics['pointsRevenue'], $prevMetrics['pointsRevenue']),
+            'verificationRevenue' => $this->calculateTrend($metrics['verificationRevenue'], $prevMetrics['verificationRevenue']),
+            'commissionRevenue' => $this->calculateTrend($metrics['paidCommissions'], $prevMetrics['paidCommissions']),
+            'totalOutflow' => $this->calculateTrend($metrics['totalOutflow'], $prevMetrics['totalOutflow']),
+            'totalProfit' => $this->calculateTrend($metrics['totalProfit'], $prevMetrics['totalProfit']),
         ];
 
         // 3. Top Performing Services (by Commission)
@@ -104,24 +106,11 @@ class FinancialController extends Controller
 
     private function getFinancialMetrics($from, $to)
     {
-        $totalInflow = UserPointsPackage::where('status', 'approved')
+        $pointsRevenue = UserPointsPackage::where('status', 'approved')
             ->whereBetween('created_at', [$from, $to])
             ->with('package')
             ->get()
             ->sum(fn($up) => $up->package->price ?? 0);
-
-        $totalOutflow = WithdrawRequest::where('status', 'approved')
-            ->whereBetween('created_at', [$from, $to])
-            ->sum('amount');
-
-        $paidCommissions = RequestModel::where('commission_paid', true)
-            ->whereBetween('created_at', [$from, $to])
-            ->sum('commission_amount');
-
-        $accruedCommissions = RequestModel::where('commission_paid', false)
-            ->where('commission_amount', '>', 0)
-            ->whereBetween('created_at', [$from, $to])
-            ->sum('commission_amount');
 
         $verificationRevenue = UserVerificationPackages::where('status', 'approved')
             ->whereBetween('created_at', [$from, $to])
@@ -129,13 +118,35 @@ class FinancialController extends Controller
             ->get()
             ->sum(fn($uv) => $uv->verificationPackage->price ?? 0);
 
+        $paidCommissions = RequestModel::where('commission_paid', true)
+            ->whereBetween('created_at', [$from, $to])
+            ->sum('commission_amount');
+
+        $totalOutflow = WithdrawRequest::where('status', 'approved')
+            ->whereBetween('created_at', [$from, $to])
+            ->sum('amount');
+
+        $totalInflow = $pointsRevenue + $verificationRevenue + $paidCommissions;
+
+        $accruedCommissions = RequestModel::where('commission_paid', false)
+            ->where('commission_amount', '>', 0)
+            ->whereBetween('created_at', [$from, $to])
+            ->sum('commission_amount');
+
+        // New: Global Point Liability Metrics
+        $totalSystemPoints = \App\Models\User::sum(DB::raw('paid_points + bonus_points'));
+        $withdrawablePoints = \App\Models\User::where('role', 'provider')->sum(DB::raw('paid_points + bonus_points'));
+
         return [
             'totalInflow' => (float)$totalInflow,
-            'totalOutflow' => (float)$totalOutflow,
-            'paidCommissions' => (float)$paidCommissions,
-            'accruedCommissions' => (float)$accruedCommissions,
+            'pointsRevenue' => (float)$pointsRevenue,
             'verificationRevenue' => (float)$verificationRevenue,
-            'totalProfit' => (float)($paidCommissions + $verificationRevenue)
+            'paidCommissions' => (float)$paidCommissions,
+            'totalOutflow' => (float)$totalOutflow,
+            'accruedCommissions' => (float)$accruedCommissions,
+            'totalProfit' => (float)($paidCommissions + $verificationRevenue),
+            'totalSystemPoints' => (float)$totalSystemPoints,
+            'withdrawablePoints' => (float)$withdrawablePoints,
         ];
     }
 

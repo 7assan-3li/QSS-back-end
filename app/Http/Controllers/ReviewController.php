@@ -131,4 +131,14 @@ class ReviewController extends Controller
             'review' => $review,
         ], 200);
     }
+
+    public function toggleVisibilityAdmin($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->update([
+            'is_hidden' => !$review->is_hidden
+        ]);
+
+        return redirect()->back()->with('success', 'تم تحديث حالة ظهور التقييم بنجاح!');
+    }
 }

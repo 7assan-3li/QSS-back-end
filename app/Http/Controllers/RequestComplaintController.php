@@ -45,10 +45,10 @@ class RequestComplaintController extends Controller
         }
 
         $requestComplaint = RequestComplaint::create([
-            'title' =>$request->title,
-            'type' => $request->type,
-            'content' => $request->content,
-            'request_id' => $request->request_id,
+            'title' => $request->input('title'),
+            'type' => $request->input('type'),
+            'content' => $request->input('content'),
+            'request_id' => $request->input('request_id'),
             'user_id' => Auth::id(),
         ]);
         return response()->json([
@@ -124,5 +124,62 @@ class RequestComplaintController extends Controller
         ]);
 
         return back()->with('success', 'تم تحديث حالة الشكوى بنجاح');
+    }
+
+    /**
+     * Export detailed Request Complaints to CSV.
+     */
+    public function exportDetailed(\Illuminate\Http\Request $request)
+    {
+        $status = $request->get('status');
+        $query = RequestComplaint::with(['request.user', 'user'])->latest();
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->get();
+        
+        $filename = "qss_request_complaints_" . date('Y-m-d') . ".csv";
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = [
+            __('كود الشكوى'), 
+            __('العنوان'), 
+            __('النوع'), 
+            __('رقم الطلب'), 
+            __('اسم الشاكي'), 
+            __('الحالة'), 
+            __('محتوى الشكوى'), 
+            __('تاريخ التقديم')
+        ];
+
+        $callback = function() use($complaints, $columns) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            fputcsv($file, $columns);
+
+            foreach ($complaints as $c) {
+                fputcsv($file, [
+                    '#' . str_pad($c->id, 5, '0', STR_PAD_LEFT),
+                    $c->title,
+                    $c->type,
+                    '#' . ($c->request_id ?? '---'),
+                    $c->user->name ?? '---',
+                    __($c->status),
+                    $c->content,
+                    $c->created_at->format('Y-m-d H:i')
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

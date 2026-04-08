@@ -109,13 +109,23 @@
 
     <!-- Payout Index Table Matrix -->
     <div class="card-premium glass-panel rounded-[4.5rem] overflow-hidden shadow-2xl relative border border-white dark:border-slate-800/50 text-start font-Cairo">
-        <div class="px-12 py-10 border-b border-white dark:border-slate-800/50 bg-slate-50/40 dark:bg-slate-950/20 text-start font-Cairo">
-            <h4 class="font-black text-xl font-Cairo text-start italic">{{ __('البيان الختامي لسجل شكاوى النظام') }}</h4>
-            <p class="text-[10px] font-black uppercase tracking-[0.3em] mt-2 text-start font-Cairo opacity-60">{{ __('عرض شامل لجميع الملفات الفنية والتقنية المقدمة من شركاء المنصة.') }}</p>
+        <div class="px-12 py-10 border-b border-white dark:border-slate-800/50 bg-slate-50/40 dark:bg-slate-950/20 flex justify-between items-center text-start font-Cairo">
+            <div class="text-start">
+                <h4 class="font-black text-xl font-Cairo text-start italic">{{ __('البيان الختامي لسجل شكاوى النظام') }}</h4>
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] mt-2 text-start font-Cairo opacity-60">{{ __('عرض شامل لجميع الملفات الفنية والتقنية المقدمة من شركاء المنصة.') }}</p>
+            </div>
+
+            <a href="{{ route('system-complaints.export', request()->all()) }}" class="bg-rose-600 text-white px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center gap-4 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-rose-600/20">
+                <span class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-sm italic">📥</span>
+                <div class="flex flex-col items-start leading-none">
+                    <span class="font-Cairo">{{ __('تصدير تقارير الجودة') }}</span>
+                    <span class="text-[8px] opacity-60 font-mono tracking-normal lowercase">{{ __('.csv (Excel)') }}</span>
+                </div>
+            </a>
         </div>
         
         <div class="overflow-x-auto text-start">
-            <table class="w-full text-start">
+            <table id="system-complaints-table" class="w-full text-start">
                 <thead class="bg-slate-50/80 dark:bg-slate-900/40 font-black text-[9px] uppercase tracking-[0.3em] border-b border-slate-100 dark:border-slate-800/50 font-Cairo text-start opacity-60">
                     <tr>
                         <th class="px-10 py-6 text-start">UUID / ID</th>

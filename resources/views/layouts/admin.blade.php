@@ -84,6 +84,44 @@
                 }
             });
         }
+
+        /**
+         * Universal CSV Export Utility (Enterprise Version)
+         * Supports Arabic characters and cleans data for Excel compatibility.
+         */
+        window.exportTableToCSV = function(tableId, filename) {
+            let csv = [];
+            const table = document.getElementById(tableId) || document.querySelector('table');
+            if (!table) return;
+            
+            const rows = table.querySelectorAll(`tr`);
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                // Skip rows without columns (like empty states)
+                if (cols.length === 0) continue;
+                
+                for (let j = 0; j < cols.length; j++) {
+                    // Skip action columns usually containing buttons/links (if they have no text or specific classes)
+                    if (cols[j].classList.contains('text-center') && i > 0 && cols[j].querySelector('a, button')) {
+                        // Optional: skip action column if desired. For now, we take text.
+                    }
+                    
+                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").replace(/(\s\s+)/gm, " ");
+                    row.push('"' + data.trim() + '"');
+                }
+                csv.push(row.join(","));
+            }
+            
+            const BOM = "\uFEFF";
+            const csvData = BOM + csv.join("\n");
+            const csvFile = new Blob([csvData], {type: "text/csv;charset=utf-8;"});
+            const downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        }
     </script>
     
     <style>

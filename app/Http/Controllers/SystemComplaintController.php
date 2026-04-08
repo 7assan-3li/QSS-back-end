@@ -113,4 +113,61 @@ class SystemComplaintController extends Controller
 
         return back()->with('success', 'تم تحديث حالة الشكوى بنجاح');
     }
+
+    /**
+     * Export detailed System Complaints to CSV.
+     */
+    public function exportDetailed(Request $request)
+    {
+        $status = $request->get('status');
+        $query = SystemComplaint::with('user')->latest();
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->get();
+        
+        $filename = "qss_system_reports_" . date('Y-m-d') . ".csv";
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = [
+            __('كود البلاغ'), 
+            __('العنوان'), 
+            __('النوع'), 
+            __('المصدر'), 
+            __('صاحب البلاغ'), 
+            __('الحالة'), 
+            __('محتوى البلاغ'), 
+            __('تاريخ التقديم')
+        ];
+
+        $callback = function() use($complaints, $columns) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            fputcsv($file, $columns);
+
+            foreach ($complaints as $c) {
+                fputcsv($file, [
+                    '#' . str_pad($c->id, 5, '0', STR_PAD_LEFT),
+                    $c->title,
+                    $c->type,
+                    $c->app_source === 'provider' ? __('تطبيق المزود') : __('تطبيق العميل'),
+                    $c->user->name ?? '---',
+                    __($c->status),
+                    $c->content,
+                    $c->created_at->format('Y-m-d H:i')
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

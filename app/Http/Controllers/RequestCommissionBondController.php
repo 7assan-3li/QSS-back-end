@@ -120,4 +120,25 @@ class RequestCommissionBondController extends Controller
             'details' => $details,
         ]);
     }
+
+    public function indexAdmin(Request $request)
+    {
+        $status = $request->get('status');
+        $query = RequestCommissionBond::with(['request.user', 'request.main_service.provider'])->latest();
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $bonds = $query->paginate(15);
+
+        $stats = [
+            'total' => RequestCommissionBond::count(),
+            'pending' => RequestCommissionBond::where('status', 'pending')->count(),
+            'approved' => RequestCommissionBond::where('status', 'approved')->count(),
+            'total_amount' => RequestCommissionBond::where('status', 'approved')->sum('amount'),
+        ];
+
+        return view('admin.commissionBonds.index', compact('bonds', 'stats', 'status'));
+    }
 }
