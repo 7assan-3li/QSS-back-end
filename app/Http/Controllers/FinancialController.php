@@ -84,22 +84,28 @@ class FinancialController extends Controller
         $sixMonthsAgo = Carbon::now()->subMonths(6)->startOfMonth();
         $monthlyData = $this->getMonthlyTrendData($sixMonthsAgo);
 
-        // 6. Detailed Tables (Paginated)
-        $detailedInflows = UserPointsPackage::where('status', 'approved')
+        // 6. Detailed Tables (Paginated independently)
+        $detailedPoints = UserPointsPackage::where('status', 'approved')
             ->whereBetween('created_at', [$fromDate, $toDate])
             ->with(['user', 'package'])
             ->latest()
-            ->paginate(8, ['*'], 'inflow_page');
+            ->paginate(10, ['*'], 'page_points');
 
-        $detailedOutflows = WithdrawRequest::where('status', 'approved')
+        $detailedVerifications = UserVerificationPackages::where('status', 'approved')
+            ->whereBetween('created_at', [$fromDate, $toDate])
+            ->with(['user', 'verificationPackage'])
+            ->latest()
+            ->paginate(10, ['*'], 'page_verif');
+
+        $detailedWithdrawals = WithdrawRequest::where('status', 'approved')
             ->whereBetween('created_at', [$fromDate, $toDate])
             ->with(['user', 'admin'])
             ->latest()
-            ->paginate(8, ['*'], 'outflow_page');
+            ->paginate(10, ['*'], 'page_withdraw');
 
         return view('admin.financial.index', array_merge(
             $metrics,
-            compact('trends', 'topServices', 'alerts', 'detailedInflows', 'detailedOutflows', 'fromDate', 'toDate'),
+            compact('trends', 'topServices', 'alerts', 'detailedPoints', 'detailedVerifications', 'detailedWithdrawals', 'fromDate', 'toDate'),
             $monthlyData
         ));
     }

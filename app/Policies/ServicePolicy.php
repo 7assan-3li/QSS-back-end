@@ -38,7 +38,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        return ($user->role === Role::PROVIDER && $user->id === $service->provider_id);
+        return ($user->role === Role::PROVIDER && $user->id === $service->provider_id) || $user->role === Role::ADMIN;
     }
 
     /**

@@ -181,27 +181,16 @@ class ServiceController extends Controller
     {
         $this->authorize('update', $service);
 
-        $rules = [
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|nullable|string',
-            'price' => 'sometimes|required|numeric|min:0',
-            'category_id' => 'sometimes|required|exists:categories,id',
-            'parent_service_id' => 'sometimes|nullable|exists:services,id',
-            'status' => 'sometimes|nullable|string|in:available,unavailable',
-            'is_available' => 'sometimes|nullable|boolean',
-            'is_active' => 'sometimes|nullable|boolean',
-            'distance_based_price' => 'sometimes|nullable|boolean',
-            'price_per_km' => 'sometimes|nullable|numeric|min:0',
-            'required_partial_percentage' => 'sometimes|nullable|integer|min:0|max:100',
-        ];
-
-        if ($request->hasFile('image_path')) {
-            $rules['image_path'] = 'image|mimes:png,jpg,jpeg,webp|max:10240';
-        } else {
-            $rules['image_path'] = 'sometimes|nullable|string|max:255';
-        }
-
-        $validated = $request->validate($rules);
+        $validated = $request->validate([
+            'name'                        => 'sometimes|required|string|max:255',
+            'description'                 => 'sometimes|nullable|string',
+            'price'                       => 'sometimes|required|numeric|min:0',
+            'status'                      => 'sometimes|nullable|string|in:available,unavailable',
+            'is_active'                   => 'sometimes|boolean',
+            'distance_based_price'        => 'sometimes|boolean',
+            'price_per_km'                => 'required_if:distance_based_price,true|nullable|numeric|min:0',
+            'required_partial_percentage' => 'sometimes|integer|min:0|max:100',
+        ]);
 
         if ($request->hasFile('image_path')) {
             if ($service->image_path) {
@@ -213,9 +202,46 @@ class ServiceController extends Controller
         $service->update($validated);
 
         return response()->json([
+            'status'  => 'success',
             'message' => 'Service updated successfully',
-            'data' => $service
+            'data'    => $service->load(['category', 'children'])
         ]);
+    }
+
+    public function adminUpdate(Request $request, Service $service)
+    {
+        $this->authorize('update', $service);
+
+        $validated = $request->validate([
+            'name'                        => 'required|string|max:255',
+            'description'                 => 'nullable|string',
+            'price'                       => 'required|numeric|min:0',
+            'category_id'                 => 'required|exists:categories,id',
+            'provider_id'                 => 'required|exists:users,id',
+            'status'                      => 'required|string|in:available,unavailable',
+            'is_active'                   => 'sometimes|boolean',
+            'is_available'                => 'sometimes|boolean',
+            'distance_based_price'        => 'sometimes|boolean',
+            'price_per_km'                => 'required_if:distance_based_price,1|nullable|numeric|min:0',
+            'required_partial_percentage' => 'required|integer|min:0|max:100',
+            'image_path'                  => 'nullable|image|mimes:png,jpg,jpeg,webp|max:10240',
+        ]);
+
+        if ($request->hasFile('image_path')) {
+            if ($service->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($service->image_path);
+            }
+            $validated['image_path'] = $request->file('image_path')->store('services', 'public');
+        }
+
+        // Toggles handling
+        $validated['is_active'] = $request->has('is_active');
+        $validated['is_available'] = $request->has('is_available');
+        $validated['distance_based_price'] = $request->has('distance_based_price');
+
+        $service->update($validated);
+
+        return redirect()->route('services.show', $service->id)->with('success', __('تم تحديث بيانات الخدمة بواسطة المسؤول بنجاح'));
     }
     public function destroy(Service $service)
     {
@@ -397,8 +423,36 @@ class ServiceController extends Controller
 
     public function adminShow(Service $service)
     {
-        $service->load(['provider', 'category', 'parent', 'children'])->where('parent_service_id', null);
+        $service->load(['provider', 'category', 'parent', 'children', 'requests' => function($q) {
+            $q->with(['user', 'review']);
+        }]);
 
-        return view('services.show', ['service' => $service]);
+        // Calculate Analytical KPIs for the Service
+        $stats = [
+            'total_requests' => $service->requests()->count(),
+            'completed_requests' => $service->requests()->where('status', 'completed')->count(),
+            'total_revenue' => $service->requests()->where('status', 'completed')->sum('total_price'),
+            'total_commissions' => $service->requests()->where('commission_paid', true)->sum('commission_amount'),
+            'average_rating' => \App\Models\Review::whereHas('request.services', function($q) use ($service) {
+                $q->where('service_id', $service->id);
+            })->avg('rating') ?: 0,
+        ];
+
+        // Get recent reviews for this service
+        $recentReviews = \App\Models\Review::whereHas('request.services', function($q) use ($service) {
+            $q->where('service_id', $service->id);
+        })->with('request.user')->latest()->limit(10)->get();
+
+        return view('services.show', compact('service', 'stats', 'recentReviews'));
+    }
+
+    public function edit(Service $service)
+    {
+        $this->authorize('update', $service);
+        $service->load(['category', 'provider', 'children']);
+        $categories = \App\Models\Category::all();
+        $providers = \App\Models\User::where('role', 'provider')->get();
+
+        return view('services.edit', compact('service', 'categories', 'providers'));
     }
 }

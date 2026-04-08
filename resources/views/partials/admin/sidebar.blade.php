@@ -49,6 +49,17 @@
                     </div>
                     <span
                         class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('التقارير المالية') }}</span>
+                </a>
+
+                <a href="{{ route('admin.withdrawals.index') }}"
+                    class="sidebar-item {{ Request::routeIs('admin.withdrawals.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.withdrawals.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('طلبات السحب') }}</span>
                     @if(isset($pending_withdrawals_count) && $pending_withdrawals_count > 0)
                         <span class="ms-auto bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-emerald-500/20 italic">{{ $pending_withdrawals_count }}</span>
                     @endif
@@ -89,8 +100,19 @@
                         </svg>
                     </div>
                     <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('شكاوى النظام') }}</span>
-                    @if(isset($pending_system_complaints_count) && $pending_system_complaints_count > 0)
-                        <span class="ms-auto bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-rose-500/20 italic">{{ $pending_system_complaints_count }}</span>
+                </a>
+
+                <a href="{{ route('commission-bonds.index') }}"
+                    class="sidebar-item {{ Request::routeIs('commission-bonds.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('commission-bonds.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('سندات العمولات') }}</span>
+                    @if(isset($pending_commission_bonds_count) && $pending_commission_bonds_count > 0)
+                        <span class="ms-auto bg-indigo-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-indigo-500/20 italic">{{ $pending_commission_bonds_count }}</span>
                     @endif
                 </a>
             </div>
@@ -145,6 +167,38 @@
                         </svg>
                     </div>
                     <span class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('قائمة المزودين') }}</span>
+                </a>
+
+                <div class="pt-4 pb-2 px-4">
+                    <p class="text-[8px] font-black uppercase tracking-[0.4em] opacity-40 italic">{{ __('الاشتراكات والمدفوعات') }}</p>
+                </div>
+
+                <a href="{{ route('user-verification-packages.index') }}"
+                    class="sidebar-item {{ Request::routeIs('user-verification-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('user-verification-packages.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-[11px] font-black italic tracking-tight font-Cairo opacity-100">{{ __('اشتراكات التوثيق') }}</span>
+                    @if(isset($pending_verifications_count) && $pending_verifications_count > 0)
+                        <span class="ms-auto bg-brand-primary text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-brand-primary/20 italic">{{ $pending_verifications_count }}</span>
+                    @endif
+                </a>
+
+                <a href="{{ route('admin.user-points-packages.index') }}"
+                    class="sidebar-item {{ Request::routeIs('admin.user-points-packages.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('admin.user-points-packages.*') ? 'bg-white/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-white dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-[11px] font-black italic tracking-tight font-Cairo opacity-100">{{ __('اشتراكات النقاط') }}</span>
+                    @if(isset($pending_user_points_packages_count) && $pending_user_points_packages_count > 0)
+                        <span class="ms-auto bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-amber-500/20 italic">{{ $pending_user_points_packages_count }}</span>
+                    @endif
                 </a>
             </div>
         </div>
