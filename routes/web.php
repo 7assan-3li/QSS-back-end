@@ -1,4 +1,6 @@
 <?php
+ 
+use App\Http\Controllers\AdvertisementController;
 
 use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\AdminDashboardController;
@@ -163,4 +165,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // System Settings
     Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'indexAdmin'])->name('settings.index');
     Route::put('/settings', [\App\Http\Controllers\SettingController::class, 'updateAdmin'])->name('settings.update');
+
+    // Advertisement Management
+    Route::group(['prefix' => 'admin'], function() {
+        Route::resource('advertisements', AdvertisementController::class)->except(['show']);
+    });
 });
