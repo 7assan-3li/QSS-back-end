@@ -306,6 +306,30 @@ class RequestController extends Controller
         ]);
     }
 
+    public function finishRequest($request_id)
+    {
+        $requestModel = RequestModel::findOrFail($request_id);
+
+        // التحقق من أن المستخدم هو مزود الخدمة لهذا الطلب
+        $provider = $requestModel->serviceProvider();
+        if (!$provider || $provider->id !== Auth::id()) {
+            return response()->json(['message' => 'غير مصرح لك بإنهاء هذا الطلب'], 403);
+        }
+
+        // التحقق من حالة الطلب (accepted_full_paid OR accepted_partial_paid)
+        $allowedStatuses = [RequestStatus::ACCEPTED_FULL_PAID, RequestStatus::ACCEPTED_PARTIAL_PAID];
+        if (!in_array($requestModel->status, $allowedStatuses)) {
+            return response()->json(['message' => 'لا يمكن إنهاء الطلب إلا إذا كان في حالة دفع كامل أو جزئي'], 422);
+        }
+
+        $requestModel->update(['provider_finished' => true]);
+
+        return response()->json([
+            'message' => 'تم تحديد الطلب كمكتمل من قبل المزود بنجاح',
+            'request' => $requestModel
+        ]);
+    }
+
     public function payByPoints(Request $request, $request_id)
     {
         $data = $request->validate([

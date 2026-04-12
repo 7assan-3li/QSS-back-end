@@ -12,6 +12,7 @@ class Request extends Model
     
     protected $casts = [
         'bonus_points_awarded' => 'boolean',
+        'provider_finished' => 'boolean',
     ];
 
     // public function service()

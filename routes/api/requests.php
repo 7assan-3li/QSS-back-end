@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
         Route::patch('/requests/custom/{request}/reject', [App\Http\Controllers\RequestCustomServiceController::class, 'reject']);
         Route::post('/requests/{request}/pay-commission', [RequestController::class, 'payCommissionByPoints']);
         Route::post('/requests/{request}/addAmountToMoneyPaid', [RequestController::class, 'addAmountToMoneyPaid']);
+        Route::patch('/requests/{request}/finish', [RequestController::class, 'finishRequest']);
     });
 
     // 3. Shared Identity & Status Monitoring
