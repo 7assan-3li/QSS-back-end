@@ -22,19 +22,13 @@ class MeetingAndCustomServiceController extends Controller
 
     public function getMeetingService($user_id)
     {
-        $meetingService = Service::firstOrCreate(
-            ['provider_id' => $user_id, 'type' => ServiceType::MEETING],
-            [
-                'distance_based_price' => true,
-                'price_per_km' => 0,
-                'is_active' => true,
-                'price' => 0,
-                'description' => '',
-                'name' => '_meeting',
-            ]
-        );
+        $meetingService = Service::where('provider_id', $user_id)
+            ->where('type', ServiceType::MEETING)
+            ->first();
         
-        $meetingService->load('schedules.days');
+        if ($meetingService) {
+            $meetingService->load('schedules.days');
+        }
         return response()->json([
             'data' => $meetingService,
             'message' => 'Meeting service retrieved successfully'
@@ -51,19 +45,13 @@ class MeetingAndCustomServiceController extends Controller
 
     public function getCustomService($user_id)
     {
-        $customService = Service::firstOrCreate(
-            ['provider_id' => $user_id, 'type' => ServiceType::CUSTOM],
-            [
-                'distance_based_price' => true,
-                'price_per_km' => 0,
-                'is_active' => true,
-                'price' => 0,
-                'description' => '',
-                'name' => '_custom',
-            ]
-        );
+        $customService = Service::where('provider_id', $user_id)
+            ->where('type', ServiceType::CUSTOM)
+            ->first();
         
-        $customService->load('schedules.days');
+        if ($customService) {
+            $customService->load('schedules.days');
+        }
         return response()->json([
             'data' => $customService,
             'message' => 'Custom service retrieved successfully'

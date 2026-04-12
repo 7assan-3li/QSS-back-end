@@ -15,20 +15,25 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
     Route::post('/services', [ServiceController::class, 'store']);
     Route::put('/services/{service}', [ServiceController::class, 'update']);
     Route::delete('/services/{service}', [ServiceController::class, 'destroy']);
-    
+
     // Schedule Routes
     Route::get('/services/{serviceId}/schedules', [ScheduleServiceController::class, 'index']);
-    Route::post('/services/schedules', [ScheduleServiceController::class, 'store']);
-    Route::put('/services/schedules/{id}', [ScheduleServiceController::class, 'update']);
-    Route::delete('/services/schedules/{id}', [ScheduleServiceController::class, 'destroy']);
 
-    Route::post('/services/children', [ServiceController::class, 'storeChild']);
-    Route::put('/services/children/{childService}', [ServiceController::class, 'updateChild']);
-    Route::delete('/services/children/{childService}', [ServiceController::class, 'deleteChild']);
-    Route::put('/services/type/{type}', [ServiceController::class, 'updateByType']);
 
     Route::get('/services-meeting/{user_id}', [MeetingAndCustomServiceController::class, 'getMeetingService']);
-    Route::put('/services-meeting', [MeetingAndCustomServiceController::class, 'updateMeetingService']);
     Route::get('/services-custom/{user_id}', [MeetingAndCustomServiceController::class, 'getCustomService']);
-    Route::put('/services-custom', [MeetingAndCustomServiceController::class, 'updateCustomService']);
+    Route::middleware('provider.policy')->group(function () {
+        Route::put('/services-meeting', [MeetingAndCustomServiceController::class, 'updateMeetingService']);
+        Route::put('/services-custom', [MeetingAndCustomServiceController::class, 'updateCustomService']);
+        Route::post('/services/schedules', [ScheduleServiceController::class, 'store']);
+        Route::put('/services/schedules/{id}', [ScheduleServiceController::class, 'update']);
+        Route::delete('/services/schedules/{id}', [ScheduleServiceController::class, 'destroy']);
+
+        Route::post('/services/children', [ServiceController::class, 'storeChild']);
+        Route::put('/services/children/{childService}', [ServiceController::class, 'updateChild']);
+        Route::delete('/services/children/{childService}', [ServiceController::class, 'deleteChild']);
+        Route::put('/services/type/{type}', [ServiceController::class, 'updateByType']);
+
+
+    });
 });

@@ -260,6 +260,15 @@ class RequestController extends Controller
                 RequestStatus::SUSPENDED,
             ],
         ];
+        if ($currentStatus == RequestStatus::COMPLETED) {
+            if (!$requestModel->provider_finished) {
+                return response()->json([
+                    'message' => 'لا يمكن الانتقال من هذه الحالة إلى الحالة المطلوبة حتى ينتهي المزود من العمل',
+                    'currentStatus' => $currentStatus,
+                ], 422);
+            }
+        }
+
 
         if (
             !isset($allowedTransitions[$currentStatus]) ||
@@ -288,7 +297,7 @@ class RequestController extends Controller
             if ($newStatus == RequestStatus::COMPLETED) {
                 // 1. منح نقاط مكافأة لطالب الخدمة
                 $this->pointsService->addBonusPoints($requestModel->user_id, $requestModel->id);
-                
+
                 // 2. محاولة خصم العمولة آلياً من رصيد المزود
                 $this->pointsService->payCommissionFromPoints($requestModel->id);
             }

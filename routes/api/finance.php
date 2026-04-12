@@ -9,16 +9,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('banks', [BankController::class, 'getAllBanks']);
 
 // Points Management
-Route::middleware(['auth:sanctum', 'seeker.policy'])->group(function () {
-    Route::post('points/convert', [PointsController::class, 'convertPaidToBonus']);
+Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function () {
     Route::get('points/transactions', [PointsController::class, 'indexTransactions']);
     Route::get('points/balance', [PointsController::class, 'getPointsBalance']);
+    Route::middleware('provider.policy')->group(function () {
+        Route::post('points/convert', [PointsController::class, 'convertPaidToBonus']);
+    });
 });
 
 // User Bank Accounts
-Route::middleware(['auth:sanctum', 'seeker.policy'])->controller(UserBankController::class)->prefix('user-banks')->group(function () {
-    Route::get('/', 'index');
-    Route::post('/', 'store');
+Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->controller(UserBankController::class)->prefix('user-banks')->group(function () {
+   
     Route::get('/{account_id}', 'show');
     Route::put('/{userBankId}', 'update');
 });
