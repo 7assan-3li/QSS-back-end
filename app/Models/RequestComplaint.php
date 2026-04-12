@@ -17,4 +17,24 @@ class RequestComplaint extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * Scope a query to only include complaints made by the seeker of the request.
+     */
+    public function scopeSeeker($query)
+    {
+        return $query->whereHas('request', function ($q) {
+            $q->whereColumn('user_id', 'request_complaints.user_id');
+        });
+    }
+
+    /**
+     * Scope a query to only include complaints made by the provider of the request.
+     */
+    public function scopeProvider($query)
+    {
+        return $query->whereHas('request.services', function ($q) {
+            $q->whereColumn('services.provider_id', 'request_complaints.user_id');
+        });
+    }
 }

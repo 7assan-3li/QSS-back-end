@@ -12,12 +12,33 @@ use Illuminate\Support\Facades\Auth;
 
 class SystemComplaintController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $complaints = SystemComplaint::where('user_id', $user->id)->get();
+        $source = $request->get('app_source'); // seeker or provider
+        $status = $request->get('status');
+
+        $query = SystemComplaint::with('user');
+
+        // Check if user is admin (this depends on how roles are handled in your project)
+        // Usually, admins have a specific role or permission.
+        if ($user->role === 'admin') {
+            if ($source) {
+                $query->where('app_source', $source);
+            }
+        } else {
+            $query->where('user_id', $user->id);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->latest()->paginate(10);
+
         return response()->json([
             'message' => 'تم استرجاع الشكاوي بنجاح',
+            'app_source' => $source,
             'SystemComplaints' => $complaints,
         ], 200);
     }

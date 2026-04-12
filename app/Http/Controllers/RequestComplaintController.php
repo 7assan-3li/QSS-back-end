@@ -57,6 +57,32 @@ class RequestComplaintController extends Controller
             ],201);
     }
 
+    public function index(Request $request)
+    {
+        $role = $request->get('role'); // seeker or provider
+        $status = $request->get('status');
+
+        $query = RequestComplaint::with(['request', 'user', 'request.user']);
+
+        if ($role === 'seeker') {
+            $query->seeker();
+        } elseif ($role === 'provider') {
+            $query->provider();
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->latest()->paginate(10);
+
+        return response()->json([
+            'message' => 'تم استرجاع الشكاوى بنجاح',
+            'role' => $role,
+            'RequestComplaints' => $complaints,
+        ], 200);
+    }
+
     public function indexAdmin(\Illuminate\Http\Request $request)
     {
         $status = $request->get('status');
