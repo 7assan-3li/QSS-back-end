@@ -441,6 +441,29 @@ public function index()
         ]);
     }
 
+    public function apiUpdatePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return response()->json([
+                'message' => 'كلمة المرور القديمة غير صحيحة'
+            ], 422);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return response()->json([
+            'message' => 'تم تغيير كلمة المرور بنجاح'
+        ]);
+    }
 
     public function logout()
     {

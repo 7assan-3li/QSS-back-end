@@ -400,6 +400,31 @@ class ServiceController extends Controller
         return response()->json($services, 200);
     }
 
+    public function getRecommendedServices(Request $request)
+    {
+        $limit = $request->input('limit', 10);
+        
+        $services = Service::where('type', ServiceType::MAIN)
+            ->where('is_active', true)
+            ->withCount('requests')
+            ->with(['provider.profile', 'category'])
+            // Add subquery for average rating
+            ->addSelect(['avg_rating' => \App\Models\Review::selectRaw('avg(rating)')
+                ->whereHas('request.services', function($q) {
+                    $q->whereColumn('services.id', 'service_id');
+                })
+            ])
+            ->orderByDesc('avg_rating')
+            ->orderByDesc('requests_count')
+            ->take($limit)
+            ->get();
+            
+        return response()->json([
+            'message' => 'Recommended services retrieved successfully',
+            'data' => $services
+        ], 200);
+    }
+
 
 
 
