@@ -86,7 +86,9 @@
                     <div class="mt-10 pt-10 border-t border-[var(--glass-border)] opacity-60 group-hover:opacity-100 transition-all duration-1000 transform translate-y-2 group-hover:translate-y-0 text-start font-Cairo text-center">
                         <p class="text-[13px] font-black font-Cairo leading-[1.8] italic">
                             @if($isPolicy)
-                                <span class="text-amber-600 dark:text-amber-400">⚠️ {{ __('تنبيه: أي تعديل في نص السياسة سيقوم بإلغاء موافقة جميع المستخدمين الحالية، مما يتطلب منهم إعادة الموافقة.') }}</span>
+                                <span class="text-rose-600 dark:text-rose-400 font-black bg-rose-50 dark:bg-rose-900/20 px-6 py-3 rounded-2xl border border-rose-100 dark:border-rose-800/50 inline-block shadow-sm">
+                                    ⚠️ {{ __('تنبيه: أي تعديل في نص السياسة سيقوم بإلغاء موافقة جميع المستخدمين الحالية، مما يتطلب منهم إعادة الموافقة.') }}
+                                </span>
                             @else
                                 {{ __('ملاحظة: تعديل هذه القيمة سيؤثر على حساب العمولات والأرباح في كافة العمليات الجديدة في النظام.') }}
                             @endif

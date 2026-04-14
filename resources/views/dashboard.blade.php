@@ -18,7 +18,7 @@
         
         <!-- Dashboard Filters -->
         <div class="flex items-center gap-2 p-1.5 bg-[var(--glass-bg)]/50 backdrop-blur-xl rounded-[1.5rem] border border-[var(--glass-border)] shadow-sm">
-            @foreach(['all' => 'الكل', 'today' => 'اليوم', 'week' => 'الأسبوع', 'month' => 'الشهر'] as $key => $label)
+            @foreach(['all' => __('الكل'), 'today' => __('اليوم'), 'week' => __('الأسبوع'), 'month' => __('الشهر')] as $key => $label)
                 <a href="?filter={{ $key }}" class="px-6 py-2.5 rounded-[1.1rem] text-[13px] font-black uppercase tracking-widest transition-all {{ $filter == $key ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20' : 'text-[var(--text-muted)] hover:text-brand-primary opacity-60 hover:opacity-100' }}">
                     {{ __($label) }}
                 </a>

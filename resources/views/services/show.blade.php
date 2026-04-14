@@ -73,7 +73,7 @@
                 <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-3 block opacity-70 group-hover:text-amber-500 transition-colors italic uppercase">{{ __('عوائد الخدمة للمزودين') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-mono font-Cairo">
                     <span class="text-4xl font-black italic text-amber-600">{{ number_format($stats['total_revenue'], 2) }}</span>
-                    <span class="text-[13px] font-black opacity-30 uppercase font-Cairo underline italic">{{ __('ر.س') }}</span>
+                    <span class="text-[13px] font-black opacity-30 uppercase font-Cairo underline italic">{{ __('{{ __('ر.س') }}') }}</span>
                 </div>
             </div>
             <div class="absolute -bottom-4 -right-4 text-8xl opacity-[0.03] group-hover:scale-110 transition-transform select-none italic font-black">💵</div>
@@ -85,7 +85,7 @@
                 <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-3 block opacity-40 uppercase italic group-hover:text-brand-primary transition-colors">{{ __('صافي عمولة المنصة (المسددة)') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-mono font-Cairo">
                     <span class="text-4xl font-black italic text-brand-primary">{{ number_format($stats['total_commissions'], 2) }}</span>
-                    <span class="text-[13px] font-black opacity-30 uppercase underline italic font-Cairo">{{ __('ر.س') }}</span>
+                    <span class="text-[13px] font-black opacity-30 uppercase underline italic font-Cairo">{{ __('{{ __('ر.س') }}') }}</span>
                 </div>
             </div>
             <div class="absolute -bottom-4 -right-4 text-8xl opacity-[0.05] group-hover:scale-110 transition-transform select-none italic font-black">📈</div>
@@ -145,12 +145,12 @@
                  <div class="space-y-6 text-start font-Cairo">
                     <div class="flex justify-between items-center text-start font-Cairo">
                         <span class="text-[14px] font-bold text-[var(--text-muted)] opacity-60 font-Cairo italic">{{ __('السعر الأساسي') }}</span>
-                        <span class="text-lg font-black italic">{{ number_format($service->price, 2) }} ر.س</span>
+                        <span class="text-lg font-black italic">{{ number_format($service->price, 2) }} {{ __('ر.س') }}</span>
                     </div>
                     @if($service->distance_based_price)
                     <div class="flex justify-between items-center font-Cairo text-start">
                         <span class="text-[14px] font-bold text-[var(--text-muted)] opacity-60 font-Cairo italic">{{ __('إضافة لكل كيلو/م') }}</span>
-                        <span class="text-lg font-black italic text-indigo-500">+{{ number_format($service->price_per_km, 2) }} ر.س</span>
+                        <span class="text-lg font-black italic text-indigo-500">+{{ number_format($service->price_per_km, 2) }} {{ __('ر.س') }}</span>
                     </div>
                     @endif
                     <div class="pt-6 border-t border-[var(--glass-border)] flex justify-between items-center text-start font-Cairo">
@@ -243,7 +243,7 @@
                                     </div>
                                 </td>
                                 <td class="px-12 py-10 text-start font-Cairo">
-                                    <span class="text-lg font-black italic text-brand-primary font-mono leading-none font-Cairo">{{ number_format($child->price, 2) }} ر.س</span>
+                                    <span class="text-lg font-black italic text-brand-primary font-mono leading-none font-Cairo">{{ number_format($child->price, 2) }} {{ __('ر.س') }}</span>
                                 </td>
                                 <td class="px-12 py-10 text-end font-Cairo">
                                     <div class="flex justify-end gap-3 font-Cairo italic">

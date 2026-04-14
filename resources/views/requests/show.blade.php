@@ -151,7 +151,7 @@
                             <h4 class="font-black text-[var(--main-text)] text-lg font-Cairo text-start">{{ __('تأكيد استلام العمولة') }}</h4>
                         </div>
                         <p class="text-[14px] font-black text-[var(--text-muted)] leading-[1.8] font-Cairo text-start" dir="rtl">
-                            ⚠️ تنبيه الإدارة: الضغط على الزر أدناه يعني أن المنصة قد استلمت مبلغ العمولة نقدياً أو بنكياً بشكل نهائي.
+                            {{ __('⚠️ تنبيه الإدارة: الضغط على الزر أدناه يعني أن المنصة قد استلمت مبلغ العمولة نقدياً أو بنكياً بشكل نهائي.') }}
                         </p>
                         
                         <form id="mark-paid-form" action="{{ route('requests.markPaid', $request->id) }}" method="POST" class="text-start">
@@ -231,7 +231,7 @@
                 @else
                     <div class="py-16 text-center opacity-30 flex flex-col items-center justify-center text-start" dir="rtl">
                         <div class="w-16 h-16 bg-[var(--glass-border)] rounded-2xl flex items-center justify-center text-3xl mb-4 font-Cairo">🔕</div>
-                        <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] font-Cairo text-start" dir="rtl">لا توجد سندات مرفقة</span>
+                        <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] font-Cairo text-start" dir="rtl">{{ __('لا توجد سندات مرفقة') }}</span>
                     </div>
                 @endif
             </div>

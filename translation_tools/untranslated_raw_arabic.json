@@ -1,0 +1,170 @@
+[
+    {
+        "file": "resources\/views\\admin\\advertisements\\create.blade.php",
+        "line_num": 153,
+        "text": "@foreach(['none' => 'لا يوجد', 'service' => 'خدمة', 'category' => 'قسم', 'external' => 'رابط خارجي'] as $val => $label)",
+        "raw_arabic": "لا"
+    },
+    {
+        "file": "resources\/views\\admin\\advertisements\\edit.blade.php",
+        "line_num": 124,
+        "text": "@foreach(['none' => 'لا يوجد', 'service' => 'خدمة', 'category' => 'قسم', 'external' => 'رابط خارجي'] as $val => $label)",
+        "raw_arabic": "لا"
+    },
+    {
+        "file": "resources\/views\\admin\\commissionBonds\\index.blade.php",
+        "line_num": 34,
+        "text": "<div class=\"w-16 h-16 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-amber-500\/20 group-hover:scale-110 transition-transform italic font-black\">؟<\/div>",
+        "raw_arabic": "؟"
+    },
+    {
+        "file": "resources\/views\\admin\\commissionBonds\\index.blade.php",
+        "line_num": 106,
+        "text": "<span class=\"text-[12px] font-bold opacity-40 ml-1 italic\">ر.س<\/span>",
+        "raw_arabic": "ر"
+    },
+    {
+        "file": "resources\/views\\admin\\withdrawals\\show.blade.php",
+        "line_num": 85,
+        "text": "بيانات\"الآيبان\" للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}",
+        "raw_arabic": "بيانات"
+    },
+    {
+        "file": "resources\/views\\categories\\create.blade.php",
+        "line_num": 3,
+        "text": "@section('title', 'إضافة تصنيف جديد')",
+        "raw_arabic": "إضافة"
+    },
+    {
+        "file": "resources\/views\\categories\\partials\\category-options.blade.php",
+        "line_num": 2,
+        "text": "$prefix = $prefix ?? ''; \/\/ إذا لم يُرسل، اجعلها فارغة",
+        "raw_arabic": "إذا"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 5,
+        "text": "<title>تأكيد البريد الإلكتروني<\/title>",
+        "raw_arabic": "تأكيد"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 26,
+        "text": "<h2 style=\"margin-top:0\">مرحباً {{ $user->name }} 👋<\/h2>",
+        "raw_arabic": "مرحباً"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 29,
+        "text": "شكراً لتسجيلك في تطبيق <strong>QSS<\/strong>.",
+        "raw_arabic": "شكراً"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 30,
+        "text": "لتأكيد بريدك الإلكتروني، يرجى استخدام رمز التحقق التالي:",
+        "raw_arabic": "لتأكيد"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 48,
+        "text": "الرمز صالح لمدة <strong>10 دقائق<\/strong>.",
+        "raw_arabic": "الرمز"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 49,
+        "text": "إذا لم تطلب هذا الرمز، يمكنك تجاهل هذه الرسالة.",
+        "raw_arabic": "إذا"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 53,
+        "text": "مع تحياتنا 🌟<br>",
+        "raw_arabic": "مع"
+    },
+    {
+        "file": "resources\/views\\emails\\verify-code.blade.php",
+        "line_num": 54,
+        "text": "فريق QSS",
+        "raw_arabic": "فريق"
+    },
+    {
+        "file": "resources\/views\\requestComplaints\\index.blade.php",
+        "line_num": 100,
+        "text": "{{ $d }} يوم",
+        "raw_arabic": "يوم"
+    },
+    {
+        "file": "resources\/views\\requestComplaints\\show.blade.php",
+        "line_num": 117,
+        "text": "<span class=\"text-sm font-black font-Cairo text-start italic\">{{ $requestComplaint->request->user->name ?? 'غير موجود' }}<\/span>",
+        "raw_arabic": "غير"
+    },
+    {
+        "file": "resources\/views\\requestComplaints\\show.blade.php",
+        "line_num": 124,
+        "text": "<span class=\"text-sm font-black font-Cairo text-start italic\">{{ $requestComplaint->request->serviceProvider()->name ?? 'غير محدد' }}<\/span>",
+        "raw_arabic": "غير"
+    },
+    {
+        "file": "resources\/views\\requests\\show.blade.php",
+        "line_num": 154,
+        "text": "⚠️ تنبيه الإدارة: الضغط على الزر أدناه يعني أن المنصة قد استلمت مبلغ العمولة نقدياً أو بنكياً بشكل نهائي.",
+        "raw_arabic": "تنبيه"
+    },
+    {
+        "file": "resources\/views\\requests\\show.blade.php",
+        "line_num": 234,
+        "text": "<span class=\"text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] font-Cairo text-start\" dir=\"rtl\">لا توجد سندات مرفقة<\/span>",
+        "raw_arabic": "لا"
+    },
+    {
+        "file": "resources\/views\\services\\edit.blade.php",
+        "line_num": 137,
+        "text": "<span class=\"text-[12px] font-black italic lrading-tight\">نشاط الخدمة<\/span>",
+        "raw_arabic": "نشاط"
+    },
+    {
+        "file": "resources\/views\\services\\edit.blade.php",
+        "line_num": 149,
+        "text": "<span class=\"text-[12px] font-black italic lrading-tight\">التوافر الفوري<\/span>",
+        "raw_arabic": "التوافر"
+    },
+    {
+        "file": "resources\/views\\services\\edit.blade.php",
+        "line_num": 161,
+        "text": "<span class=\"text-[12px] font-black italic lrading-tight\">التسعير حسب المسافة<\/span>",
+        "raw_arabic": "التسعير"
+    },
+    {
+        "file": "resources\/views\\services\\show.blade.php",
+        "line_num": 148,
+        "text": "<span class=\"text-lg font-black italic\">{{ number_format($service->price, 2) }} ر.س<\/span>",
+        "raw_arabic": "ر"
+    },
+    {
+        "file": "resources\/views\\services\\show.blade.php",
+        "line_num": 153,
+        "text": "<span class=\"text-lg font-black italic text-indigo-500\">+{{ number_format($service->price_per_km, 2) }} ر.س<\/span>",
+        "raw_arabic": "ر"
+    },
+    {
+        "file": "resources\/views\\services\\show.blade.php",
+        "line_num": 246,
+        "text": "<span class=\"text-lg font-black italic text-brand-primary font-mono leading-none font-Cairo\">{{ number_format($child->price, 2) }} ر.س<\/span>",
+        "raw_arabic": "ر"
+    },
+    {
+        "file": "resources\/views\\settings\\index.blade.php",
+        "line_num": 20,
+        "text": "{{ __('حالة النظام') }}: نشط 🛡️",
+        "raw_arabic": "نشط"
+    },
+    {
+        "file": "resources\/views\\verification_packages\\show.blade.php",
+        "line_num": 3,
+        "text": "@section('title', 'تفاصيل الباقة: ' . $package->name)",
+        "raw_arabic": "تفاصيل"
+    }
+]

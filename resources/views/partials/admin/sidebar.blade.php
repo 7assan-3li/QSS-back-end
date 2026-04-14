@@ -294,7 +294,7 @@
                     {{ mb_substr(auth()->user()->name ?? 'A', 0, 1) }}
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-xs font-black text-brand-primary truncate max-w-[120px]">{{ auth()->user()->name ?? 'مشرف النظام' }}</span>
+                    <span class="text-xs font-black text-brand-primary truncate max-w-[120px]">{{ auth()->user()->name ?? __('مشرف النظام') }}</span>
                     <span class="text-[12px] font-black uppercase tracking-widest opacity-60">{{ __('مشرف النظام') }}</span>
                 </div>
             </div>

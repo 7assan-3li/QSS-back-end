@@ -150,7 +150,7 @@
                         <div class="md:col-span-2">
                             <label class="block text-[13px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mb-3 italic px-1">{{ __('نوع الرابط') }}</label>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                @foreach(['none' => 'لا يوجد', 'service' => 'خدمة', 'category' => 'قسم', 'external' => 'رابط خارجي'] as $val => $label)
+                                @foreach(['none' => __('لا يوجد'), 'service' => __('خدمة'), 'category' => __('قسم'), 'external' => __('رابط خارجي')] as $val => $label)
                                     <label class="cursor-pointer">
                                         <input type="radio" name="target_type" value="{{ $val }}" class="peer hidden" 
                                                x-model="targetType" {{ $val === 'none' ? 'checked' : '' }}>

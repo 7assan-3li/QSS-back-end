@@ -134,7 +134,7 @@
                         <!-- Switch 1: Active -->
                         <div class="flex items-center justify-between text-start font-Cairo">
                             <div class="flex flex-col text-start">
-                                <span class="text-[12px] font-black italic lrading-tight">نشاط الخدمة</span>
+                                <span class="text-[12px] font-black italic lrading-tight">{{ __('نشاط الخدمة') }}</span>
                                 <span class="text-[14px] font-bold text-[var(--text-muted)] font-Cairo uppercase mt-1">System Activation Status</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -146,7 +146,7 @@
                         <!-- Switch 2: Available -->
                         <div class="flex items-center justify-between text-start font-Cairo">
                             <div class="flex flex-col text-start">
-                                <span class="text-[12px] font-black italic lrading-tight">التوافر الفوري</span>
+                                <span class="text-[12px] font-black italic lrading-tight">{{ __('التوافر الفوري') }}</span>
                                 <span class="text-[14px] font-bold text-[var(--text-muted)] font-Cairo uppercase mt-1">Real-time Availability Toggle</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -158,7 +158,7 @@
                         <!-- Switch 3: Distance Pricing -->
                         <div class="flex items-center justify-between text-start font-Cairo" x-data="{ dBased: {{ $service->distance_based_price ? 'true' : 'false' }} }">
                             <div class="flex flex-col text-start">
-                                <span class="text-[12px] font-black italic lrading-tight">التسعير حسب المسافة</span>
+                                <span class="text-[12px] font-black italic lrading-tight">{{ __('التسعير حسب المسافة') }}</span>
                                 <span class="text-[14px] font-bold text-[var(--text-muted)] font-Cairo uppercase mt-1">Dynamic Distance Pricing</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">

@@ -43,81 +43,81 @@
 
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <span class="icon">📊</span>
-                    <span class="text">لوحة التحكم</span>
+                    <span class="text">{{ __('لوحة التحكم') }}</span>
                 </a>
 
                 <a href="{{ route('categories.index') }}" class="{{ request()->is('categories*') ? 'active' : '' }}">
                     <span class="icon">📁</span>
-                    <span class="text">التصنيفات</span>
+                    <span class="text">{{ __('التصنيفات') }}</span>
                 </a>
 
                 <a href="{{ route('services.index') }}" class="{{ request()->is('services*') ? 'active' : '' }}">
                     <span class="icon">🛠️</span>
-                    <span class="text">الخدمات</span>
+                    <span class="text">{{ __('الخدمات') }}</span>
                 </a>
 
                 <a href="{{ route('banks.index') }}" class="{{ request()->is('banks*') ? 'active' : '' }}">
                     <span class="icon">🏦</span>
-                    <span class="text">البنوك</span>
+                    <span class="text">{{ __('البنوك') }}</span>
                 </a>
 
                 <a href="{{ route('users.index') }}" class="{{ request()->is('users*') ? 'active' : '' }}">
                     <span class="icon">👤</span>
-                    <span class="text">المستخدمين</span>
+                    <span class="text">{{ __('المستخدمين') }}</span>
                 </a>
 
                 <a href="{{ route('provider-requests.index') }}" class="{{ request()->is('provider-requests*') ? 'active' : '' }}">
                     <span class="icon">📈</span>
-                    <span class="text">طلبات مزودي الخدمات</span>
+                    <span class="text">{{ __('طلبات مزودي الخدمات') }}</span>
                 </a>
                 <a href="{{ route('requests.index') }}" class="{{ request()->is('requests*') ? 'active' : '' }}">
                     <span class="icon">📈</span>
-                    <span class="text">طلبات الخدمات</span>
+                    <span class="text">{{ __('طلبات الخدمات') }}</span>
                 </a>
 
                 <a href="{{ route('verification-requests.index') }}" class="{{ request()->routeIs('verification-requests*') ? 'active' : '' }}">
                     <span class="icon">📑</span>
-                    <span class="text">طلبات التوثيق</span>
+                    <span class="text">{{ __('طلبات التوثيق') }}</span>
                 </a>
 
                 <a href="{{ route('verification-packages.index') }}" class="{{ request()->is('verification-packages*') ? 'active' : '' }}">
                     <span class="icon">📦</span>
-                    <span class="text">باقات التحقق</span>
+                    <span class="text">{{ __('باقات التحقق') }}</span>
                 </a>
 
                 <a href="{{ route('user-verification-packages.index') }}" class="{{ request()->is('user-verification-packages*') ? 'active' : '' }}">
                     <span class="icon">💳</span>
-                    <span class="text">طلبات اشتراك الباقات</span>
+                    <span class="text">{{ __('طلبات اشتراك الباقات') }}</span>
                 </a>
 
                 <a href="{{ route('admin.points-packages.index') }}" class="{{ request()->is('admin/points-packages*') ? 'active' : '' }}">
                     <span class="icon">💎</span>
-                    <span class="text">باقات النقاط</span>
+                    <span class="text">{{ __('باقات النقاط') }}</span>
                 </a>
 
                 <a href="{{ route('admin.user-points-packages.index') }}" class="{{ request()->is('admin/user-points-packages*') ? 'active' : '' }}">
                     <span class="icon">💰</span>
-                    <span class="text">طلبات شحن النقاط</span>
+                    <span class="text">{{ __('طلبات شحن النقاط') }}</span>
                 </a>
 
                 <a href="{{ route('admin.withdrawals.index') }}" class="{{ request()->is('admin/withdrawals*') ? 'active' : '' }}">
                     <span class="icon">💸</span>
-                    <span class="text">طلبات السحب</span>
+                    <span class="text">{{ __('طلبات السحب') }}</span>
                 </a>
 
                 <a href="{{ route('system-complaints.index') }}" class="{{ request()->is('system-complaints*') ? 'active' : '' }}">
                     <span class="icon">⚠️</span>
-                    <span class="text">شكاوى النظام</span>
+                    <span class="text">{{ __('شكاوى النظام') }}</span>
                 </a>
 
                 <a href="{{ route('request-complaints.index') }}" class="{{ request()->is('request-complaints*') ? 'active' : '' }}">
                     <span class="icon">🚨</span>
-                    <span class="text">بلاغات الطلبات</span>
+                    <span class="text">{{ __('بلاغات الطلبات') }}</span>
                 </a>
 
                 <a href="{{ route('settings.index') }}" class="{{ request()->is('settings*') ? 'active' : '' }}">
                     <span class="icon">⚙️</span>
-                    <span class="text">إعدادات النظام الديناميكية</span>
+                    <span class="text">{{ __('إعدادات النظام الديناميكية') }}</span>
                 </a>
 
                 <!-- Logout -->
@@ -125,7 +125,7 @@
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <span class="icon">🚪</span>
-                        <input type="submit" class="text" value="تسجيل خروج">
+                        <input type="submit" class="text" value="{{ __('تسجيل خروج') }}">
                     </form>
                 </a>
 
