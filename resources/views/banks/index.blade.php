@@ -8,14 +8,14 @@
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start font-Cairo">
         <div class="text-start font-Cairo">
             <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
-                <span class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-3xl font-Cairo shadow-lg shadow-emerald-500/5">🏦</span>
+                <span class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-3xl font-Cairo shadow-lg shadow-emerald-500/5 whitespace-nowrap inline-flex items-center justify-center">🏦</span>
                 {{ __('إدارة البنوك') }}
             </h3>
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo opacity-60">
+            <p class="text-[13px] font-black uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo opacity-60">
                 {{ __('إدارة الحسابات البنكية المعتمدة لاستقبال وتحويل المدفوعات في المنصة.') }}
             </p>
         </div>
-        <a href="{{ route('banks.create') }}" class="px-10 py-5 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(79,70,229,0.3)] hover:scale-[1.05] active:scale-95 transition-all font-Cairo flex items-center gap-3 text-start font-Cairo">
+        <a href="{{ route('banks.create') }}" class="px-10 py-5 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[2rem] text-[14px] font-black uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(79,70,229,0.3)] hover:scale-[1.05] transition-all font-Cairo flex items-center gap-3 text-start font-Cairo">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
             {{ __('إضافة بنك جديد') }}
         </a>
@@ -32,13 +32,13 @@
     <!-- Banks List -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-start font-Cairo">
         @forelse($banks as $bank)
-            <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-white dark:border-white/5 flex flex-col group hover:-translate-y-3 transition-all duration-700 text-start font-Cairo">
+            <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl relative border border-[var(--glass-border)] flex flex-col group hover:-translate-y-3 transition-all duration-700 text-start font-Cairo">
                 <!-- ID Micro-Badge -->
-                <div class="absolute top-8 left-8 px-3 py-1.5 bg-slate-100 dark:bg-slate-900 rounded-xl text-[8px] font-black font-mono italic tracking-widest font-Cairo text-start opacity-60">BANK_{{ str_pad($bank->id, 3, '0', STR_PAD_LEFT) }}</div>
+                <div class="absolute top-8 left-8 px-3 py-1.5 bg-[var(--glass-border)] rounded-xl text-[14px] font-black font-mono italic tracking-widest font-Cairo text-start opacity-60">BANK_{{ str_pad($bank->id, 3, '0', STR_PAD_LEFT) }}</div>
                 
                 <!-- Gateway Identity Sector -->
                 <div class="flex flex-col items-center text-center mb-10 pt-4 font-Cairo">
-                    <div class="w-28 h-28 rounded-[2rem] border-[6px] border-white dark:border-slate-800 shadow-2xl overflow-hidden bg-slate-50 dark:bg-slate-950 group-hover:rotate-6 transition-all duration-700 p-1 font-Cairo shadow-emerald-500/5">
+                    <div class="w-28 h-28 rounded-[2rem] border-[6px] border-[var(--glass-border)] shadow-2xl overflow-hidden bg-[var(--main-bg)] group-hover:rotate-6 transition-all duration-700 p-1 font-Cairo shadow-emerald-500/5">
                         @if($bank->image_path)
                             <img src="{{ asset('storage/'.$bank->image_path) }}" alt="{{ $bank->bank_name }}" class="w-full h-full object-cover rounded-[1.5rem]">
                         @else
@@ -48,7 +48,7 @@
                         @endif
                     </div>
                     <h4 class="mt-8 text-xl font-black font-Cairo leading-none italic text-start">{{ $bank->bank_name }}</h4>
-                    <span class="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] mt-4 font-Cairo text-start italic">{{ __('بنك معتمد') }}</span>
+                    <span class="text-[12px] font-black text-emerald-500 uppercase tracking-[0.3em] mt-4 font-Cairo text-start italic">{{ __('بنك معتمد') }}</span>
                 </div>
 
                 <!-- Abstract Descriptor -->
@@ -59,11 +59,11 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="mt-10 flex items-center justify-center gap-4 pt-8 border-t border-slate-100 dark:border-slate-800/60 text-start font-Cairo">
-                    <a href="{{ route('banks.show', $bank->id) }}" class="w-12 h-12 bg-slate-50 dark:bg-slate-900 text-slate-500 hover:text-emerald-500 hover:bg-emerald-500/10 rounded-[1.2rem] transition-all flex items-center justify-center shadow-sm border border-slate-100 dark:border-white/5 font-Cairo text-start" title="{{ __('عرض التفاصيل') }}">
+                <div class="mt-10 flex items-center justify-center gap-4 pt-8 border-t border-[var(--glass-border)] text-start font-Cairo">
+                    <a href="{{ route('banks.show', $bank->id) }}" class="w-12 h-12 bg-[var(--main-bg)] text-[var(--text-muted)] hover:text-emerald-500 hover:bg-emerald-500/10 rounded-[1.2rem] transition-all flex items-center justify-center shadow-sm border border-[var(--glass-border)] font-Cairo text-start" title="{{ __('عرض التفاصيل') }}">
                         <svg class="w-5 h-5 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                     </a>
-                    <a href="{{ route('banks.edit', $bank->id) }}" class="w-12 h-12 bg-slate-50 dark:bg-slate-900 text-slate-500 hover:text-amber-500 hover:bg-amber-500/10 rounded-[1.2rem] transition-all flex items-center justify-center shadow-sm border border-slate-100 dark:border-white/5 font-Cairo text-start font-Cairo" title="{{ __('تعديل البيانات') }}">
+                    <a href="{{ route('banks.edit', $bank->id) }}" class="w-12 h-12 bg-[var(--main-bg)] text-[var(--text-muted)] hover:text-amber-500 hover:bg-amber-500/10 rounded-[1.2rem] transition-all flex items-center justify-center shadow-sm border border-[var(--glass-border)] font-Cairo text-start font-Cairo" title="{{ __('تعديل البيانات') }}">
                         <svg class="w-5 h-5 font-black uppercase" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </a>
                     <form id="delete-bank-{{ $bank->id }}" action="{{ route('banks.destroy', $bank->id) }}" method="POST" class="inline font-Cairo">
@@ -76,8 +76,7 @@
                                 icon: 'warning',
                                 isDanger: true,
                                 confirmButtonText: '{{ __('تأكيد المسح النهائي') }}'
-                            })"
-                            class="w-12 h-12 bg-slate-50 dark:bg-slate-900 text-slate-500 hover:text-rose-500 hover:bg-rose-500/10 rounded-[1.2rem] transition-all flex items-center justify-center shadow-sm border border-slate-100 dark:border-white/5 font-Cairo text-start" title="{{ __('حذف البنك') }}">
+                            })" class="w-12 h-12 bg-[var(--main-bg)] text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 rounded-[1.2rem] transition-all flex items-center justify-center shadow-sm border border-[var(--glass-border)] font-Cairo text-start" title="{{ __('حذف البنك') }}">
                             <svg class="w-5 h-5 font-black uppercase" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
                     </form>
@@ -85,7 +84,7 @@
             </div>
         @empty
             <div class="col-span-full py-40 text-center flex flex-col items-center opacity-30 gap-8 font-Cairo">
-                <div class="w-24 h-24 bg-slate-100 dark:bg-slate-900 rounded-[2rem] flex items-center justify-center text-6xl shadow-inner font-Cairo italic">🏦</div>
+                <div class="w-24 h-24 bg-[var(--glass-border)] rounded-[2rem] flex items-center justify-center text-6xl shadow-inner font-Cairo italic">🏦</div>
                 <p class="text-xs font-black uppercase tracking-[0.3em] font-Cairo text-start opacity-60">{{ __('لا توجد بنوك مضافة حالياً.') }}</p>
             </div>
         @endforelse

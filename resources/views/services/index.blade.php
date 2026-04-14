@@ -8,15 +8,15 @@
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
             <h3 class="font-black text-2xl flex items-center gap-4 text-start font-Cairo">
-                <span class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-500 text-2xl font-Cairo shadow-lg shadow-indigo-500/5">🛠️</span>
+                <span class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-500 text-2xl font-Cairo shadow-lg shadow-indigo-500/5 whitespace-nowrap inline-flex items-center justify-center">🛠️</span>
                 {{ __('إدارة الخدمات') }}
             </h3>
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] mt-2 mr-16 text-start font-Cairo opacity-60">
+            <p class="text-[13px] font-black uppercase tracking-[0.2em] mt-2 mr-16 text-start font-Cairo opacity-60">
                 {{ __('إدارة قائمة الخدمات المتاحة، أسعارها، وتوافرها في المنصة.') }}
             </p>
         </div>
-        <a href="{{ route('services.create') }}" class="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-brand-primary text-white rounded-[1.75rem] text-xs font-black shadow-[0_20px_40px_-5px_rgba(var(--brand-primary-rgb),0.3)] hover:scale-[1.05] active:scale-95 transition-all font-Cairo">
-            <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center group-hover:rotate-90 transition-transform">
+        <a href="{{ route('services.create') }}" class="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-brand-primary text-white rounded-[1.75rem] text-xs font-black shadow-[0_20px_40px_-5px_rgba(var(--brand-primary-rgb),0.3)] hover:scale-[1.05] transition-all font-Cairo">
+            <div class="w-6 h-6 bg-[var(--glass-bg)]/20 rounded-lg flex items-center justify-center group-hover:rotate-90 transition-transform">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
             </div>
             {{ __('إضافة خدمة جديدة') }}
@@ -26,21 +26,21 @@
     <!-- Service Statistics (6 Items) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 font-Cairo text-start">
         <!-- Total Service Node -->
-        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50 relative overflow-hidden group text-start">
+        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-[var(--glass-border)] relative overflow-hidden group text-start">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-slate-500/5 rounded-full blur-2xl group-hover:bg-slate-500/10 transition-colors"></div>
-            <span class="text-[8px] font-black uppercase tracking-[0.2em] block mb-3 font-Cairo opacity-60">{{ __('إجمالي الخدمات') }}</span>
+            <span class="text-[14px] font-black uppercase tracking-[0.2em] block mb-3 font-Cairo opacity-60">{{ __('إجمالي الخدمات') }}</span>
             <div class="flex items-center justify-between relative z-10">
                 <span class="text-3xl font-black leading-none font-mono">{{ str_pad($stats['total'], 2, '0', STR_PAD_LEFT) }}</span>
-                <div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform">
+                <div class="w-10 h-10 bg-[var(--glass-border)] text-[var(--text-muted)] rounded-xl flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
             </div>
         </div>
 
         <!-- Available Service Node -->
-        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50 relative overflow-hidden group text-start">
+        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-[var(--glass-border)] relative overflow-hidden group text-start">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors"></div>
-            <span class="text-[8px] font-black text-emerald-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('المتاحة للحجز') }}</span>
+            <span class="text-[14px] font-black text-emerald-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('المتاحة للحجز') }}</span>
             <div class="flex items-center justify-between relative z-10">
                 <span class="text-3xl font-black leading-none font-mono">{{ str_pad($stats['available'], 2, '0', STR_PAD_LEFT) }}</span>
                 <div class="w-10 h-10 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
@@ -50,9 +50,9 @@
         </div>
 
         <!-- Unavailable Service Node -->
-        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50 relative overflow-hidden group text-start">
+        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-[var(--glass-border)] relative overflow-hidden group text-start">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-colors"></div>
-            <span class="text-[8px] font-black text-rose-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('غير متاحــة') }}</span>
+            <span class="text-[14px] font-black text-rose-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('غير متاحــة') }}</span>
             <div class="flex items-center justify-between relative z-10">
                 <span class="text-3xl font-black leading-none font-mono">{{ str_pad($stats['unavailable'], 2, '0', STR_PAD_LEFT) }}</span>
                 <div class="w-10 h-10 bg-rose-500/10 text-rose-600 rounded-xl flex items-center justify-center shadow-inner group-hover:-rotate-12 transition-transform">
@@ -62,9 +62,9 @@
         </div>
 
         <!-- Active Service Node -->
-        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50 relative overflow-hidden group text-start">
+        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-[var(--glass-border)] relative overflow-hidden group text-start">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition-colors"></div>
-            <span class="text-[8px] font-black text-indigo-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('النشطة حالياً') }}</span>
+            <span class="text-[14px] font-black text-indigo-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('النشطة حالياً') }}</span>
             <div class="flex items-center justify-between relative z-10">
                 <span class="text-3xl font-black leading-none font-mono">{{ str_pad($stats['active'], 2, '0', STR_PAD_LEFT) }}</span>
                 <div class="w-10 h-10 bg-indigo-500/10 text-indigo-600 rounded-xl flex items-center justify-center shadow-inner group-hover:translate-y-[-2px] transition-transform">
@@ -74,9 +74,9 @@
         </div>
 
         <!-- Meeting Service Node -->
-        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50 relative overflow-hidden group text-start">
+        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-[var(--glass-border)] relative overflow-hidden group text-start">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors"></div>
-            <span class="text-[8px] font-black text-amber-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('خدمات اللقاء') }}</span>
+            <span class="text-[14px] font-black text-amber-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('خدمات اللقاء') }}</span>
             <div class="flex items-center justify-between relative z-10">
                 <span class="text-3xl font-black leading-none font-mono">{{ str_pad($stats['meeting_service'], 2, '0', STR_PAD_LEFT) }}</span>
                 <div class="w-10 h-10 bg-amber-500/10 text-amber-600 rounded-xl flex items-center justify-center shadow-inner group-hover:scale-125 transition-transform">
@@ -86,9 +86,9 @@
         </div>
 
         <!-- Custom Service Node -->
-        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50 relative overflow-hidden group text-start">
+        <div class="card-premium glass-panel p-6 rounded-[2rem] shadow-xl border border-[var(--glass-border)] relative overflow-hidden group text-start">
             <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl group-hover:bg-purple-500/10 transition-colors"></div>
-            <span class="text-[8px] font-black text-purple-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('مهام مخصصة') }}</span>
+            <span class="text-[14px] font-black text-purple-500 uppercase tracking-[0.2em] block mb-3 font-Cairo">{{ __('مهام مخصصة') }}</span>
             <div class="flex items-center justify-between relative z-10">
                 <span class="text-3xl font-black leading-none font-mono">{{ str_pad($stats['custom_service'], 2, '0', STR_PAD_LEFT) }}</span>
                 <div class="w-10 h-10 bg-purple-500/10 text-purple-600 rounded-xl flex items-center justify-center shadow-inner group-hover:rotate-45 transition-transform">
@@ -99,14 +99,14 @@
     </div>
 
     <!-- Service List -->
-    <div class="card-premium glass-panel rounded-[3rem] overflow-hidden shadow-2xl relative border border-white dark:border-slate-800/50 text-start font-Cairo">
-        <div class="px-10 py-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40 text-start">
+    <div class="card-premium glass-panel rounded-[3rem] overflow-hidden shadow-2xl relative border border-[var(--glass-border)] text-start font-Cairo">
+        <div class="px-10 py-8 border-b border-[var(--glass-border)] flex justify-between items-center bg-[var(--main-bg)] text-start">
             <div class="flex items-center gap-4 text-start">
                 <span class="w-2 h-10 bg-indigo-500 rounded-full shadow-lg shadow-indigo-500/20"></span>
                 <h4 class="font-black text-xl font-Cairo text-start">{{ __('سجل الخدمات المتاحة') }}</h4>
             </div>
             <div class="flex items-center gap-3 text-start">
-                <span class="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 font-Cairo text-start opacity-70">
+                <span class="px-4 py-2 bg-[var(--glass-border)] rounded-xl text-[13px] font-black uppercase tracking-widest border border-[var(--glass-border)] font-Cairo opacity-70 whitespace-nowrap inline-flex items-center justify-center">
                     {{ __('إجمالي السجلات') }}: {{ $services->count() }}
                 </span>
             </div>
@@ -114,7 +114,7 @@
         
         <div class="overflow-x-auto text-start">
             <table class="w-full text-sm text-start">
-                <thead class="bg-slate-50/30 dark:bg-slate-900/20 font-black text-[9px] uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 text-start opacity-60">
+                <thead class="bg-[var(--main-bg)] font-black text-[12px] uppercase tracking-[0.2em] border-b border-[var(--glass-border)] text-start opacity-60">
                     <tr>
                         <th class="px-10 py-6 text-start">{{ __('اسم الخدمة') }}</th>
                         <th class="px-10 py-6 text-start">{{ __('مزود الخدمة') }}</th>
@@ -125,7 +125,7 @@
                         <th class="px-10 py-6 text-end">{{ __('التحكم') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/50 text-start font-Cairo">
+                <tbody class="divide-y divide-[var(--glass-border)] text-start font-Cairo">
                     @forelse ($services as $service)
                         <tr class="hover:bg-brand-primary/[0.03] transition-all group/row">
                             <td class="px-10 py-6 text-start">
@@ -133,26 +133,26 @@
                             </td>
                             <td class="px-10 py-6 text-start">
                                 <div class="flex items-center gap-3 text-start font-Cairo">
-                                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-black font-Cairo opacity-60">
+                                    <div class="w-8 h-8 rounded-lg bg-[var(--glass-border)] flex items-center justify-center text-xs font-black font-Cairo opacity-60">
                                         {{ mb_substr($service->provider->name ?? '?', 0, 1) }}
                                     </div>
                                     <span class="text-xs font-black font-Cairo text-start italic opacity-70">{{ $service->provider->name ?? __('غير محدد') }}</span>
                                 </div>
                             </td>
                             <td class="px-10 py-6 text-start">
-                                <span class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-xl text-[9px] font-black font-Cairo text-start opacity-60">
+                                <span class="px-3 py-1.5 bg-[var(--main-bg)] border border-[var(--glass-border)] rounded-xl text-[12px] font-black font-Cairo opacity-60 whitespace-nowrap inline-flex items-center justify-center">
                                     {{ $service->category->name ?? __('بدون قسم') }}
                                 </span>
                             </td>
                             <td class="px-10 py-6 text-start">
                                 <div class="flex items-center gap-1.5 text-start font-Cairo italic">
                                     <span class="text-base font-black text-brand-primary font-mono text-start">{{ number_format($service->price, 2) }}</span>
-                                    <span class="text-[9px] font-black uppercase font-Cairo text-start opacity-40">USD</span>
+                                    <span class="text-[12px] font-black uppercase font-Cairo text-start opacity-40">YER</span>
                                 </div>
                             </td>
                             <td class="px-10 py-6 text-start">
                                 <div class="text-start">
-                                    <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black {{ $service->is_available ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-600 border border-rose-500/20' }} font-Cairo text-start">
+                                    <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-black {{ $service->is_available ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-600 border border-rose-500/20' }} font-Cairo whitespace-nowrap inline-flex items-center justify-center">
                                         <span class="w-1.5 h-1.5 rounded-full {{ $service->is_available ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500' }}"></span>
                                         {{ $service->is_available ? __('متاحة') : __('غير متاحة') }}
                                     </span>
@@ -160,7 +160,7 @@
                             </td>
                             <td class="px-10 py-6 text-start">
                                 <div class="text-start font-Cairo">
-                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[9px] font-black {{ $service->is_active ? 'bg-indigo-500/10 text-indigo-600 border border-indigo-500/20' : 'bg-slate-100 text-slate-500 border border-slate-200 opacity-60' }} font-Cairo text-start">
+                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[12px] font-black {{ $service->is_active ? 'bg-indigo-500/10 text-indigo-600 border border-indigo-500/20' : 'bg-[var(--glass-bg)] text-[var(--text-muted)] border border-[var(--glass-border)] opacity-60' }} font-Cairo whitespace-nowrap inline-flex items-center justify-center">
                                         {{ $service->is_active ? __('نشطة') : __('موقوفة') }}
                                     </span>
                                 </div>
@@ -180,9 +180,9 @@
                         <tr>
                             <td colspan="7" class="px-10 py-32 text-center text-start">
                                 <div class="flex flex-col items-center justify-center opacity-40 text-start">
-                                    <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center text-4xl mb-6 shadow-inner">🚫</div>
+                                    <div class="w-20 h-20 bg-[var(--glass-border)] rounded-[2rem] flex items-center justify-center text-4xl mb-6 shadow-inner">🚫</div>
                                     <h5 class="text-xl font-black font-Cairo">{{ __('لا توجد خدمات متاحة حالياً') }}</h5>
-                                    <p class="text-[10px] font-black mt-4 max-w-xs leading-relaxed uppercase tracking-[0.2em] font-Cairo opacity-60">
+                                    <p class="text-[13px] font-black mt-4 max-w-xs leading-relaxed uppercase tracking-[0.2em] font-Cairo opacity-60">
                                         {{ __('لا توجد خدمات مضافة حالياً. يمكنك إضافة خدمات جديدة من زر الإضافة أعلاه.') }}
                                     </p>
                                 </div>
@@ -194,7 +194,7 @@
         </div>
 
         @if ($services->hasPages())
-            <div class="px-10 py-8 bg-slate-50/50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800 text-start font-Cairo">
+            <div class="px-10 py-8 bg-[var(--main-bg)] border-t border-[var(--glass-border)] text-start font-Cairo">
                 {{ $services->links() }}
             </div>
         @endif

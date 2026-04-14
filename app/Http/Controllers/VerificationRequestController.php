@@ -141,17 +141,20 @@ class VerificationRequestController extends Controller
         return back()->with('success', 'تم قبول الهوية. المزود كان موثقاً من قبل، لذا يجب عليه شراء باقة توثيق لتفعيل التوثيق في حسابه مجدداً.');
     }
 
-    public function rejectAdmin($id)
+    public function rejectAdmin(Request $request, $id)
     {
-        $request = VerificationRequest::findOrFail($id);
-        $request->update(['status' => 'rejected']);
-        $provider = $request->user;
+        $verificationRequest = VerificationRequest::findOrFail($id);
+        $verificationRequest->update([
+            'status' => 'rejected',
+            'rejection_reason' => $request->input('rejection_reason')
+        ]);
+        $provider = $verificationRequest->user;
 
         $provider->verification_provider = false;
         $provider->provider_verified_until = null;
         $provider->save();
 
-        return back()->with('success', 'تم رفض طلب التحقق');
+        return back()->with('success', 'تم رفض طلب التحقق بنجاح');
     }
 
 

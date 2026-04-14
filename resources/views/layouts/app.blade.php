@@ -28,12 +28,12 @@
     @yield('css')
 </head>
 
-<body class="font-Cairo antialiased text-slate-900 dark:text-slate-100 h-screen flex overflow-hidden relative bg-[var(--main-bg)] selection:bg-brand-primary selection:text-white">
+<body class="font-Cairo antialiased text-[var(--main-text)] h-screen flex overflow-hidden relative bg-[var(--main-bg)] selection:bg-brand-primary selection:text-white">
 
     <div class="admin-layout w-full h-full flex">
 
         <!-- Sidebar -->
-        <aside class="sidebar w-64 h-full bg-[var(--sidebar-bg)] border-l border-slate-200 dark:border-white/5 flex flex-col transition-all duration-500">
+        <aside class="sidebar w-64 h-full bg-[var(--sidebar-bg)] border-l border-[var(--glass-border)] flex flex-col transition-all duration-500">
 
             <div class="sidebar-header">
                 <h2>Admin Panel</h2>
@@ -66,13 +66,11 @@
                     <span class="text">المستخدمين</span>
                 </a>
 
-                <a href="{{ route('provider-requests.index') }}"
-                    class="{{ request()->is('provider-requests*') ? 'active' : '' }}">
+                <a href="{{ route('provider-requests.index') }}" class="{{ request()->is('provider-requests*') ? 'active' : '' }}">
                     <span class="icon">📈</span>
                     <span class="text">طلبات مزودي الخدمات</span>
                 </a>
-                <a href="{{ route('requests.index') }}"
-                    class="{{ request()->is('requests*') ? 'active' : '' }}">
+                <a href="{{ route('requests.index') }}" class="{{ request()->is('requests*') ? 'active' : '' }}">
                     <span class="icon">📈</span>
                     <span class="text">طلبات الخدمات</span>
                 </a>

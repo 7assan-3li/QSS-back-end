@@ -62,9 +62,9 @@ class UserVerificationPackagesController extends Controller
         ]);
     }
 
-    public function reject($id)
+    public function reject(Request $request, $id)
     {
-        $userPackage = $this->verificationPackageService->rejectPackage($id, Auth::id());
+        $userPackage = $this->verificationPackageService->rejectPackage($id, Auth::id(), $request->input('rejection_reason'));
 
         return response()->json([
             'message' => 'تم رفض الطلب',
@@ -97,9 +97,9 @@ class UserVerificationPackagesController extends Controller
         return redirect()->back()->with('success', 'تم الموافقة على الطلب بنجاح');
     }
 
-    public function rejectWebAdmin($id)
+    public function rejectWebAdmin(Request $request, $id)
     {
-        $this->verificationPackageService->rejectPackage($id, Auth::id());
-        return redirect()->back()->with('success', 'تم رفض الطلب');
+        $this->verificationPackageService->rejectPackage($id, Auth::id(), $request->input('rejection_reason'));
+        return redirect()->back()->with('success', 'تم رفض الطلب بنجاح');
     }
 }

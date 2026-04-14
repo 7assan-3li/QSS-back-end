@@ -96,14 +96,15 @@ class UserVerificationPackagesService
     /**
      * Reject a package request
      */
-    public function rejectPackage($packageId, $adminId)
+    public function rejectPackage($packageId, $adminId, $rejectionReason = null)
     {
-        return DB::transaction(function () use ($packageId, $adminId) {
+        return DB::transaction(function () use ($packageId, $adminId, $rejectionReason) {
             $userPackage = UserVerificationPackages::findOrFail($packageId);
             
             $userPackage->update([
                 'status' => BondStatus::REJECTED,
                 'admin_id' => $adminId,
+                'rejection_reason' => $rejectionReason,
             ]);
 
             // إزالة من السجل المركزي

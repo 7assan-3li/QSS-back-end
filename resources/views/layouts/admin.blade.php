@@ -43,17 +43,17 @@
 
         /**
          * Premium Confirmation Helper (High Impact Edition)
-         * Integrates with SweetAlert2 with specialized "Danger Mode" for deletions
+         * Integrates with SweetAlert2 with specialized"Danger Mode" for deletions
          */
         function confirmAction(formId, config = {}) {
             const isDark = document.documentElement.classList.contains('dark');
             const isDanger = config.isDanger || config.icon === 'warning';
             
             const confirmColor = isDanger ? '#e11d48' : '#4f46e5';
-            const defaultText = config.text || (isDanger ? "{{ __('تنبيه: أنت على وشك القيام بعملية مسح نهائية لا يمكن التراجع عنها!') }}" : "{{ __('هل أنت متأكد من القيام بهذه العملية الحساسة؟') }}");
-            const defaultTitle = config.title || (isDanger ? "⚠️ {{ __('تأكيد الحذف النهائي') }}" : "{{ __('تأكيد إجراء إداري') }}");
-            const confirmButtonText = config.confirmButtonText || (isDanger ? "{{ __('تأكيد المسح الآن') }}" : "{{ __('تأكيد التنفيذ') }}");
-            const cancelButtonText = config.cancelButtonText || "{{ __('إلغاء') }}";
+            const defaultText = config.text || (isDanger ?"{{ __('تنبيه: أنت على وشك القيام بعملية مسح نهائية لا يمكن التراجع عنها!') }}" :"{{ __('هل أنت متأكد من القيام بهذه العملية الحساسة؟') }}");
+            const defaultTitle = config.title || (isDanger ?"⚠️ {{ __('تأكيد الحذف النهائي') }}" :"{{ __('تأكيد إجراء إداري') }}");
+            const confirmButtonText = config.confirmButtonText || (isDanger ?"{{ __('تأكيد المسح الآن') }}" :"{{ __('تأكيد التنفيذ') }}");
+            const cancelButtonText = config.cancelButtonText ||"{{ __('إلغاء') }}";
 
             Swal.fire({
                 title: defaultTitle,
@@ -71,11 +71,11 @@
                     popup: isDanger ? 'swal2-head-shake' : 'swal2-show'
                 },
                 customClass: {
-                    popup: `rounded-[2.5rem] border ${isDanger ? 'border-rose-500 shadow-rose-500/10' : 'border-slate-100 dark:border-slate-800 shadow-2xl'} font-Cairo`,
+                    popup: `rounded-[2.5rem] border ${isDanger ? 'border-rose-500 shadow-rose-500/10' : 'border-[var(--glass-border)] shadow-2xl'} font-Cairo`,
                     title: 'font-black text-2xl font-Cairo !text-inherit',
                     htmlContainer: 'font-bold text-sm font-Cairo opacity-60',
-                    confirmButton: `px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 active:scale-95 font-Cairo shadow-lg ${isDanger ? 'shadow-rose-500/20' : 'shadow-indigo-500/20'}`,
-                    cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 active:scale-95 font-Cairo'
+                    confirmButton: `px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105  font-Cairo shadow-lg ${isDanger ? 'shadow-rose-500/20' : 'shadow-indigo-500/20'}`,
+                    cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105  font-Cairo'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -106,19 +106,19 @@
                         // Optional: skip action column if desired. For now, we take text.
                     }
                     
-                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").replace(/(\s\s+)/gm, " ");
+                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm,"").replace(/(\s\s+)/gm,"");
                     row.push('"' + data.trim() + '"');
                 }
                 csv.push(row.join(","));
             }
             
-            const BOM = "\uFEFF";
+            const BOM ="\uFEFF";
             const csvData = BOM + csv.join("\n");
-            const csvFile = new Blob([csvData], {type: "text/csv;charset=utf-8;"});
+            const csvFile = new Blob([csvData], {type:"text/csv;charset=utf-8;"});
             const downloadLink = document.createElement("a");
             downloadLink.download = filename;
             downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = "none";
+            downloadLink.style.display ="none";
             document.body.appendChild(downloadLink);
             downloadLink.click();
         }
@@ -149,14 +149,14 @@
                 toast: true,
                 position: 'top-end',
                 icon: 'success',
-                title: "{{ session('success') }}",
+                title:"{{ session('success') }}",
                 showConfirmButton: false,
                 timer: 4000,
                 timerProgressBar: true,
                 background: isDark ? '#1e293b' : '#ffffff',
                 color: isDark ? '#f8fafc' : '#1e293b',
                 customClass: {
-                    popup: 'rounded-2xl border border-slate-100 dark:border-slate-800 font-Cairo shadow-2xl'
+                    popup: 'rounded-2xl border border-[var(--glass-border)] font-Cairo shadow-2xl'
                 }
             });
         });
@@ -171,7 +171,7 @@
                 toast: true,
                 position: 'top-end',
                 icon: 'error',
-                title: "{{ session('error') }}",
+                title:"{{ session('error') }}",
                 showConfirmButton: false,
                 timer: 5000,
                 timerProgressBar: true,
@@ -187,7 +187,7 @@
 
     @stack('styles')
 </head>
-<body class="font-sans antialiased text-slate-900 dark:text-slate-100 h-screen flex overflow-hidden relative selection:bg-brand-primary selection:text-white">
+<body class="font-sans antialiased text-[var(--main-text)] h-screen flex overflow-hidden relative selection:bg-brand-primary selection:text-white">
 
     <!-- Ambient Glow Backgrounds -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -212,5 +212,28 @@
     </main>
 
     @stack('scripts')
+    
+    <!-- Navigation Reliability Fix -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (!link || !link.href || link.href.includes('#') || link.hasAttribute('download') || link.getAttribute('target') === '_blank') return;
+                
+                // If it's a sidebar link or a show/action button
+                if (link.classList.contains('sidebar-item') || link.closest('.card-premium') || link.closest('td')) {
+                    // Check if it's pointing to our domain
+                    if (link.href.startsWith(window.location.origin)) {
+                        e.preventDefault();
+                        // Add an immediate active state visually
+                        link.style.opacity = '0.5';
+                        link.style.transform = 'scale(0.95)';
+                        // Force fast navigation
+                        window.location.href = link.href;
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

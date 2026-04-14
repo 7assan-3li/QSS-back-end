@@ -13,6 +13,7 @@ class UserVerificationPackages extends Model
         'number_bond',
         'status',
         'admin_id',
+        'rejection_reason',
     ];
 
     public function user()

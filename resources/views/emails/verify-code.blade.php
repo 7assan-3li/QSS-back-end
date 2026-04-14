@@ -39,8 +39,7 @@
                                 background:#2563eb;
                                 color:#ffffff;
                                 border-radius:12px;
-                                font-weight:bold
-                            ">
+                                font-weight:bold">
                                 {{ $code }}
                             </span>
                         </div>
