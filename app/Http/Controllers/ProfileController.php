@@ -18,7 +18,7 @@ class ProfileController extends Controller
 
     public function show($profile_id)
     {
-        $profile = Profile::with(['user.banks', 'profilePhones', 'previousWorks'])->findOrFail($profile_id);
+        $profile = Profile::with(['user.banks', 'user.main_services', 'user.services', 'profilePhones', 'previousWorks'])->findOrFail($profile_id);
         return response()->json([
             'message' => 'Profile retrieved successfully',
             'profile' => new ProfileResource($profile)
@@ -28,7 +28,7 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($user_id);
         $profile = $user->profile;
-        $profile->load(['user.banks', 'profilePhones', 'previousWorks']);
+        $profile->load(['user.banks', 'user.main_services', 'user.services', 'profilePhones', 'previousWorks']);
         return response()->json([
             'message' => 'Profile retrieved successfully',
             'profile' => new ProfileResource($profile)
@@ -38,7 +38,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $profile = $user->profile;
-        $profile->load(['user.banks', 'profilePhones', 'previousWorks']);
+        $profile->load(['user.banks', 'user.main_services', 'user.services', 'profilePhones', 'previousWorks']);
         return response()->json([
             'message' => 'Profile retrieved successfully',
             'profile' => new ProfileResource($profile)

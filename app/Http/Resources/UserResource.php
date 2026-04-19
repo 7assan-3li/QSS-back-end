@@ -25,6 +25,8 @@ class UserResource extends JsonResource
             'paid_points' => $this->paid_points,
             'seeker_policy' => $this->seeker_policy,
             'banks' => $this->whenLoaded('banks'),
+            'main_services' => $this->whenLoaded('main_services'),
+            'services' => $this->whenLoaded('services'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
