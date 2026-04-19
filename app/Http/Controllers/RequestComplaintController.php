@@ -59,26 +59,16 @@ class RequestComplaintController extends Controller
 
     public function index(Request $request)
     {
-        $role = $request->get('role'); // seeker or provider
         $status = $request->get('status');
 
-        $query = RequestComplaint::with(['request', 'user', 'request.user']);
-
-        if ($role === 'seeker') {
-            $query->seeker();
-        } elseif ($role === 'provider') {
-            $query->provider();
-        }
-
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        $complaints = $query->latest()->paginate(10);
+        $complaints = RequestComplaint::with(['request.user', 'user'])
+            ->where('user_id', Auth::id())
+            ->when($status, fn($query) => $query->where('status', $status))
+            ->latest()
+            ->paginate(10);
 
         return response()->json([
             'message' => 'تم استرجاع الشكاوى بنجاح',
-            'role' => $role,
             'RequestComplaints' => $complaints,
         ], 200);
     }

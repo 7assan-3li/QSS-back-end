@@ -5,6 +5,7 @@ namespace App\Services;
 use App\constant\RequestStatus;
 use App\constant\ServiceType;
 use App\Models\Request as RequestModel;
+use App\Models\RequestComplaint;
 use Illuminate\Support\Facades\DB;
 
 class RequestService
@@ -61,19 +62,38 @@ class RequestService
 
     }
 
-    public function getAllSeekerRequests($seekerId){
-        $requests = RequestModel::with(['user', 'services'])->where('user_id', $seekerId)->get();
-        return $requests;
-    }
+    public function getAllSeekerRequests($seekerId)
+    {
+        $requests = RequestModel::with(['user', 'services'])->where('user_id', $seekerId)->latest()->get();
         
-    
+        $complaints = RequestComplaint::with(['request', 'user', 'request.user'])
+            ->where('user_id', $seekerId)
+            ->latest()
+            ->get();
 
-    public function getAllProviderRequests($providerId){
+        return [
+            'requests' => $requests,
+            'complaints' => $complaints
+        ];
+    }
+
+    public function getAllProviderRequests($providerId)
+    {
         // we use whereHas because a request is linked to a provider through its services
-        return RequestModel::with(['user', 'services'])
-            ->whereHas('services', function($q) use ($providerId) {
+        $requests = RequestModel::with(['user', 'services'])
+            ->whereHas('services', function ($q) use ($providerId) {
                 $q->where('provider_id', $providerId);
-            })->get();
+            })->latest()->get();
+
+        $complaints = RequestComplaint::with(['request', 'user', 'request.user'])
+            ->where('user_id', $providerId)
+            ->latest()
+            ->get();
+
+        return [
+            'requests' => $requests,
+            'complaints' => $complaints
+        ];
     }
 
     public function markPaid($data)
