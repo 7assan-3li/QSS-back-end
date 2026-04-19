@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class RequestComplaintController extends Controller
 {
+    public function __construct(
+        private \App\Services\NotificationService $notificationService
+    ) {}
 
     // $table->string('title');
     //         $table->string('type');
@@ -51,6 +54,15 @@ class RequestComplaintController extends Controller
             'request_id' => $request->input('request_id'),
             'user_id' => Auth::id(),
         ]);
+
+        // إشعار تأكيد استلام الشكوى
+        $this->notificationService->sendToUser(
+            Auth::id(),
+            'تم استلام شكواك 🛡️',
+            'شكراً لك، تم استلام شكواك بشأن الطلب رقم #' . $request->input('request_id') . ' وسيتم الرد عليك قريباً.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return response()->json([
                 'message' => 'تم ارسال الشكوى بنجاح',
                 'requestComplaint' => $requestComplaint
@@ -138,6 +150,20 @@ class RequestComplaintController extends Controller
             'status' => $request->status,
             'admin_id' => Auth::id()
         ]);
+
+        // إشعار لمقدم الشكوى بتحديث الحالة
+        $statusText = [
+            'pending'     => 'قيد الانتظار',
+            'in_progress' => 'قيد المعالجة',
+            'resolved'    => 'تم الحل'
+        ][$request->status] ?? $request->status;
+
+        $this->notificationService->sendToUser(
+            $requestComplaint->user_id,
+            'تحديث على شكواك 🛡️',
+            'تم تحديث حالة شكواك رقم #' . $requestComplaint->id . ' إلى: ' . $statusText,
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
 
         return back()->with('success', 'تم تحديث حالة الشكوى بنجاح');
     }

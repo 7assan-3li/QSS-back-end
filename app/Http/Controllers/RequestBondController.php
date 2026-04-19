@@ -14,8 +14,10 @@ class RequestBondController extends Controller
 {
     public function __construct(
         private RequestService $requestService,
-        private \App\Services\BondRegistryService $bondRegistryService
-    ) {}
+        private \App\Services\BondRegistryService $bondRegistryService,
+        private \App\Services\NotificationService $notificationService
+    ) {
+    }
     public function index()
     {
         $bonds = RequestBond::with('request')
@@ -40,42 +42,42 @@ class RequestBondController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'request_id'   => 'required|exists:requests,id',
-            'image_path'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'bond_number'  => 'nullable|integer',
-            'amount'       => 'required|numeric|min:0.01',
-            'description'  => 'nullable|string',
+            'request_id' => 'required|exists:requests,id',
+            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'bond_number' => 'nullable|integer',
+            'amount' => 'required|numeric|min:0.01',
+            'description' => 'nullable|string',
         ]);
 
         //التاكد من حالة الطلب
         $requestModel = RequestModel::findOrFail($validated['request_id']);
         $requestStatus = $requestModel->status;
-        
+
         if ($requestStatus !== RequestStatus::ACCEPTED_INITIAL && $requestStatus !== RequestStatus::ACCEPTED_PARTIAL_PAID) {
             return response()->json([
                 'message' => 'لا يمكن رفع سند حالياً لهذا الطلب',
-                'requestStatus'    => $requestStatus
+                'requestStatus' => $requestStatus
             ], 422);
         }
 
         // حفظ الصورة
         $path = $request->file('image_path')->store('bonds', 'public');
 
-        return \DB::transaction(function () use ($validated, $path) {
+        return \DB::transaction(function () use ($validated, $path, $requestModel) {
             $requestBond = RequestBond::create([
-                'request_id'  => $validated['request_id'],
-                'image_path'  => $path,
+                'request_id' => $validated['request_id'],
+                'image_path' => $path,
                 'bond_number' => $validated['bond_number'] ?? null,
-                'amount'      => $validated['amount'],
+                'amount' => $validated['amount'],
                 'description' => $validated['description'] ?? null,
-                'status'      => BondStatus::PENDING,
+                'status' => BondStatus::PENDING,
             ]);
 
             // تسجيل في السجل المركزي إذا وجد رقم السند
             if (!empty($validated['bond_number'])) {
                 $this->bondRegistryService->register(
                     Auth::id(),
-                    (string)$validated['bond_number'],
+                    (string) $validated['bond_number'],
                     null, // Bank name
                     $validated['amount'],
                     'request_payment',
@@ -84,9 +86,27 @@ class RequestBondController extends Controller
                 );
             }
 
+            // إشعار لمزود الخدمة بوجود سند جديد للمراجعة
+            $provider = $requestModel->serviceProvider();
+            $this->notificationService->sendToUser(
+                $provider->id,
+                'سند دفع جديد 📄',
+                'قام العميل برفع سند دفع جديد للطلب #' . $requestModel->id . ' يرجى مراجعته.',
+                \App\Constants\NotificationType::NEW_BOND,
+                ['request_id' => $requestModel->id]
+            );
+
+            // إشعار لطالب الخدمة بتأكيد استلام السند
+            $this->notificationService->sendToUser(
+                Auth::id(),
+                'سند الدفع قيد المراجعة 📑',
+                'تم استلام سند دفع جديد للطلب رقم #' . $requestModel->id . ' وهو الآن قيد المراجعة.',
+                \App\Constants\NotificationType::REQ_MSG
+            );
+
             return response()->json([
                 'message' => 'تم رفع السند بنجاح وهو بانتظار المراجعة',
-                'data'    => $requestBond
+                'data' => $requestBond
             ], 201);
         });
     }
@@ -95,7 +115,7 @@ class RequestBondController extends Controller
     {
         return \DB::transaction(function () use ($id) {
             $bond = RequestBond::lockForUpdate()->findOrFail($id);
-            
+
             if ($bond->status !== BondStatus::PENDING) {
                 return response()->json(['message' => 'هذا السند غير موجود في حالة الانتظار'], 422);
             }
@@ -109,22 +129,23 @@ class RequestBondController extends Controller
             }
 
             $bond->update(['status' => BondStatus::APPROVED]);
-            
+
             // تحديث السجل المركزي
             if ($bond->bond_number) {
                 $this->bondRegistryService->approve('request_payment', $bond->id);
             }
 
-            // تحديث المبلغ المدفوع
+            // تحديث المبلغ المدفوع والحالة عبر الخدمة المركزية
             $requestModel = $this->requestService->addToMoneyPaid($requestModel->id, $bond->amount);
 
-            if ($requestModel->money_paid >= $requestModel->total_price) {
-                $requestModel->status = RequestStatus::ACCEPTED_FULL_PAID;
-            } else {
-                $requestModel->status = RequestStatus::ACCEPTED_PARTIAL_PAID;
-            }
-
-            $requestModel->save();
+            // إشعار لطالب الخدمة بقبول السند
+            $this->notificationService->sendToUser(
+                $requestModel->user_id,
+                'تم قبول سند الدفع ✅',
+                'لقد تمت الموافقة على سند الدفع الخاص بك للطلب #' . $requestModel->id,
+                \App\Constants\NotificationType::BOND_STATUS_UPDATED,
+                ['request_id' => $requestModel->id]
+            );
 
             return response()->json([
                 'message' => 'تمت الموافقة على السند وتحديث حالة الطلب بنجاح',
@@ -137,7 +158,7 @@ class RequestBondController extends Controller
     {
         return \DB::transaction(function () use ($id) {
             $bond = RequestBond::findOrFail($id);
-            
+
             if ($bond->status !== BondStatus::PENDING) {
                 return response()->json(['message' => 'هذا السند غير موجود في حالة الانتظار'], 422);
             }
@@ -154,6 +175,15 @@ class RequestBondController extends Controller
             if ($bond->bond_number) {
                 $this->bondRegistryService->reject('request_payment', $bond->id);
             }
+
+            // إشعار لطالب الخدمة برفض السند
+            $this->notificationService->sendToUser(
+                $requestModel->user_id,
+                'تم رفض سند الدفع ❌',
+                'نعتذر، لقد تم رفض سند الدفع الخاص بك للطلب #' . $requestModel->id . '. يرجى التأكد من البيانات وإعادة الرفع.',
+                \App\Constants\NotificationType::BOND_STATUS_UPDATED,
+                ['request_id' => $requestModel->id]
+            );
 
             return response()->json([
                 'message' => 'تم رفض السند بنجاح',

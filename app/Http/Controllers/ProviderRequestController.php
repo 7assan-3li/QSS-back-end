@@ -18,6 +18,11 @@ class ProviderRequestController extends Controller
 {
     use AuthorizesRequests;
 
+    public function __construct(
+        private \App\Services\NotificationService $notificationService
+    ) {}
+
+
     public function index()
     {
         $this->authorize('viewAny', ProviderRequest::class);
@@ -58,6 +63,14 @@ class ProviderRequestController extends Controller
 
         // حفظ الطلب
         $providerRequest = ProviderRequest::create($validated);
+
+        // إشعار تأكيد استلام طلب الانضمام
+        $this->notificationService->sendToUser(
+            Auth::id(),
+            'طلب الانضمام قيد المراجعة 📝',
+            'شكراً لاهتمامك، تم استلام طلبك للانضمام كمزود خدمة بنجاح وهو قيد المراجعة حالياً.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
 
         return response()->json([
             'message' => 'تم ارسال الطلب بنجاح',
@@ -185,7 +198,15 @@ class ProviderRequestController extends Controller
         $providerRequest->admin_id = Auth::id();
         $providerRequest->save();
 
+        // إرسال إشعار للمستخدم بالنتجية
         if ($newStatus === ProviderRequestStatus::ACCEPTED) {
+            $this->notificationService->sendToUser(
+                $providerRequest->user_id,
+                'تهانينا! تم قبول طلبك 🎉',
+                'تمت الموافقة على طلبك للانضمام كمزود خدمة بنجاح. يمكنك الآن البدء في تقديم خدماتك.',
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+
             $user = User::findOrFail($providerRequest->user_id);
             if ($user->role === Role::PROVIDER) {
                 return back()->withErrors('لا يمكن تغيير الحالة من هذه الحالة.');
@@ -205,6 +226,20 @@ class ProviderRequestController extends Controller
             if (!$hasMeeting || !$hasCustom) {
                 $serviceService->createMeetingCustomSerivce($user->id);
             }
+        } elseif ($newStatus === ProviderRequestStatus::REJECTED) {
+            $this->notificationService->sendToUser(
+                $providerRequest->user_id,
+                'تم رفض طلب الانضمام ⚠️',
+                'للأسف، تم رفض طلبك للانضمام كمزود خدمة. يرجى مراجعة البيانات والمحاولة لاحقاً بمستندات أوضح.',
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+        }
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'message' => 'تم تحديث حالة الطلب بنجاح',
+                'providerRequest' => $providerRequest
+            ]);
         }
 
         return to_route('provider-requests.show', $providerRequest->id)->with('success', 'تم تحديث حالة الطلب بنجاح');

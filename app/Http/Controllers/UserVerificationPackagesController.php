@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserVerificationPackageRequest;
 use App\Services\UserVerificationPackagesService;
 use Illuminate\Http\Request;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 
 class UserVerificationPackagesController extends Controller
 {
-    protected $verificationPackageService;
 
-    public function __construct(UserVerificationPackagesService $verificationPackageService)
-    {
-        $this->verificationPackageService = $verificationPackageService;
-    }
+    public function __construct(
+        private UserVerificationPackagesService $verificationPackageService,
+        private NotificationService $notificationService
+    ) {}
 
     public function index()
     {
@@ -46,6 +46,14 @@ class UserVerificationPackagesController extends Controller
 
         $userPackage = $this->verificationPackageService->storePackage(Auth::id(), $validated, $imageFile);
 
+        // إشعار تأكيد استلام طلب الاشتراك
+        $this->notificationService->sendToUser(
+            Auth::id(),
+            'طلب اشتراك باقة التوثيق 🎫',
+            'تم استلام طلب اشتراكك في الباقة بنجاح، وهو الآن قيد المراجعة.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return response()->json([
             'message' => 'تم إرسال طلب الاشتراك بنجاح، بانتظار موافقة المسؤول',
             'user_package' => $userPackage
@@ -56,6 +64,14 @@ class UserVerificationPackagesController extends Controller
     {
         $userPackage = $this->verificationPackageService->approvePackage($id, Auth::id());
 
+        // إشعار بقبول باقة التوثيق
+        $this->notificationService->sendToUser(
+            $userPackage->user_id,
+            'تفعيل باقة التوثيق ✨',
+            'تمت الموافقة على اشتراكك وتفعيل ميزات باقة التوثيق بنجاح.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return response()->json([
             'message' => 'تم الموافقة على الطلب بنجاح',
             'user_package' => $userPackage
@@ -65,6 +81,14 @@ class UserVerificationPackagesController extends Controller
     public function reject(Request $request, $id)
     {
         $userPackage = $this->verificationPackageService->rejectPackage($id, Auth::id(), $request->input('rejection_reason'));
+
+        // إشعار برفض باقة التوثيق
+        $this->notificationService->sendToUser(
+            $userPackage->user_id,
+            'رفض اشتراك باقة التوثيق ⚠️',
+            'للأسف، تم رفض طلب اشتراكك في باقة التوثيق. السبب: ' . ($request->input('rejection_reason') ?? 'يرجى مراجعة البيانات.'),
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
 
         return response()->json([
             'message' => 'تم رفض الطلب',

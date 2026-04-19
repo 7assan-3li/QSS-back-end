@@ -9,6 +9,9 @@ use DB;
 
 class PointsService
 {
+    public function __construct(
+        private \App\Services\NotificationService $notificationService
+    ) {}
     public function addBonusPoints($userId, $requestId)
     {
         DB::transaction(function () use ($userId, $requestId) {
@@ -29,11 +32,18 @@ class PointsService
 
             \App\Models\PointTransaction::create([
                 'seeker_id' => $userId,
-                'provider_id' => null, // Bonus from system
                 'request_id' => $requestId,
                 'amount' => $bonusAmount,
                 'type' => 'bonus',
             ]);
+
+            // إشعار للمطالب بنقاط المكافأة
+            $this->notificationService->sendToUser(
+                $userId,
+                'لقد حصلت على نقاط مكافأة! 🎉',
+                "مبروك! حصلت على $bonusAmount نقطة مكافأة لإكمالك الطلب رقم #$requestId.",
+                \App\Constants\NotificationType::REQ_MSG
+            );
         });
     }
 
@@ -82,12 +92,20 @@ class PointsService
             $seeker->save();
 
             \App\Models\PointTransaction::create([
-                'seeker_id' => $seeker->id,
+                'seeker_id' => $request->user_id,
                 'provider_id' => $provider->id,
                 'request_id' => $requestId,
                 'amount' => $transferred_points,
                 'type' => 'payment',
             ]);
+
+            // إشعار لمزود الخدمة باستلام دفع نقدية (نقاط)
+            $this->notificationService->sendToUser(
+                $provider->id,
+                'تم استلام دفعة جديدة 💰',
+                "قام العميل بتحويل $transferred_points نقطة إلى رصيدك للطلب رقم #$requestId.",
+                \App\Constants\NotificationType::REQ_MSG
+            );
 
             return $request;
         });
@@ -187,12 +205,18 @@ class PointsService
 
             \App\Models\PointTransaction::create([
                 'seeker_id'   => null,
-                'provider_id' => $user->id,
-                'request_id'  => null,
-                'amount'      => $amount,
+                'provider_id' => $userId,
                 'type'        => 'points_conversion',
                 'description' => "تحويل $amount من الأرباح إلى $bonusAmount من المكافآت (حافز $conversionBonusRate%)"
             ]);
+
+            // إشعار للمزود بنجاح عملية التحويل
+            $this->notificationService->sendToUser(
+                $user->id,
+                'نجاح عملية تحويل النقاط 🔄',
+                "تم تحويل $amount نقطة من أرباحك إلى $bonusAmount نقطة مكافأة بنجاح.",
+                \App\Constants\NotificationType::REQ_MSG
+            );
 
             return [
                 'paid_points_deducted' => $amount,

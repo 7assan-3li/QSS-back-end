@@ -17,6 +17,9 @@ use Carbon\Carbon;
 
 class VerificationRequestController extends Controller
 {
+    public function __construct(
+        private \App\Services\NotificationService $notificationService
+    ) {}
     public function index()
     {
         $user = Auth::user();
@@ -40,6 +43,15 @@ class VerificationRequestController extends Controller
             ], 400);
         }
         $verificationRequest = $verificationRequestService->create($verificationRequestRequest->validated());
+
+        // إشعار تأكيد استلام طلب التحقق
+        $this->notificationService->sendToUser(
+            $user->id,
+            'طلب التحقق قيد المراجعة ⏳',
+            'تم استلام طلب توثيق هويتك بنجاح وهو الآن قيد المراجعة من قبل الإدارة.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return response()->json([
             "message" => "تم إرسال طلب التحقق بنجاح",
             "verification_request" => $verificationRequest
@@ -54,6 +66,7 @@ class VerificationRequestController extends Controller
                 "message" => "طلب التحقق غير موجود",
             ], 404);
         }
+        
         return response()->json([
             "message" => "تم استرجاع طلب التحقق بنجاح",
             "verification_request" => $verificationRequest
@@ -114,6 +127,14 @@ class VerificationRequestController extends Controller
             ->where('id', '!=', $id) // استثناء الطلب الحالي
             ->exists();
 
+        // إشعار بالقبول
+        $this->notificationService->sendToUser(
+            $provider->id,
+            'تم توثيق حسابك ✨',
+            'تهانينا، لقد تمت الموافقة على طلب توثيق هويتك بنجاح.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         if (!$hasBeenVerifiedBefore) {
             $freeDays = (int) (\App\Models\Setting::where('key', 'initial_free_verification_days')->value('value') ?? 365);
             $provider->verification_provider = true;
@@ -153,6 +174,14 @@ class VerificationRequestController extends Controller
         $provider->verification_provider = false;
         $provider->provider_verified_until = null;
         $provider->save();
+
+        // إشعار بالرفض
+        $this->notificationService->sendToUser(
+            $provider->id,
+            'تم رفض طلب التوثيق ⚠️',
+            'نعتذر، لقد تم رفض طلب توثيق هويتك. السبب: ' . ($request->input('rejection_reason') ?? 'يرجى مراجعة البيانات.'),
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
 
         return back()->with('success', 'تم رفض طلب التحقق بنجاح');
     }

@@ -7,12 +7,11 @@ use Illuminate\Http\Request;
 
 class RequestCustomServiceController extends Controller
 {
-    private $requestCustomServiceService;
 
-    public function __construct(RequestCustomServiceService $requestCustomServiceService)
-    {
-        $this->requestCustomServiceService = $requestCustomServiceService;
-    }
+    public function __construct(
+        private  $requestCustomServiceService,
+        private \App\Services\NotificationService $notificationService
+    ) {}
 
     public function indexProvider()
     {
@@ -38,6 +37,23 @@ class RequestCustomServiceController extends Controller
         try {
             $result = $this->requestCustomServiceService->store($data);
 
+            // إشعار لمزود الخدمة بطلب خدمة مخصصة جديد
+            $this->notificationService->sendToUser(
+                $data['provider_id'],
+                'طلب خدمة مخصصة 🛠️',
+                'لديك طلب جديد لخدمة مخصصة، يرجى مراجعة الوصف وتحديد السعر.',
+                \App\Constants\NotificationType::NEW_REQUEST,
+                ['request_id' => $result['request_id']]
+            );
+
+            // إشعار تأكيد لطالب الخدمة
+            $this->notificationService->sendToUser(
+                auth()->id(),
+                'تم إرسال طلب الخدمة 📡',
+                'تم إرسال طلبك بنجاح وسيتم إخطارك فور تحديد السعر من قبل المزود.',
+                \App\Constants\NotificationType::GENERAL
+            );
+
             return response()->json([
                 'message' => 'تم إنشاء طلب الخدمة المخصصة بنجاح',
                 'request_id' => $result['request_id']
@@ -62,6 +78,16 @@ class RequestCustomServiceController extends Controller
         try {
             $this->requestCustomServiceService->setPrice((int)$id, $data['price']);
 
+            // إشعار لطالب الخدمة بتحديد السعر
+            $customRequest = \App\Models\Request::find($id);
+            $this->notificationService->sendToUser(
+                $customRequest->user_id,
+                'تم تحديد سعر الخدمة 💰',
+                "تم تحديد سعر طلبك المخصص بمبلغ {$data['price']} ريال. يمكنك الآن المتابعة للدقع.",
+                \App\Constants\NotificationType::REQUEST_ACCEPTED,
+                ['request_id' => $id]
+            );
+
             return response()->json([
                 'message' => 'تم تحديد السعر وتحديث حالة الطلب بنجاح',
             ], 200);
@@ -84,6 +110,16 @@ class RequestCustomServiceController extends Controller
     {
         try {
             $this->requestCustomServiceService->reject((int)$id);
+
+            // إشعار لطالب الخدمة بالرفض
+            $customRequest = \App\Models\Request::find($id);
+            $this->notificationService->sendToUser(
+                $customRequest->user_id,
+                'رفض طلب الخدمة المخصصة ❌',
+                'نعتذر، لقد تم رفض طلبك للخدمة المخصصة من قبل المزود.',
+                \App\Constants\NotificationType::REQUEST_REJECTED,
+                ['request_id' => $id]
+            );
 
             return response()->json([
                 'message' => 'تم رفض الطلب بنجاح',

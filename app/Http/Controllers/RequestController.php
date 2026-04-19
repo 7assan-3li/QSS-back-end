@@ -18,8 +18,11 @@ class RequestController extends Controller
     use AuthorizesRequests;
 
     //constructor
-    public function __construct(private PointsService $pointsService, private RequestService $requestService)
-    {
+    public function __construct(
+        private PointsService $pointsService,
+        private RequestService $requestService,
+        private \App\Services\NotificationService $notificationService
+    ) {
     }
     public function index()
     {
@@ -180,6 +183,24 @@ class RequestController extends Controller
 
             // تحديث الطلب بالسعر النهائي
             $requestModel->update(['total_price' => $totalPrice]);
+
+            // إرسال إشعار للمزود
+            $providerId = $mainService->provider_id;
+            $this->notificationService->sendToUser(
+                $providerId,
+                'طلب جديد 🆕',
+                'لديك طلب جديد للخدمة ' . $mainService->name . ' من العميل ' . Auth::user()->name,
+                \App\Constants\NotificationType::NEW_REQUEST,
+                ['request_id' => $requestModel->id]
+            );
+
+            // إرسال إشعار تأكيد لطالب الخدمة
+            $this->notificationService->sendToUser(
+                Auth::id(),
+                'تم إرسال طلبك بنجاح 🚀',
+                'شكراً لك، تم إرسال طلبك رقم #' . $requestModel->id . ' بنجاح وهو بانتظار موافقة المزود.',
+                \App\Constants\NotificationType::GENERAL
+            );
         });
         return response()->json([
             'message' => 'تم إنشاء الطلب بنجاح',
@@ -281,27 +302,63 @@ class RequestController extends Controller
         }
 
         // تحديث الحالة ونقاط المكافأة بشكل ذري
-        DB::transaction(function () use ($requestModel, $newStatus) {
-            $requestModel->update([
-                'status' => $newStatus,
-            ]);
+        DB::transaction(
+            function () use ($requestModel, $newStatus) {
+                $requestModel->update([
+                    'status' => $newStatus,
+                ]);
 
-            if (in_array($newStatus, [RequestStatus::COMPLETED, RequestStatus::ACCEPTED_FULL_PAID, RequestStatus::ACCEPTED_PARTIAL_PAID])) {
-                // التأكد من تهيئة مبلغ العمولة عند البدء في سداد الطلب أو إكماله لضمان ثبات القيمة
-                if ($requestModel->commission_amount <= 0) {
-                    $requestModel->commission_amount = $requestModel->getCommissionAmount();
-                    $requestModel->save();
+                if (in_array($newStatus, [RequestStatus::COMPLETED, RequestStatus::ACCEPTED_FULL_PAID, RequestStatus::ACCEPTED_PARTIAL_PAID])) {
+                    // التأكد من تهيئة مبلغ العمولة عند البدء في سداد الطلب أو إكماله لضمان ثبات القيمة
+                    if ($requestModel->commission_amount <= 0) {
+                        $requestModel->commission_amount = $requestModel->getCommissionAmount();
+                        $requestModel->save();
+                    }
+                }
+
+                if ($newStatus == RequestStatus::COMPLETED) {
+                    // 1. منح نقاط مكافأة لطالب الخدمة
+                    $this->pointsService->addBonusPoints($requestModel->user_id, $requestModel->id);
+
+                    // 2. محاولة خصم العمولة آلياً من رصيد المزود
+                    $this->pointsService->payCommissionFromPoints($requestModel->id);
                 }
             }
+        );
 
-            if ($newStatus == RequestStatus::COMPLETED) {
-                // 1. منح نقاط مكافأة لطالب الخدمة
-                $this->pointsService->addBonusPoints($requestModel->user_id, $requestModel->id);
+        // إرسال إشعار للطرف المعني بتحديث الحالة
+        $seekerId = $requestModel->user_id;
+        $provider = $requestModel->serviceProvider();
 
-                // 2. محاولة خصم العمولة آلياً من رصيد المزود
-                $this->pointsService->payCommissionFromPoints($requestModel->id);
-            }
-        });
+        $title = 'تحديث حالة الطلب #' . $requestModel->id;
+        $message = '';
+        $type = \App\Constants\NotificationType::GENERAL;
+
+        switch ($newStatus) {
+            case RequestStatus::ACCEPTED_INITIAL:
+                $message = 'تم قبول طلبك مبدئياً من قبل المزود، يمكنك الآن متابعة الدفع.';
+                $type = \App\Constants\NotificationType::REQUEST_ACCEPTED;
+                $this->notificationService->sendToUser($seekerId, $title, $message, $type, ['request_id' => $requestModel->id]);
+                break;
+            case RequestStatus::REJECTED:
+                $message = 'نعتذر، تم رفض طلبك من قبل المزود.';
+                $type = \App\Constants\NotificationType::REQUEST_REJECTED;
+                $this->notificationService->sendToUser($seekerId, $title, $message, $type, ['request_id' => $requestModel->id]);
+                break;
+            case RequestStatus::COMPLETED:
+                $message = 'تم اكتمال طلبك بنجاح، شكراً لتعاملك معنا.';
+                $type = \App\Constants\NotificationType::REQUEST_COMPLETED;
+                $this->notificationService->sendToUser($seekerId, $title, $message, $type, ['request_id' => $requestModel->id]);
+                break;
+            case RequestStatus::CANCELLED:
+                // إبلاغ الطرف الآخر بالإلغاء
+                $cancelledBy = Auth::id();
+                $targetId = ($cancelledBy == $seekerId) ? $provider->id : $seekerId;
+                $message = 'تم إلغاء الطلب من قبل الطرف الآخر.';
+                $this->notificationService->sendToUser($targetId, $title, $message, $type, ['request_id' => $requestModel->id]);
+                break;
+        }
+
         $requestModel = RequestModel::with([
             'user',
             'main_service',
@@ -333,6 +390,15 @@ class RequestController extends Controller
 
         $requestModel->update(['provider_finished' => true]);
 
+        // إشعار لطالب الخدمة
+        $this->notificationService->sendToUser(
+            $requestModel->user_id,
+            'أنهى المزود العمل ✅',
+            'لقد حدد المزود الطلب كمكتمل من طرفه، يرجى مراجعة العمل وتأكيد الاستلام.',
+            \App\Constants\NotificationType::REQUEST_COMPLETED,
+            ['request_id' => $requestModel->id]
+        );
+
         return response()->json([
             'message' => 'تم تحديد الطلب كمكتمل من قبل المزود بنجاح',
             'request' => $requestModel
@@ -344,6 +410,10 @@ class RequestController extends Controller
         $data = $request->validate([
             'transferred_points' => 'required|numeric|min:0.01',
         ]);
+        $request = RequestModel::findOrFail($request_id);
+        if($request->status !== RequestStatus::ACCEPTED_INITIAL &&$request->status !== RequestStatus::ACCEPTED_PARTIAL_PAID && $request->status !== RequestStatus::ACCEPTED_FULL_PAID) {
+            return response()->json(['message' => 'لا يمكن الدفع إلا إذا كان في حالة دفع جزئي'], 422);
+        }
 
         $requestModel = RequestModel::findOrFail($request_id);
 
@@ -353,6 +423,16 @@ class RequestController extends Controller
 
         try {
             $updatedRequest = $this->pointsService->payRequest($request_id, $data['transferred_points']);
+
+            // إشعار للمزود باستلام دفع
+            $provider = $requestModel->serviceProvider();
+            $this->notificationService->sendToUser(
+                $provider->id,
+                'تم استلام دفعة نقاط 💰',
+                'لقد استلمت ' . $data['transferred_points'] . ' نقطة كدفعة للطلب #' . $requestModel->id,
+                \App\Constants\NotificationType::POINTS_RECEIVED,
+                ['request_id' => $requestModel->id]
+            );
 
             return response()->json([
                 'message' => 'تم الدفع بنجاح',

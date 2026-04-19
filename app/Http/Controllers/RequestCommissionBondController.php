@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class RequestCommissionBondController extends Controller
 {
+    public function __construct(
+        private \App\Services\NotificationService $notificationService
+    ) {}
     public function index(Request $request)
     {
         $bonds = RequestCommissionBond::with('request.main_service')
@@ -27,6 +30,15 @@ class RequestCommissionBondController extends Controller
     public function store(RequestCommissionBondRequest $request,RequestCommissionBondService $service)
     {
         $commissionBond = $service->create($request->validated());
+
+        // إشعار تأكيد استلام سند العمولة
+        $this->notificationService->sendToUser(
+            Auth::id(),
+            'تم استلام سند العمولة 💸',
+            'تم استلام سند دفع العمولة بنجاح وهو الآن قيد المراجعة من قبل الإدارة.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return response()->json($commissionBond, 201);
     }
 
@@ -53,6 +65,14 @@ class RequestCommissionBondController extends Controller
             }
             
             $request->save();
+
+            // إشعار للمزود بقبول سند العمولة
+            $this->notificationService->sendToUser(
+                $request->serviceProvider()->id,
+                'تم قبول سند العمولة ✅',
+                'تم قبول سند دفع العمولة الخاص بالطلب #' . $request->id . ' بنجاح.',
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
         });
 
         return back()->with('success', 'تم قبول السند وتحديث رصيد العمولة');
@@ -61,6 +81,15 @@ class RequestCommissionBondController extends Controller
     public function reject(RequestCommissionBond $bond)
     {
         $bond->update(['status' => 'rejected']);
+
+        // إشعار للمزود برفض سند العمولة
+        $this->notificationService->sendToUser(
+            $bond->request->serviceProvider()->id,
+            'تم رفض سند العمولة ❌',
+            'تم رفض سند دفع العمولة الخاص بالطلب #' . $bond->request->id . '. يرجى مراجعة الإدارة.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return back()->with('success', 'تم رفض السند');
     }
 

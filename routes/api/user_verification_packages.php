@@ -10,7 +10,7 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
 
     Route::middleware(['is_admin'])->group(function () {
         Route::get('/admin/user-verification-packages', [UserVerificationPackagesController::class, 'indexAdmin']);
-        Route::patch('/user-verification-packages/{id}/approve', [UserVerificationPackagesController::class, 'approve']);
-        Route::patch('/user-verification-packages/{id}/reject', [UserVerificationPackagesController::class, 'reject']);
+        Route::post('/user-verification-packages/{id}/approve', [UserVerificationPackagesController::class, 'approve']);
+        Route::post('/user-verification-packages/{id}/reject', [UserVerificationPackagesController::class, 'reject']);
     });
 });

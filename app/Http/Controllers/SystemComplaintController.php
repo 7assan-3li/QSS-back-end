@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 
 class SystemComplaintController extends Controller
 {
+    public function __construct(
+        private SystemComplaintService $service,
+        private \App\Services\NotificationService $notificationService
+    ) {}
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -46,6 +50,15 @@ class SystemComplaintController extends Controller
     public function store(StoreSystemComplaintRequest $storeSystemComplaintRequest, SystemComplaintService $service)
     {
         $complaint = $service->create($storeSystemComplaintRequest->validated(), $storeSystemComplaintRequest);
+
+        // إشعار تأكيد استلام الشكوى العامة
+        $this->notificationService->sendToUser(
+            Auth::id(),
+            'تم استلام بلاغك 📢',
+            'شكراً لك، تم استلام بلاغك بنجاح وهو الآن قيد المراجعة من قبل الإدارة.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return response()->json([
             'message' => 'تم اضافة الشكوي بنجاح',
             'SystemComplaint' => $complaint,
@@ -131,6 +144,20 @@ class SystemComplaintController extends Controller
         $systemComplaint->update([
             'status' => $request->status
         ]);
+
+        // إشعار للمستخدم بتحديث حالة الشكوى العامة
+        $statusText = [
+            SystemComplaintStatus::PENDING     => 'قيد الانتظار',
+            SystemComplaintStatus::IN_PROGRESS => 'قيد المعالجة',
+            SystemComplaintStatus::COMPLETED   => 'تم الإغلاق/الحل'
+        ][$request->status] ?? $request->status;
+
+        $this->notificationService->sendToUser(
+            $systemComplaint->user_id,
+            'تحديث على بلاغك 📢',
+            'تم تحديث حالة بلاغك رقم #' . $systemComplaint->id . ' إلى: ' . $statusText,
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
 
         return back()->with('success', 'تم تحديث حالة الشكوى بنجاح');
     }

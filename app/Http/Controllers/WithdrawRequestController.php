@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class WithdrawRequestController extends Controller
 {
-    public function __construct(private WithdrawRequestService $service) {}
+    public function __construct(
+        private WithdrawRequestService $service,
+        private \App\Services\NotificationService $notificationService
+    ) {}
 
     // API: Provider sends a withdrawal request
     public function store(Request $request)
@@ -20,6 +23,15 @@ class WithdrawRequestController extends Controller
 
         try {
             $withdrawal = $this->service->store(Auth::id(), $request->amount);
+
+            // إشعار تأكيد طلب السحب
+            $this->notificationService->sendToUser(
+                Auth::id(),
+                'طلب السحب قيد المعالجة 🕒',
+                'لقد تم تقديم طلب سحب رصيد بقيمة ' . $request->amount . ' ريال بنجاح وهو قيد المراجعة.',
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+
             return response()->json([
                 'message' => 'تم إرسال طلب السحب بنجاح وهو قيد المراجعة',
                 'data' => $withdrawal
@@ -60,7 +72,17 @@ class WithdrawRequestController extends Controller
         ]);
 
         try {
+            $withdrawal = \App\Models\WithdrawRequest::findOrFail($id);
             $this->service->approve($id, Auth::id(), $request->file('bond_image'), $request->bond_number);
+
+            // إشعار للمزود بقبول طلب السحب
+            $this->notificationService->sendToUser(
+                $withdrawal->user_id,
+                'تم تنفيذ طلب السحب 💸',
+                'تمت الموافقة على طلب سحب الرصيد بقيمة ' . $withdrawal->amount . ' ريال . رقم السند: ' . $request->bond_number,
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+
             return redirect()->back()->with('success', 'تمت الموافقة على طلب السحب وتحويل المبلغ');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -73,7 +95,17 @@ class WithdrawRequestController extends Controller
         $request->validate(['admin_note' => 'required|string']);
 
         try {
+            $withdrawal = \App\Models\WithdrawRequest::findOrFail($id);
             $this->service->reject($id, Auth::id(), $request->admin_note);
+
+            // إشعار للمزود برفض طلب السحب
+            $this->notificationService->sendToUser(
+                $withdrawal->user_id,
+                'تم رفض طلب السحب ❌',
+                'للأسف، تم رفض طلب سحب الرصيد. السبب: ' . $request->admin_note,
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+
             return redirect()->back()->with('success', 'تم رفض طلب السحب');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

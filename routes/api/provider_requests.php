@@ -8,5 +8,5 @@ Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function 
     //provider request routes
     Route::get('/provider-requests', [ProviderRequestController::class, 'index']);
     Route::post('/provider-requests', [ProviderRequestController::class, 'store']);
-    Route::patch('/provider-requests/{providerRequest}/status', [ProviderRequestController::class, 'updateStatus']);
+    Route::post('/provider-requests/{providerRequest}/status', [ProviderRequestController::class, 'updateStatus']);
 });

@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    public function __construct(
+        private \App\Services\NotificationService $notificationService
+    ) {}
     public function index()
     {
         $user = Auth::user();
@@ -97,6 +100,14 @@ class ReviewController extends Controller
         ]);
 
 
+
+        // 3. إشعار للمزود بوجود تقييم جديد
+        $this->notificationService->sendToUser(
+            $provider->id,
+            'لديك تقييم جديد ⭐',
+            'قام العميل ' . Auth::user()->name . ' بتقييم خدمتك بـ ' . $validated['rating'] . ' نجوم.',
+            \App\Constants\NotificationType::REQ_MSG
+        );
 
         return response()->json([
             'message' => 'تم إضافة التقييم بنجاح',

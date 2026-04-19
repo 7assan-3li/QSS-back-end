@@ -20,7 +20,7 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
 
         // Manage Subscriptions
         Route::get('user-points-packages', [UserPointsPackageController::class, 'index']);
-        Route::patch('user-points-packages/{id}/approve', [UserPointsPackageController::class, 'approve']);
-        Route::patch('user-points-packages/{id}/reject', [UserPointsPackageController::class, 'reject']);
+        Route::post('user-points-packages/{id}/approve', [UserPointsPackageController::class, 'approve']);
+        Route::post('user-points-packages/{id}/reject', [UserPointsPackageController::class, 'reject']);
     });
 });

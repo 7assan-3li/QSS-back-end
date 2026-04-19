@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
-
+use App\Constants\NotificationType;
 
 class NotificationService
 {
@@ -15,11 +15,11 @@ class NotificationService
      * @param int $userId (رقم المستخدم المستهدف)
      * @param string $title (عنوان الإشعار)
      * @param string $message (محتوى الإشعار)
-     * @param string $type (نوع الإشعار، مثلاً: new_request)
+     * @param string $type (نوع الإشعار، استخدم Constants\NotificationType)
      * @param array $data (بيانات إضافية للإشعار)
      * @return bool
      */
-    public function sendToUser($userId, $title, $message, $type = 'general', $data = [])
+    public function sendToUser($userId, $title, $message, $type = NotificationType::GENERAL, $data = [])
     {
         // 1. جلب التوكنات الخاصة بالمستخدم من جدول device_tokens
         $tokens = \App\Models\DeviceTokens::where('user_id', $userId)->pluck('token')->toArray();
@@ -42,7 +42,7 @@ class NotificationService
     }
 
     /**
-     * إرسال إشعار للموبايل باستخدام Firebase Cloud Messaging (FCM)
+     * إرسال إشعار للموبايل باستخدام Firebase Cloud Messaging (FCM) - HTTP v1
      *
      * @param string|array $fcmTokens (توكن الجهاز أو مصفوفة من التوكنز)
      * @param string $title (عنوان الإشعار)
@@ -52,38 +52,37 @@ class NotificationService
      */
     public function sendPushNotification($fcmTokens, $title, $body, $data = [])
     {
-        // يرجى إضافة FCM_SERVER_KEY في ملف .env
-        $serverKey = env('FCM_SERVER_KEY');
-        $url = 'https://fcm.googleapis.com/fcm/send';
-
-        $tokens = is_array($fcmTokens) ? $fcmTokens : [$fcmTokens];
-
-        $payload = [
-            'registration_ids' => $tokens,
-            'notification' => [
-                'title' => $title,
-                'body' => $body,
-                'sound' => 'default',
-            ],
-            'data' => $data,
-        ];
-
         try {
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
-                'Authorization' => 'key=' . $serverKey,
-                'Content-Type' => 'application/json',
-            ])->post($url, $payload);
+            $messaging = app('firebase.messaging');
+            $tokens = is_array($fcmTokens) ? $fcmTokens : [$fcmTokens];
 
-            if ($response->successful()) {
-                \Illuminate\Support\Facades\Log::info('Notification sent successfully', $response->json());
-                return true;
+            if (empty($tokens)) {
+                return false;
             }
 
-            \Illuminate\Support\Facades\Log::error('Notification failed', ['response' => $response->body()]);
-            return false;
+            $notification = \Kreait\Firebase\Messaging\Notification::create($title, $body);
+            
+            $message = \Kreait\Firebase\Messaging\CloudMessage::new()
+                ->withNotification($notification)
+                ->withData($data);
+
+            $sendReport = $messaging->sendMulticast($message, $tokens);
+
+            if ($sendReport->hasFailures()) {
+                foreach ($sendReport->failures()->getItems() as $failure) {
+                    \Illuminate\Support\Facades\Log::error('FCM Notification failure: ' . $failure->error()->getMessage());
+                }
+            }
+
+            \Illuminate\Support\Facades\Log::info('FCM Notifications processed', [
+                'success_count' => $sendReport->successes()->count(),
+                'failure_count' => $sendReport->failures()->count(),
+            ]);
+
+            return $sendReport->successes()->count() > 0;
 
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Notification Exception: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Firebase Notification Exception: ' . $e->getMessage());
             return false;
         }
     }

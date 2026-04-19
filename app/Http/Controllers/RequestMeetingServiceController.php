@@ -6,16 +6,14 @@ use App\Http\Requests\IndexProviderMeetingRequest;
 use App\Http\Requests\IndexSeekerMeetingRequest;
 use App\Http\Requests\StoreRequestMeetingServiceRequest;
 use App\Services\RequestMeetingServiceService;
-use Illuminate\Http\Request;
+use App\Services\NotificationService;
 
 class RequestMeetingServiceController extends Controller
 {
-    private $requestMeetingServiceService;
-
-    public function __construct(RequestMeetingServiceService $requestMeetingServiceService)
-    {
-        $this->requestMeetingServiceService = $requestMeetingServiceService;
-    }
+    public function __construct(
+        private RequestMeetingServiceService $requestMeetingServiceService,
+        private NotificationService $notificationService
+    ) {}
 
     public function indexProvider()
     {
@@ -65,6 +63,25 @@ class RequestMeetingServiceController extends Controller
 
         try {
             $result = $this->requestMeetingServiceService->store($data);
+
+            // إشعار لمزود الخدمة بطلب اجتماع جديد
+            $meetingRequest = \App\Models\Request::find($result['request_id']);
+            $providerId = $meetingRequest->main_service->provider_id;
+            $this->notificationService->sendToUser(
+                $providerId,
+                'طلب اجتماع جديد 🗓️',
+                'لديك طلب اجتماع جديد، يرجى مراجعة التفاصيل والموافقة.',
+                \App\Constants\NotificationType::NEW_REQUEST,
+                ['request_id' => $result['request_id']]
+            );
+
+            // إشعار تأكيد لطالب الخدمة
+            $this->notificationService->sendToUser(
+                auth()->id(),
+                'تم إرسال طلب الاجتماع 📡',
+                'تم إرسال طلبك بنجاح وهو بانتظار موافقة المزود.',
+                \App\Constants\NotificationType::GENERAL
+            );
 
             return response()->json([
                 'message' => 'تم إنشاء طلب خدمة الاجتماع بنجاح',
