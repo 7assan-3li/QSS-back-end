@@ -75,16 +75,16 @@
 
                 @if($withdrawal->status == 'pending')
                     <div class="pt-14 border-t border-[var(--glass-border)] text-start font-Cairo">
-                        <div class="mb-12 p-10 bg-amber-500/[0.03] dark:bg-amber-500/[0.05] rounded-[3.5rem] border-2 border-dashed border-amber-500/20 text-start relative ov <div class="flex items-center gap-5 mb-5 text-start font-Cairo">
+                        <div class="mb-12 p-10 bg-amber-500/[0.03] dark:bg-amber-500/[0.05] rounded-[3.5rem] border-2 border-dashed border-amber-500/20 text-start relative overflow-hidden">
+                            <div class="flex items-center gap-5 mb-5 text-start font-Cairo">
                                 <span class="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-600 text-xl font-Cairo whitespace-nowrap inline-flex items-center justify-center">⚡</span>
                                 <h5 class="text-xs font-black text-amber-600 uppercase tracking-[0.3em] font-Cairo text-start font-Cairo italic">{{ __('إثبات عملية التحويل الخارجي') }}</h5>
                             </div>
                             <p class="text-[14px] font-bold font-Cairo leading-[1.8] mb-0 text-start italic font-Cairo opacity-60">
-                                {{ __('يرجى مراجعة {{ __('بيانات"الآيبان" للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}') }}
-                            </p>
-{{ __('بيانات"الآيبان" للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}') }}
+                                {{ __('يرجى مراجعة بيانات الآيبان للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}
                             </p>
                         </div>
+
                         
                         <form action="{{ route('admin.withdrawals.approve', $withdrawal->id) }}" method="POST" enctype="multipart/form-data" class="space-y-12 text-start font-Cairo">
                             @csrf

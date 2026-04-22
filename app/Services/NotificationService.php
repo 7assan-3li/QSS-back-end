@@ -24,8 +24,8 @@ class NotificationService
         // 1. جلب التوكنات الخاصة بالمستخدم من جدول device_tokens
         $tokens = \App\Models\DeviceTokens::where('user_id', $userId)->pluck('token')->toArray();
 
-        // 2. إرسال الإشعار كـ Push Notification في حال وجود توكنات
-        if (!empty($tokens)) {
+        // 2. إرسال الإشعار كـ Push Notification في حال وجود توكنات (إذا كانت مفعلة في الإعدادات)
+        if (!empty($tokens) && env('NOTIFICATIONS_ENABLED', true)) {
             $this->sendPushNotification($tokens, $title, $message, $data);
         }
 
