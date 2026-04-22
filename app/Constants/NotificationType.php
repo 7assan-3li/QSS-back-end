@@ -14,4 +14,6 @@ class NotificationType
     const POINTS_RECEIVED = 'points_received';
     const ADMIN_MSG = 'admin_message';
     const COMPLAINT_UPDATE = 'complaint_update';
+    const REQ_MSG = 'request_message';
+
 }
