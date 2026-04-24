@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\NotificationType;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class NotificationService
 {
@@ -53,7 +54,7 @@ class NotificationService
     public function sendPushNotification($fcmTokens, $title, $body, $data = [])
     {
         try {
-            $messaging = app('firebase.messaging');
+            $messaging = Firebase::messaging();
             $tokens = is_array($fcmTokens) ? $fcmTokens : [$fcmTokens];
 
             if (empty($tokens)) {
