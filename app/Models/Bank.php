@@ -16,4 +16,12 @@ class Bank extends Model
             ->withPivot(['bank_account'])
             ->withTimestamps();
     }
+
+    /**
+     * Get the system accounts for this bank.
+     */
+    public function systemAccounts()
+    {
+        return $this->hasMany(BankSystemAccount::class);
+    }
 }

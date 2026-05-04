@@ -5,12 +5,15 @@ namespace App\Services;
 use App\Models\WithdrawRequest;
 use App\Models\User;
 use App\constant\BondStatus;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 
 class WithdrawRequestService
 {
+    use AuthorizesRequests;
     public function indexAdmin($status = null)
     {
+        $this->authorize('adminViewAny', WithdrawRequest::class);
         $query = WithdrawRequest::with(['user', 'admin']);
         if ($status) {
             $query->where('status', $status);
@@ -20,6 +23,7 @@ class WithdrawRequestService
 
     public function indexUser($userId)
     {
+        $this->authorize('viewAny', WithdrawRequest::class);
         return WithdrawRequest::where('user_id', $userId)->latest()->get();
     }
 

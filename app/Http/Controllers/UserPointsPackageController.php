@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserPointsPackage;
 use App\Services\UserPointsPackageService;
 use App\Services\PointsPackageService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserPointsPackageController extends Controller
 {
+    use AuthorizesRequests;
     public function __construct(
         private UserPointsPackageService $userPackageService,
         private PointsPackageService $packageService,
         private \App\Services\NotificationService $notificationService
-    ) {}
+    ) {
+    }
 
     // User: Get available packages
     public function availablePackages()
@@ -74,7 +78,7 @@ class UserPointsPackageController extends Controller
     {
         try {
             $result = $this->userPackageService->approve($id, Auth::id());
-            
+
             // إشعار بقبول طلب النقاط
             $userPackage = \App\Models\UserPointsPackage::with('package')->find($id);
             $this->notificationService->sendToUser(
@@ -97,10 +101,10 @@ class UserPointsPackageController extends Controller
     public function reject(Request $request, $id)
     {
         $request->validate(['admin_note' => 'required|string']);
-        
+
         try {
             $result = $this->userPackageService->reject($id, Auth::id(), $request->admin_note);
-            
+
             // إشعار برفض طلب النقاط
             $userPackage = \App\Models\UserPointsPackage::find($id);
             $this->notificationService->sendToUser(
@@ -122,6 +126,7 @@ class UserPointsPackageController extends Controller
     // Web Admin Methods
     public function indexWeb(Request $request)
     {
+        $this->authorize('viewAny', UserPointsPackage::class);
         $subscriptions = $this->userPackageService->index($request->status);
         return view('admin.user_points_packages.index', compact('subscriptions'));
     }
@@ -129,11 +134,13 @@ class UserPointsPackageController extends Controller
     public function showWeb($id)
     {
         $subscription = \App\Models\UserPointsPackage::with(['user', 'package', 'admin'])->findOrFail($id);
+        $this->authorize('view', $subscription);
         return view('admin.user_points_packages.show', compact('subscription'));
     }
 
     public function approveWeb($id)
     {
+        $this->authorize('updateStatus', UserPointsPackage::class);
         try {
             $this->userPackageService->approve($id, Auth::id());
             return redirect()->back()->with('success', 'تمت الموافقة على الطلب وإضافة النقاط للمستخدم');
@@ -144,8 +151,9 @@ class UserPointsPackageController extends Controller
 
     public function rejectWeb(Request $request, $id)
     {
+        $this->authorize('updateStatus',UserPointsPackage::class);
         $request->validate(['admin_note' => 'required|string']);
-        
+
         try {
             $this->userPackageService->reject($id, Auth::id(), $request->admin_note);
             return redirect()->route('admin.user-points-packages.index')->with('success', 'تم رفض طلب الاشتراك');

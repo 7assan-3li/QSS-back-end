@@ -2,21 +2,20 @@
 
 namespace App\Policies;
 
-use App\constant\providerRequestStatus;
 use App\constant\Role;
-use App\Models\ProviderRequest;
+use App\constant\VerificationRequestStatus;
 use App\Models\User;
+use App\Models\VerificationRequest;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Auth;
 
-class ProviderRequestPolicy
+class VerificationRequestPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): Response
     {
-        if ($user->role !== Role::EMPLOYEE) {
+        if ($user->role !== Role::PROVIDER) {
             return Response::deny('غير مصرح لك بعرض الطلبات.');
         }
         return Response::allow();
@@ -25,10 +24,10 @@ class ProviderRequestPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, ProviderRequest $providerRequest): Response
+    public function view(User $user, VerificationRequest $verificationRequest): Response
     {
-        if ($user->id !== $providerRequest->user_id) {
-            return Response::deny('غير مصرح لك بعرض هذا الطلب.');
+        if ($user->role !== Role::PROVIDER ) {
+            return Response::deny('غير مصرح لك بعرض الطلب.');
         }
         return Response::allow();
     }
@@ -38,7 +37,7 @@ class ProviderRequestPolicy
      */
     public function create(User $user): Response
     {
-        if ($user->role !== Role::SEEKER) {
+        if ($user->role !== Role::PROVIDER) {
             return Response::deny('غير مصرح لك بإنشاء طلب.');
         }
         return Response::allow();
@@ -47,7 +46,7 @@ class ProviderRequestPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ProviderRequest $providerRequest): bool
+    public function update(User $user, VerificationRequest $verificationRequest): bool
     {
         return false;
     }
@@ -55,7 +54,7 @@ class ProviderRequestPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, ProviderRequest $providerRequest): bool
+    public function delete(User $user, VerificationRequest $verificationRequest): bool
     {
         return false;
     }
@@ -63,7 +62,7 @@ class ProviderRequestPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, ProviderRequest $providerRequest): bool
+    public function restore(User $user, VerificationRequest $verificationRequest): bool
     {
         return false;
     }
@@ -71,24 +70,33 @@ class ProviderRequestPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, ProviderRequest $providerRequest): bool
+    public function forceDelete(User $user, VerificationRequest $verificationRequest): bool
     {
         return false;
     }
 
-    //admin functions
-    public function adminViewAny(User $user): Response{
+    public function adminViewAny(User $user): Response
+    {
         if ($user->role !== Role::EMPLOYEE) {
             return Response::deny('غير مصرح لك بعرض الطلبات.');
         }
         return Response::allow();
     }
 
-    public function updateStatus(User $user, ProviderRequest $providerRequest): Response{
+    public function adminView(User $user, VerificationRequest $verificationRequest): Response
+    {
+        if ($user->role !== Role::EMPLOYEE) {
+            return Response::deny('غير مصرح لك بعرض الطلب.');
+        }
+        return Response::allow();
+    }
+
+    public function updateStatus(User $user, VerificationRequest $verificationRequest): Response
+    {
         if ($user->role !== Role::EMPLOYEE) {
             return Response::deny('غير مصرح لك بتحديث حالة الطلب.');
         }
-        if ($providerRequest->status !== providerRequestStatus::PENDING) {
+        if ($verificationRequest->status !== VerificationRequestStatus::PENDING) {
             return Response::deny('لا يمكن تحديث حالة الطلب لأنه ليس في حالة الانتظار.');
         }
         return Response::allow();

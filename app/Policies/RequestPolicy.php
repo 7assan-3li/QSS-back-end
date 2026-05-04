@@ -13,17 +13,23 @@ class RequestPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user): Response
     {
-        return false;
+        if($user->role !== Role::EMPLOYEE) {
+            return Response::deny('غير مصرح لك بعرض الطلبات.');
+        }
+        return Response::allow();
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Request $request): bool
+    public function view(User $user, Request $request): Response
     {
-        return false;
+        if($user->role !== Role::EMPLOYEE) {
+            return Response::deny('غير مصرح لك بعرض الطلبات.');
+        }
+        return Response::allow();
     }
 
     /**

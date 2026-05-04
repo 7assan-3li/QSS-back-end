@@ -183,6 +183,68 @@ public function index()
             'user' => $user,
         ]);
     }
+    public function create()
+    {
+        $this->authorize('create', User::class);
+        return view('users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', User::class);
+        
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+            'role' => 'required|string|in:employee,seeker,provider',
+        ];
+
+        // Add provider-specific rules
+        if ($request->role === Role::PROVIDER) {
+            $rules = array_merge($rules, [
+                'job_title' => 'nullable|string|max:255',
+                'bio' => 'nullable|string',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+                'commission' => 'nullable|numeric|min:0|max:100',
+            ]);
+        }
+
+        $validated = $request->validate($rules);
+
+        $userData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+            'email_verified_at' => now(), // Auto-verify admin-created accounts
+        ];
+
+        if ($request->role === Role::PROVIDER) {
+            $userData['commission'] = $validated['commission'] ?? 10;
+            $userData['no_commission'] = $request->has('no_commission');
+        } else {
+            $userData['commission'] = 0;
+            $userData['no_commission'] = false;
+        }
+
+        $user = User::create($userData);
+
+        if ($request->role === Role::PROVIDER) {
+            $user->profile()->create([
+                'job_title' => $request->job_title,
+                'bio' => $request->bio,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+        } else {
+            $user->profile()->create([]);
+        }
+
+        return to_route('users.index')->with('success', 'تم إنشاء حساب المستخدم بنجاح');
+    }
+
     public function edit(User $user)
     {
         $this->authorize('update', $user);
@@ -463,6 +525,58 @@ public function index()
         return response()->json([
             'message' => 'تم تغيير كلمة المرور بنجاح'
         ]);
+    }
+
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('admin.profile.edit', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|min:8|confirmed',
+        ];
+
+        // Only Admin can change email
+        if ($user->role === Role::ADMIN) {
+            $rules['email'] = 'required|email|unique:users,email,' . $user->id;
+        }
+
+        // Check if sensitive data is changing
+        $isChangingEmail = $user->role === Role::ADMIN && $request->has('email') && $request->email !== $user->email;
+        $isChangingPassword = $request->filled('password');
+
+        if ($isChangingEmail || $isChangingPassword) {
+            $rules['current_password'] = 'required';
+        }
+
+        $request->validate($rules);
+
+        // Verify current password for sensitive changes
+        if ($isChangingEmail || $isChangingPassword) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'كلمة المرور الحالية غير صحيحة']);
+            }
+        }
+
+        $user->name = $request->name;
+        
+        if ($user->role === Role::ADMIN && $request->has('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($isChangingPassword) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'تم تحديث الملف الشخصي بنجاح');
     }
 
     public function logout()

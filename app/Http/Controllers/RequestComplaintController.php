@@ -6,14 +6,17 @@ use App\constant\RequestStatus;
 use App\Models\RequestComplaint;
 use App\Models\Request as RequestModel;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RequestComplaintController extends Controller
 {
+    use AuthorizesRequests;
     public function __construct(
         private \App\Services\NotificationService $notificationService
-    ) {}
+    ) {
+    }
 
     // $table->string('title');
     //         $table->string('type');
@@ -23,11 +26,11 @@ class RequestComplaintController extends Controller
     //         $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
     public function store(Request $request)
     {
-        $validated  = $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:200',
             'type' => 'required|string|max:200',
             'content' => 'required|string|max:2000',
-            'request_id'   => 'required|exists:requests,id',
+            'request_id' => 'required|exists:requests,id',
         ]);
 
         $requestModel = RequestModel::findOrFail($request->request_id);
@@ -40,11 +43,11 @@ class RequestComplaintController extends Controller
             ], 403);
         }
 
-        if($requestStatus === RequestStatus::COMPLETED){
+        if ($requestStatus === RequestStatus::COMPLETED) {
             return response()->json([
                 'message' => 'لا يمكن ارسال بلاغ لان الطلب مكتمل',
                 'requestStatus' => $requestStatus
-            ],422);
+            ], 422);
         }
 
         $requestComplaint = RequestComplaint::create([
@@ -64,9 +67,9 @@ class RequestComplaintController extends Controller
         );
 
         return response()->json([
-                'message' => 'تم ارسال الشكوى بنجاح',
-                'requestComplaint' => $requestComplaint
-            ],201);
+            'message' => 'تم ارسال الشكوى بنجاح',
+            'requestComplaint' => $requestComplaint
+        ], 201);
     }
 
     public function index(Request $request)
@@ -87,6 +90,7 @@ class RequestComplaintController extends Controller
 
     public function indexAdmin(\Illuminate\Http\Request $request)
     {
+        $this->authorize('view', RequestComplaint::class);
         $status = $request->get('status');
         $days = (int) $request->get('days', 7);
 
@@ -128,6 +132,7 @@ class RequestComplaintController extends Controller
 
     public function showAdmin(RequestComplaint $requestComplaint)
     {
+        $this->authorize('view', $requestComplaint);
         $statusSteps = [
             'pending',
             'in_progress',
@@ -142,6 +147,7 @@ class RequestComplaintController extends Controller
 
     public function updateStatus(\Illuminate\Http\Request $request, RequestComplaint $requestComplaint)
     {
+        $this->authorize('updateStatus', $requestComplaint);
         $request->validate([
             'status' => 'required|in:pending,in_progress,resolved',
         ]);
@@ -153,9 +159,9 @@ class RequestComplaintController extends Controller
 
         // إشعار لمقدم الشكوى بتحديث الحالة
         $statusText = [
-            'pending'     => 'قيد الانتظار',
+            'pending' => 'قيد الانتظار',
             'in_progress' => 'قيد المعالجة',
-            'resolved'    => 'تم الحل'
+            'resolved' => 'تم الحل'
         ][$request->status] ?? $request->status;
 
         $this->notificationService->sendToUser(
@@ -173,6 +179,7 @@ class RequestComplaintController extends Controller
      */
     public function exportDetailed(\Illuminate\Http\Request $request)
     {
+        $this->authorize('exportDetailed', RequestComplaint::class);
         $status = $request->get('status');
         $query = RequestComplaint::with(['request.user', 'user'])->latest();
 
@@ -181,30 +188,30 @@ class RequestComplaintController extends Controller
         }
 
         $complaints = $query->get();
-        
+
         $filename = "qss_request_complaints_" . date('Y-m-d') . ".csv";
         $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-type" => "text/csv; charset=UTF-8",
             "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
         ];
 
         $columns = [
-            __('كود الشكوى'), 
-            __('العنوان'), 
-            __('النوع'), 
-            __('رقم الطلب'), 
-            __('اسم الشاكي'), 
-            __('الحالة'), 
-            __('محتوى الشكوى'), 
+            __('كود الشكوى'),
+            __('العنوان'),
+            __('النوع'),
+            __('رقم الطلب'),
+            __('اسم الشاكي'),
+            __('الحالة'),
+            __('محتوى الشكوى'),
             __('تاريخ التقديم')
         ];
 
-        $callback = function() use($complaints, $columns) {
+        $callback = function () use ($complaints, $columns) {
             $file = fopen('php://output', 'w');
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
             fputcsv($file, $columns);
 
             foreach ($complaints as $c) {

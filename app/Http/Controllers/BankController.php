@@ -12,6 +12,7 @@ class BankController extends Controller
     use AuthorizesRequests;
     public function index()
     {
+        $this->authorize('viewAny', Bank::class);
         $banks = Bank::latest()->get();
 
         return view('banks.index', ['banks' => $banks]);
@@ -45,6 +46,7 @@ class BankController extends Controller
     public function show($bank_id)
     {
         $bank = Bank::findOrFail($bank_id);
+        $this->authorize('view', $bank);
         return view('banks.show', ['bank' => $bank]);
     }
 

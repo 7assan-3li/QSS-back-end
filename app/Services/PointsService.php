@@ -76,9 +76,9 @@ class PointsService
 
             $provider = User::lockForUpdate()->findOrFail($providerModel->id);
 
-            $provider->paid_points += $transferred_points;
-            $seeker->bonus_points -= $transferred_points;
-            $request->money_paid = $current_money_paid + $transferred_points;
+            $provider->paid_points += round($transferred_points, 2);
+            $seeker->bonus_points -= round($transferred_points, 2);
+            $request->money_paid = round($current_money_paid + $transferred_points, 2);
             
             // تحديث حالة الطلب بناءً على النسبة المطلوبة
             if ($request->money_paid >= $request->total_price) {
@@ -139,7 +139,7 @@ class PointsService
 
             // 1. الخصم من نقاط المكافأة أولاً
             if ($provider->bonus_points > 0) {
-                $bonusToDeduct = min($provider->bonus_points, $amountNeeded);
+                $bonusToDeduct = round(min($provider->bonus_points, $amountNeeded), 2);
                 $provider->bonus_points -= $bonusToDeduct;
                 $amountNeeded -= $bonusToDeduct;
                 $totalDeducted += $bonusToDeduct;
@@ -155,7 +155,7 @@ class PointsService
 
             // 2. الخصم من نقاط الأرباح إذا كانت المكافآت لا تكفي
             if ($amountNeeded > 0 && $provider->paid_points > 0) {
-                $paidToDeduct = min($provider->paid_points, $amountNeeded);
+                $paidToDeduct = round(min($provider->paid_points, $amountNeeded), 2);
                 $provider->paid_points -= $paidToDeduct;
                 $amountNeeded -= $paidToDeduct;
                 $totalDeducted += $paidToDeduct;
@@ -177,6 +177,30 @@ class PointsService
 
             $request->save();
             $provider->save();
+
+            // إشعار بالدفع الناجح (كلي أو جزئي)
+            if ($totalDeducted > 0) {
+                $statusMsg = $request->commission_paid ? "بالكامل" : "جزئياً";
+                $this->notificationService->sendToUser(
+                    $provider->id,
+                    'تم خصم العمولة بنجاح ✅',
+                    "تم خصم $totalDeducted نقطة من رصيدك كعمولة للطلب #$requestId ($statusMsg).",
+                    \App\Constants\NotificationType::GENERAL,
+                    ['request_id' => $requestId]
+                );
+            }
+
+            // إشعار في حال فشل الخصم التلقائي لكامل العمولة
+            if (!$request->commission_paid && $request->commission_amount > 0) {
+                $remaining = round($request->commission_amount - $request->commission_amount_paid, 2);
+                $this->notificationService->sendToUser(
+                    $provider->id,
+                    'تنبيه: رصيد غير كافٍ للعمولة ⚠️',
+                    "لم يتم خصم كامل عمولة الطلب #$requestId لعدم توفر رصيد كافٍ. المبلغ المتبقي: $remaining نقطة. يرجى شحن الرصيد أو الدفع يدوياً.",
+                    \App\Constants\NotificationType::GENERAL,
+                    ['request_id' => $requestId]
+                );
+            }
 
             return $request;
         });

@@ -50,21 +50,21 @@
 
             <div class="relative z-10 text-center flex flex-col items-center animate-fade-slide-up">
                 <div class="w-32 h-32 bg-[var(--glass-bg)]/10 backdrop-blur-2xl rounded-[3rem] border border-white/20 flex items-center justify-center text-white text-6xl font-black shadow-2xl mb-10 transform hover:rotate-12 transition-all duration-1000 font-mono italic">Q</div>
-                <h1 class="text-5xl font-black text-white tracking-tighter italic mb-6">QSS <span class="opacity-60 italic">Intelligence</span></h1>
+                <h1 class="text-5xl font-black text-white tracking-tighter italic mb-6">QSS</h1>
                 <p class="text-lg text-white/80 font-bold max-w-md leading-relaxed">
-                    {{ __('المستقبل الرقمي يبدأ هنا. إدارة ذكية، أمان فائق، وكفاءة لا متناهية في منظومة واحدة متكاملة.') }}
+                    {{ __('منصة متكاملة لإدارة الخدمات، تضمن لك الأمان والكفاءة في تنفيذ العمليات الرقمية.') }}
                 </p>
                 
                 <div class="mt-16 flex items-center gap-8">
                     <div class="flex flex-col items-center gap-1 opacity-60">
-                        <span class="text-2xl font-black text-white">99.9%</span>
-                        <span class="text-[13px] uppercase tracking-widest text-white/70">{{ __('جاهزية النظام') }}</span>
+                        <span class="text-2xl font-black text-white">24/7</span>
+                        <span class="text-[13px] uppercase tracking-widest text-white/70">{{ __('دعم فني مستمر') }}</span>
                     </div>
-                    <div class="w-px h-10 bg-[var(--glass-bg)]/20"></div>
+                    {{-- <div class="w-px h-10 bg-[var(--glass-bg)]/20"></div>
                     <div class="flex flex-col items-center gap-1 opacity-60">
                         <span class="text-2xl font-black text-white">AES-256</span>
                         <span class="text-[13px] uppercase tracking-widest text-white/70">{{ __('تشفير البيانات') }}</span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@
                 <!-- Mobile Brand Mark -->
                 <div class="lg:hidden flex flex-col items-center mb-12 animate-fade-slide-up">
                     <div class="w-16 h-16 bg-brand-primary rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-brand-primary/20 font-mono italic">Q</div>
-                    <h2 class="text-2xl font-black mt-4 italic">QSS <span class="text-brand-primary">Portal</span></h2>
+                    <h2 class="text-2xl font-black mt-4 italic">QSS</h2>
                 </div>
 
                 <div class="w-full max-w-md space-y-12 animate-fade-slide-up delay-100">
@@ -120,7 +120,7 @@
                             <label for="email" class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.4em] px-6 transition-colors group-focus-within:text-brand-primary italic">{{ __('البريد الإلكتروني') }}</label>
                             <div class="relative">
                                 <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus class="w-full py-6 px-16 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[2rem] text-sm font-black outline-none transition-all focus:border-brand-primary focus:ring-8 focus:ring-brand-primary/5 placeholder:text-slate-300 dark:placeholder:text-[var(--main-text)]"
-                                       placeholder="admin@example.com">
+                                       placeholder="">
                                 <div class="absolute left-6 rtl:right-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brand-primary transition-colors">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"></path></svg>
                                 </div>
@@ -134,7 +134,7 @@
                             </div>
                             <div class="relative">
                                 <input type="password" id="password" name="password" required class="w-full py-6 px-16 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[2rem] text-sm font-black outline-none transition-all focus:border-brand-primary focus:ring-8 focus:ring-brand-primary/5 placeholder:text-slate-300 dark:placeholder:text-[var(--main-text)]"
-                                       placeholder="••••••••">
+                                       placeholder="">
                                 <div class="absolute left-6 rtl:right-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-brand-primary transition-colors">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                 </div>
@@ -164,7 +164,7 @@
                     <!-- Footer Info -->
                     <div class="pt-20 text-center lg:text-start flex flex-col gap-2">
                         <p class="text-[12px] font-black text-slate-300 dark:text-[var(--text-secondary)] uppercase tracking-widest italic">
-                            {{ __('جميع الحقوق محفوظة لمنظومة QSS الذكية') }}
+                            {{ __('حقوق النشر محفوظة لمنصة QSS') }}
                         </p>
                     </div>
                 </div>

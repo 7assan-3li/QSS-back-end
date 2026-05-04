@@ -3,18 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    use AuthorizesRequests;
     public function indexAdmin()
     {
+        $this->authorize('viewAny', Setting::class);
         $settings = Setting::all();
         return view('settings.index', compact('settings'));
     }
 
     public function updateAdmin(Request $request)
     {
+        $this->authorize('create', Setting::class);
         $settingsData = $request->except(['_token', '_method']);
 
         foreach ($settingsData as $key => $value) {

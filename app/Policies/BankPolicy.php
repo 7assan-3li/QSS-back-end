@@ -14,7 +14,7 @@ class BankPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->role === Role::ADMIN;
     }
 
     /**
@@ -22,7 +22,7 @@ class BankPolicy
      */
     public function view(User $user, Bank $bank): bool
     {
-        return false;
+        return $user->role === Role::ADMIN;
     }
 
     /**
@@ -44,9 +44,13 @@ class BankPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Bank $bank): bool
+    public function delete(User $user, Bank $bank): Response
     {
-        return $user->role === Role::ADMIN;
+        if($user->role !== Role::ADMIN){
+            return Response::deny('غير مصرح لك بحذف البنك.');
+        }
+        
+        return Response::allow();
     }
 
     /**

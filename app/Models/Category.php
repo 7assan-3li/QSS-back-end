@@ -30,6 +30,24 @@ class Category extends Model
         return $this->hasMany( Service::class, 'category_id');
     }
 
+    /**
+     * Check if this category or any of its children have services.
+     */
+    public function hasServicesRecursively(): bool
+    {
+        if ($this->services()->exists()) {
+            return true;
+        }
+
+        foreach ($this->children as $child) {
+            if ($child->hasServicesRecursively()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function getAllChildrenIds($parentId)
     {
         $ids = [$parentId];

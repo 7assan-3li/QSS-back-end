@@ -21,7 +21,8 @@ class RequestController extends Controller
     public function __construct(
         private PointsService $pointsService,
         private RequestService $requestService,
-        private \App\Services\NotificationService $notificationService
+        private \App\Services\NotificationService $notificationService,
+        Private RequestModel $requestModel
     ) {
     }
     public function index()
@@ -182,7 +183,7 @@ class RequestController extends Controller
             }
 
             // تحديث الطلب بالسعر النهائي
-            $requestModel->update(['total_price' => $totalPrice]);
+            $requestModel->update(['total_price' => round($totalPrice, 2)]);
 
             // إرسال إشعار للمزود
             $providerId = $mainService->provider_id;
@@ -499,6 +500,7 @@ class RequestController extends Controller
     //web functions
     public function indexAdmin(Request $httpRequest, RequestService $service)
     {
+        $this->authorize('viewAny',RequestModel::class);
         $data = $service->getAllRequests($httpRequest);
         return view('requests.index', ['requests' => $data['requests'], 'stats' => $data['stats']]);
     }
@@ -510,6 +512,8 @@ class RequestController extends Controller
             'services',
             'commissionBonds'
         ])->findOrFail($id);
+
+        $this->authorize('view', $request);
 
         $commission = $request->getCommissionAmount();
 

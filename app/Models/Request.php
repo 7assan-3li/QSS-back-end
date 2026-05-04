@@ -99,7 +99,7 @@ class Request extends Model
         // تخرين النسبة المستخدمة في خاصية الموديل لكي يتم حفظها عند عمل save()
         $this->commission_rate = (float) $percentage;
         
-        return (float) ($this->total_price * ($percentage / 100));
+        return round((float) ($this->total_price * ($percentage / 100)), 2);
     }
 
     public function commissionBonds()

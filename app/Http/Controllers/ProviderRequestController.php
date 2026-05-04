@@ -38,7 +38,7 @@ class ProviderRequestController extends Controller
 
         //  التحقق من وجود طلب اخر قيد الانتظار
         $hasPendingRequest = ProviderRequest::where('user_id', Auth::id())
-            ->where('status', 'pending')
+            ->where('status', ProviderRequestStatus::PENDING)
             ->exists();
 
         if ($hasPendingRequest) {
@@ -160,7 +160,7 @@ class ProviderRequestController extends Controller
 
     public function adminShow(ProviderRequest $providerRequest)
     {
-        $this->authorize('view', $providerRequest);
+        $this->authorize('adminView', $providerRequest);
 
         $providerRequest->with(['user', 'admin']);
         // return $providerRequest;

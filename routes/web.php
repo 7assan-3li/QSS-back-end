@@ -39,12 +39,16 @@ Route::middleware('guest')->group(function () {
 });
 
 
+Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class, 'switch'])->name('lang.switch');
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/financial-report', [FinancialController::class, 'index'])->name('admin.financial.index');
-    Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class, 'switch'])->name('lang.switch');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
     Route::patch('/admin/reviews/{id}/toggle', [\App\Http\Controllers\ReviewController::class, 'toggleVisibilityAdmin'])->name('admin.reviews.toggle');
+    
+    // Profile Routes
+    Route::get('/admin/profile', [UserController::class, 'editProfile'])->name('admin.profile.edit');
+    Route::put('/admin/profile', [UserController::class, 'updateProfile'])->name('admin.profile.update');
 
     // Provider Management Routes
     Route::get('/admin/providers/export', [AdminProviderController::class, 'exportDetailed'])->name('admin.providers.export');
@@ -53,6 +57,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     //user Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
@@ -169,5 +175,17 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Advertisement Management
     Route::group(['prefix' => 'admin'], function() {
         Route::resource('advertisements', AdvertisementController::class)->except(['show']);
+    });
+
+    // Bank System Accounts Management
+    Route::group(['prefix' => 'admin'], function() {
+        Route::resource('bank-accounts', \App\Http\Controllers\BankSystemAccountController::class)->names([
+            'index' => 'admin.bank-accounts.index',
+            'create' => 'admin.bank-accounts.create',
+            'store' => 'admin.bank-accounts.store',
+            'edit' => 'admin.bank-accounts.edit',
+            'update' => 'admin.bank-accounts.update',
+            'destroy' => 'admin.bank-accounts.destroy',
+        ])->except(['show']);
     });
 });

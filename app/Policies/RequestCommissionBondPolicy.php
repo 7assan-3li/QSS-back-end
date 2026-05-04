@@ -13,9 +13,12 @@ class RequestCommissionBondPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user): Response
     {
-        return false;
+        if ($user->role === Role::EMPLOYEE) {
+            return Response::allow();
+        }
+        return Response::deny('لا يمكن عرض طلبات ');
     }
 
     /**

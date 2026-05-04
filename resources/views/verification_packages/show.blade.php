@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'تفاصيل الباقة: ' . $package->name)
+@section('title', __('تفاصيل الباقة') . ': ' . $package->name)
 
 @section('content')
 <div class="max-w-6xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">

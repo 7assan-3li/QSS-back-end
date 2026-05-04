@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserVerificationPackageRequest;
+use App\Models\UserVerificationPackages;
 use App\Services\UserVerificationPackagesService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 
 class UserVerificationPackagesController extends Controller
 {
-
+    use AuthorizesRequests;
     public function __construct(
         private UserVerificationPackagesService $verificationPackageService,
         private NotificationService $notificationService
-    ) {}
+    ) {
+    }
 
     public function index()
     {
@@ -105,24 +108,29 @@ class UserVerificationPackagesController extends Controller
     // Web Admin Methods
     public function indexWebAdmin()
     {
+        $this->authorize('viewAny', UserVerificationPackages::class);
         $userPackages = $this->verificationPackageService->getAllPackages();
         return view('user_verification_packages.index', compact('userPackages'));
     }
 
     public function showWebAdmin($id)
     {
+        $package = UserVerificationPackages::findOrFail($id);
+        $this->authorize('view', $package);
         $userPackage = $this->verificationPackageService->getPackageDetails($id);
         return view('user_verification_packages.show', compact('userPackage'));
     }
 
     public function approveWebAdmin($id)
     {
+        $this->authorize('updateStatus', UserVerificationPackages::class);
         $this->verificationPackageService->approvePackage($id, Auth::id());
         return redirect()->back()->with('success', 'تم الموافقة على الطلب بنجاح');
     }
 
     public function rejectWebAdmin(Request $request, $id)
     {
+        $this->authorize('updateStatus', UserVerificationPackages::class);
         $this->verificationPackageService->rejectPackage($id, Auth::id(), $request->input('rejection_reason'));
         return redirect()->back()->with('success', 'تم رفض الطلب بنجاح');
     }

@@ -13,7 +13,7 @@
                 </a>
                 <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-brand-primary/5 font-Cairo underline-offset-8 italic whitespace-nowrap inline-flex items-center justify-center">👤</span>
-                    {{ __('تدقيق مصفوفة الهوية الإدارية') }}
+                    {{ __('تدقيق الهوية الإدارية') }}
                 </h3>
             </div>
         </div>
@@ -138,7 +138,7 @@
                 <div class="space-y-4 relative z-10">
                     <a href="{{ route('users.edit', $user->id) }}" class="w-full py-5 bg-[var(--glass-bg)]/10 hover:bg-[var(--glass-bg)] text-white hover:text-brand-primary border border-white/10 rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        {{ __('تعديل المصفوفة') }}
+                        {{ __('تعديل الهوية') }}
                     </a>
 
                     <button class="w-full py-5 bg-rose-500/20 hover:bg-rose-600 text-rose-500 hover:text-white border border-rose-500/20 rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic">

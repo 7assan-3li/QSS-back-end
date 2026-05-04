@@ -13,7 +13,6 @@ class CategoryController extends Controller
     use AuthorizesRequests;
     public function index()
     {
-        $this->authorize('viewDashboard', User::class);
         $categories = Category::all();
         return view('categories.index', ['categories' => $categories]);
     }
@@ -99,11 +98,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // تحقق أولًا إن أي تصنيف في الشجرة مرتبط بخدمات
-        if ($this->hasServicesInTree($category)) {
-            return redirect()->route('categories.index')
-                ->with('error', 'لا يمكن حذف هذا التصنيف أو أحد أبنائه لأنه مرتبط بخدمات');
-        }
+        $this->authorize('delete', $category);
 
         // حذف الصور وجميع الأبناء بشكل متكرر
         $this->deleteCategoryTree($category);
@@ -112,23 +107,6 @@ class CategoryController extends Controller
             ->with('success', 'تم حذف التصنيف وكل أبنائه بنجاح!');
     }
 
-    /**
-     * تحقق إذا كان هذا التصنيف أو أي من أبنائه لديه خدمات
-     */
-    protected function hasServicesInTree(Category $category): bool
-    {
-        if ($category->services()->exists()) {
-            return true;
-        }
-
-        foreach ($category->children as $child) {
-            if ($this->hasServicesInTree($child)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * حذف التصنيف وأبنائه بشكل متكرر مع الصور

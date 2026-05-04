@@ -121,6 +121,10 @@
                 <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('عرض وتعديل بيانات المستخدمين والتحكم في صلاحياتهم.') }}</p>
             </div>
             <div class="flex items-center gap-4 text-start font-Cairo">
+                <a href="{{ route('users.create') }}" class="bg-brand-primary text-white px-8 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-lg shadow-brand-primary/20 hover:scale-105 transition-all whitespace-nowrap inline-flex items-center justify-center gap-2 italic">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                    {{ __('إضافة مستخدم جديد') }}
+                </a>
                 <span class="bg-indigo-500/10 text-indigo-600 px-6 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm whitespace-nowrap inline-flex items-center justify-center">{{ __('إدارة المستخدمين') }}</span>
             </div>
         </div>

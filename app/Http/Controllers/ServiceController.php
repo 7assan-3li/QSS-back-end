@@ -431,7 +431,7 @@ class ServiceController extends Controller
     //web functions
     public function adminIndex()
     {
-        $this->authorize('viewAny', User::class);
+        $this->authorize('adminViewAny', User::class);
 
         $services = Service::with(['category', 'provider', 'children'])->latest()->where('parent_service_id', null)->paginate(10);
         $stats = [
@@ -448,6 +448,7 @@ class ServiceController extends Controller
 
     public function adminShow(Service $service)
     {
+        $this->authorize('adminView', $service);
         $service->load(['provider', 'category', 'parent', 'children', 'requests' => function($q) {
             $q->with(['user', 'review']);
         }]);
@@ -473,7 +474,7 @@ class ServiceController extends Controller
 
     public function edit(Service $service)
     {
-        $this->authorize('update', $service);
+        $this->authorize('adminUpdate', $service);
         $service->load(['category', 'provider', 'children']);
         $categories = \App\Models\Category::all();
         $providers = \App\Models\User::where('role', 'provider')->get();

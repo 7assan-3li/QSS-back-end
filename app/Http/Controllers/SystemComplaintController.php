@@ -6,12 +6,14 @@ use App\constant\SystemComplaintStatus;
 use App\Http\Requests\StoreSystemComplaintRequest;
 use App\Services\SystemComplaintService;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\SystemComplaint;
 use Illuminate\Support\Facades\Auth;
 
 class SystemComplaintController extends Controller
 {
+    use AuthorizesRequests;
     public function __construct(
         private SystemComplaintService $service,
         private \App\Services\NotificationService $notificationService
@@ -67,6 +69,7 @@ class SystemComplaintController extends Controller
 
     public function indexAdmin(Request $request)
     {
+        $this->authorize('viewAny', SystemComplaint::class);
         $status = $request->get('status');
         $days = (int) $request->get('days', 7);
 
@@ -109,6 +112,7 @@ class SystemComplaintController extends Controller
 
     public function showAdmin(SystemComplaint $systemComplaint)
     {
+        $this->authorize('view', SystemComplaint::class);
         $statusSteps = [
             SystemComplaintStatus::PENDING,
             SystemComplaintStatus::IN_PROGRESS,
@@ -137,6 +141,7 @@ class SystemComplaintController extends Controller
 
     public function updateStatus(Request $request, SystemComplaint $systemComplaint)
     {
+        $this->authorize('updateStatus', SystemComplaint::class);
         $request->validate([
             'status' => 'required|in:' . implode(',', SystemComplaintStatus::all()),
         ]);
@@ -167,6 +172,7 @@ class SystemComplaintController extends Controller
      */
     public function exportDetailed(Request $request)
     {
+        $this->authorize('exportDetailed', SystemComplaint::class);
         $status = $request->get('status');
         $query = SystemComplaint::with('user')->latest();
 

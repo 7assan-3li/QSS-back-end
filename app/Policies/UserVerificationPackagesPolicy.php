@@ -3,11 +3,11 @@
 namespace App\Policies;
 
 use App\constant\Role;
-use App\Models\RequestComplaint;
 use App\Models\User;
+use App\Models\UserVerificationPackages;
 use Illuminate\Auth\Access\Response;
 
-class RequestComplaintPolicy
+class UserVerificationPackagesPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -15,7 +15,7 @@ class RequestComplaintPolicy
     public function viewAny(User $user): Response
     {
         if ($user->role !== Role::EMPLOYEE) {
-            return Response::deny('غير مصرح لك بعرض الشكاوي.');
+            return Response::deny('غير مصرح لك بعرض باقات التوثيق.');
         }
         return Response::allow();
     }
@@ -23,10 +23,10 @@ class RequestComplaintPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, RequestComplaint $requestComplaint): Response
+    public function view(User $user, UserVerificationPackages $userVerificationPackages): Response
     {
         if ($user->role !== Role::EMPLOYEE) {
-            return Response::deny('غير مصرح لك بعرض الشكاوي.');
+            return Response::deny('غير مصرح لك بعرض باقات التوثيق.');
         }
         return Response::allow();
     }
@@ -42,7 +42,7 @@ class RequestComplaintPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, RequestComplaint $requestComplaint): bool
+    public function update(User $user, UserVerificationPackages $userVerificationPackages): bool
     {
         return false;
     }
@@ -50,7 +50,7 @@ class RequestComplaintPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, RequestComplaint $requestComplaint): bool
+    public function delete(User $user, UserVerificationPackages $userVerificationPackages): bool
     {
         return false;
     }
@@ -58,7 +58,7 @@ class RequestComplaintPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, RequestComplaint $requestComplaint): bool
+    public function restore(User $user, UserVerificationPackages $userVerificationPackages): bool
     {
         return false;
     }
@@ -66,23 +66,17 @@ class RequestComplaintPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, RequestComplaint $requestComplaint): bool
+    public function forceDelete(User $user, UserVerificationPackages $userVerificationPackages): bool
     {
         return false;
     }
 
-    public function updateStatus(User $user, RequestComplaint $requestComplaint)
+    public function updateStatus(User $user): Response
     {
         if ($user->role !== Role::EMPLOYEE) {
-            return Response::deny('غير مصرح لك بتحديث حالة الشكوي.');
+            return Response::deny('غير مصرح لك بالموافقة على الباقة.');
         }
         return Response::allow();
     }
-    public function exportDetailed(User $user)
-    {
-        if ($user->role !== Role::EMPLOYEE) {
-            return Response::deny('غير مصرح لك بتصدير الشكاوى.');
-        }
-        return Response::allow();
-    }
+
 }

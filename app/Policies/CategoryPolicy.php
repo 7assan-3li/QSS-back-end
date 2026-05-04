@@ -14,7 +14,7 @@ class CategoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->role === Role::ADMIN;
     }
 
     /**
@@ -22,7 +22,7 @@ class CategoryPolicy
      */
     public function view(User $user, Category $category): bool
     {
-        return false;
+        return $user->role === Role::ADMIN;
     }
 
     /**
@@ -44,9 +44,17 @@ class CategoryPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Category $category): bool
+    public function delete(User $user, Category $category): Response
     {
-        return $user->role === Role::ADMIN;
+        if ($user->role !== Role::ADMIN) {
+            return Response::deny('غير مصرح لك بحذف التصنيفات.');
+        }
+
+        if ($category->hasServicesRecursively()) {
+            return Response::deny('لا يمكن حذف هذا التصنيف أو أحد أبنائه لأنه مرتبط بخدمات.');
+        }
+
+        return Response::allow();
     }
 
     /**

@@ -65,18 +65,35 @@ class ServicePolicy
         return false;
     }
 
-    public function adminViewAny(User $user): bool
+    public function adminView(User $user, Service $service): Response
     {
-        return $user->role === Role::ADMIN || $user->role === Role::EMPLOYEE;
+        if( $user->role === Role::EMPLOYEE){
+            return Response::allow();
+        }
+        return Response::deny('لا يمكن الوصول');
     }
 
-    public function adminUpdate(User $user, Service $service): bool
+    public function adminViewAny(User $user): Response
     {
-        return  $user->role === Role::ADMIN;
+        if( $user->role === Role::EMPLOYEE){
+            return Response::allow();
+        }
+        return Response::deny('لا يمكن الوصول');
     }
-    public function adminDelete(User $user, Service $service): bool
+
+    public function adminUpdate(User $user, Service $service): Response
     {
-        return  $user->role === Role::ADMIN;
+        if( $user->role === Role::EMPLOYEE){
+            return Response::allow();
+        }
+        return Response::deny('لا يمكن الوصول');
+    }
+    public function adminDelete(User $user, Service $service): Response
+    {
+        if( $user->role === Role::EMPLOYEE){
+            return Response::allow();
+        }
+        return Response::deny('لا يمكن الوصول');
     }
 
 }

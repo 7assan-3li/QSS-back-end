@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Services\WithdrawRequestService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class WithdrawRequestController extends Controller
 {
+    use AuthorizesRequests;
     public function __construct(
         private WithdrawRequestService $service,
         private \App\Services\NotificationService $notificationService
-    ) {}
+    ) {
+    }
 
     // API: Provider sends a withdrawal request
     public function store(Request $request)
     {
+        $this->authorize('create', \App\Models\WithdrawRequest::class);
+
         $minWithdrawal = \App\Models\Setting::where('key', 'min_withdrawal_amount')->value('value') ?? 50;
         $request->validate([
             'amount' => 'required|numeric|min:' . $minWithdrawal,
@@ -44,6 +49,7 @@ class WithdrawRequestController extends Controller
     // API: Provider lists their own requests
     public function indexUser()
     {
+        $this->authorize('viewAny', \App\Models\WithdrawRequest::class);
         return response()->json([
             'data' => $this->service->indexUser(Auth::id())
         ]);
@@ -52,6 +58,7 @@ class WithdrawRequestController extends Controller
     // Web Admin: List all requests
     public function indexWebAdmin(Request $request)
     {
+        $this->authorize('adminViewAny', \App\Models\WithdrawRequest::class);
         $withdrawals = $this->service->indexAdmin($request->status);
         return view('admin.withdrawals.index', compact('withdrawals'));
     }
@@ -59,13 +66,16 @@ class WithdrawRequestController extends Controller
     // Web Admin: Show single request
     public function showWebAdmin($id)
     {
+
         $withdrawal = \App\Models\WithdrawRequest::with(['user', 'admin'])->findOrFail($id);
+        $this->authorize('adminView', $withdrawal);
         return view('admin.withdrawals.show', compact('withdrawal'));
     }
 
     // Web Admin: Approve
     public function approveWebAdmin(Request $request, $id)
     {
+
         $request->validate([
             'bond_number' => 'required|string',
             'bond_image' => 'required|image|max:2048',
@@ -73,6 +83,7 @@ class WithdrawRequestController extends Controller
 
         try {
             $withdrawal = \App\Models\WithdrawRequest::findOrFail($id);
+            $this->authorize('updateStatus', $withdrawal);
             $this->service->approve($id, Auth::id(), $request->file('bond_image'), $request->bond_number);
 
             // إشعار للمزود بقبول طلب السحب
@@ -96,6 +107,7 @@ class WithdrawRequestController extends Controller
 
         try {
             $withdrawal = \App\Models\WithdrawRequest::findOrFail($id);
+            $this->authorize('updateStatus', $withdrawal);
             $this->service->reject($id, Auth::id(), $request->admin_note);
 
             // إشعار للمزود برفض طلب السحب

@@ -11,17 +11,20 @@ use App\Models\Request as RequestModel;
 use App\Models\User;
 use App\Models\VerificationRequest;
 use App\Services\VerificationRequestService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class VerificationRequestController extends Controller
 {
+    use AuthorizesRequests;
     public function __construct(
         private \App\Services\NotificationService $notificationService
     ) {}
     public function index()
     {
+        $this->authorize('viewAny', VerificationRequest::class);  
         $user = Auth::user();
         $verificationRequests = VerificationRequest::where('user_id', $user->id)->get();
         return response()->json([
@@ -31,6 +34,7 @@ class VerificationRequestController extends Controller
     }
     public function store(StoreVerificationRequestRequest $verificationRequestRequest, VerificationRequestService $verificationRequestService)
     {
+        $this->authorize('create', VerificationRequest::class);
         $user = Auth::user();
         if ($user->verificationRequests()->where('status', VerificationRequestStatus::PENDING)->exists()) {
             return response()->json([
@@ -61,6 +65,7 @@ class VerificationRequestController extends Controller
     public function show($id)
     {
         $verificationRequest = VerificationRequest::find($id);
+        $this->authorize('view', $verificationRequest);  
         if (!$verificationRequest) {
             return response()->json([
                 "message" => "طلب التحقق غير موجود",
@@ -76,6 +81,7 @@ class VerificationRequestController extends Controller
     //wep functions
     public function indexAdmin(Request $request)
     {
+        $this->authorize('adminViewAny', VerificationRequest::class);  
         $days = $request->get('days', 7);
 
         $requests = VerificationRequest::with('user')
@@ -118,7 +124,9 @@ class VerificationRequestController extends Controller
     public function acceptAdmin($id)
     {
         $request = VerificationRequest::findOrFail($id);
-        $request->update(['status' => 'accepted']);
+        $this->authorize('updateStatus', $request); 
+        
+        $request->update(['status' => VerificationRequestStatus::ACCEPTED]);
         $provider = $request->user;
 
         // التحقق مما إذا كانت هذه هي المرة الأولى التي يُقبل فيها توثيق هذا المزود
@@ -165,6 +173,7 @@ class VerificationRequestController extends Controller
     public function rejectAdmin(Request $request, $id)
     {
         $verificationRequest = VerificationRequest::findOrFail($id);
+        $this->authorize('updateStatus', $verificationRequest); 
         $verificationRequest->update([
             'status' => 'rejected',
             'rejection_reason' => $request->input('rejection_reason')
@@ -189,6 +198,7 @@ class VerificationRequestController extends Controller
 
     public function showAdmin(VerificationRequest $verificationRequest)
     {
+        $this->authorize('adminView', $verificationRequest);  
         // مزود الخدمة
         $provider = User::findOrFail($verificationRequest->user_id);
 

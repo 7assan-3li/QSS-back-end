@@ -17,7 +17,7 @@
                 </a>
                 <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-indigo-500/5 font-Cairo underline-offset-8 italic whitespace-nowrap inline-flex items-center justify-center">✍️</span>
-                    {{ __('تعديل مصفوفة الهوية') }}: {{ $user->name }}
+                    {{ __('تعديل الهوية') }}: {{ $user->name }}
                 </h3>
             </div>
         </div>
