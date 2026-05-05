@@ -96,8 +96,14 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $user = Auth
-            ::user();
+        $user = Auth::user();
+        
+        if ($user->status === 'suspended') {
+            return response()->json([
+                'message' => 'عذراً، لقد تم إيقاف حسابك من قبل الإدارة. يرجى التواصل مع الدعم الفني.'
+            ], 403);
+        }
+
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
@@ -367,6 +373,18 @@ public function index()
         return to_route('users.index')->with('success', 'تم حذف المستخدم بنجاح');
     }
 
+    public function toggleStatus(User $user)
+    {
+        $this->authorize('suspend', $user);
+        
+        $newStatus = $user->status === 'active' ? 'suspended' : 'active';
+        $user->update(['status' => $newStatus]);
+
+        $message = $newStatus === 'active' ? 'تم تنشيط الحساب بنجاح' : 'تم إيقاف الحساب بنجاح';
+        
+        return back()->with('success', $message);
+    }
+
     public function loginPage()
     {
         return view('auth.login');
@@ -407,6 +425,13 @@ public function index()
 
         // محاولة تسجيل الدخول
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            if ($user->status === 'suspended') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'عذراً، لقد تم إيقاف حسابك من قبل الإدارة. يرجى التواصل مع الدعم الفني.',
+                ])->onlyInput('email');
+            }
             $request->session()->regenerate();
             return to_route('dashboard');
         }

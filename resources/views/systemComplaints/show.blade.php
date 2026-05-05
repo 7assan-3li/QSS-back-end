@@ -119,10 +119,11 @@
                     <!-- Metadata Node: Chronology -->
                     <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-[var(--glass-border)] flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start font-Cairo">
                         <div class="w-16 h-16 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo font-mono">📅</div>
-                        <div class="flex flex-col text-start">
-                            <span class="inline-flex items-center gap-3 px-6 py-3 bg-[var(--main-bg)] rounded-2xl border border-[var(--glass-border)] text-[13px] font-black text-[var(--text-muted)] font-mono whitespace-nowrap inline-flex items-center justify-center">
-                                <span class="w-2 h-2 rounded-full bg-slate-300"></span>
-                                {{ __('توقيت الدخول') }}: {{ $systemComplaint->created_at->format('Y-m-d H:i') }}
+                        <div class="flex flex-col text-start w-full overflow-hidden">
+                            <span class="flex items-center gap-3 px-4 py-2 bg-[var(--main-bg)] rounded-2xl border border-[var(--glass-border)] text-[11px] font-black text-[var(--text-muted)] font-mono flex-wrap">
+                                <span class="w-2 h-2 rounded-full bg-slate-300 shrink-0"></span>
+                                <span class="opacity-70">{{ __('تاريخ التقديم') }}:</span>
+                                <span class="text-amber-600">{{ $systemComplaint->created_at->format('Y-m-d H:i') }}</span>
                             </span>
                         </div>
                     </div>
@@ -187,11 +188,11 @@
                 <div class="mt-10 grid grid-cols-2 gap-6 text-start font-Cairo">
                     <div class="bg-amber-500/10 p-6 rounded-[2rem] border border-amber-500/20 text-center group hover:bg-amber-500/15 transition-all text-start font-Cairo">
                         <span class="block text-[14px] font-black text-amber-600 uppercase tracking-[0.3em] mb-2 font-Cairo opacity-70">{{ __('وقت الانتظار') }}</span>
-                        <span class="text-lg font-black font-mono italic">{{ $waitingHours }}h</span>
+                        <span class="text-lg font-black font-mono italic">{{ $waitingHours }}</span>
                     </div>
                     <div class="bg-emerald-500/10 p-6 rounded-[2rem] border border-emerald-500/20 text-center group hover:bg-emerald-500/15 transition-all text-start font-Cairo">
                         <span class="block text-[14px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-2 font-Cairo opacity-70">{{ __('وقت المعالجة') }}</span>
-                        <span class="text-lg font-black font-mono italic">{{ $processingHours }}h</span>
+                        <span class="text-lg font-black font-mono italic">{{ $processingHours }}</span>
                     </div>
                 </div>
             </div>
@@ -209,7 +210,7 @@
             data: {
                 labels: ['{{ __("الانتظار") }}', '{{ __("المعالجة") }}'],
                 datasets: [{
-                    data: [{{ $waitingHours }}, {{ $processingHours }}],
+                    data: [{{ $waitingHoursRaw }}, {{ $processingHoursRaw }}],
                     backgroundColor: ['#f59e0b', '#10b981'],
                     borderRadius: 20,
                     barThickness: 45,

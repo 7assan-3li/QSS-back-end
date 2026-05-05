@@ -42,13 +42,26 @@
 
         <div class="flex flex-col items-end gap-3 w-full lg:w-fit relative z-10 text-start">
              <div class="flex items-center gap-3 w-full">
-                <a href="{{ route('users.edit', $provider->id) }}" class="flex-1 lg:flex-none px-8 py-3 bg-brand-primary text-white text-[14px] font-black rounded-2xl hover:scale-105 transition-all shadow-xl shadow-brand-primary/20 flex items-center gap-2 justify-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                    {{ __('تعديل الحساب') }}
-                </a>
-                <button class="p-3 bg-rose-500/10 text-rose-500 rounded-2xl hover:bg-rose-500 hover:text-white transition-all shadow-lg" title="{{ __('حظر المزود') }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                </button>
+                @can('update', $provider)
+                    <a href="{{ route('users.edit', $provider->id) }}" class="flex-1 lg:flex-none px-8 py-3 bg-brand-primary text-white text-[14px] font-black rounded-2xl hover:scale-105 transition-all shadow-xl shadow-brand-primary/20 flex items-center gap-2 justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        {{ __('تعديل الحساب') }}
+                    </a>
+                @endcan
+                
+                @can('suspend', $provider)
+                    <form action="{{ route('users.toggle-status', $provider->id) }}" method="POST" class="inline">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="p-3 {{ $provider->status === 'active' ? 'bg-rose-500/10 text-rose-500 hover:bg-rose-500' : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500' }} rounded-2xl hover:text-white transition-all shadow-lg" title="{{ $provider->status === 'active' ? __('إيقاف الحساب') : __('تنشيط الحساب') }}">
+                            @if($provider->status === 'active')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                            @else
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            @endif
+                        </button>
+                    </form>
+                @endcan
              </div>
             @if(!($provider->provider_verified_until && \Carbon\Carbon::parse($provider->provider_verified_until)->isFuture()))
             <span class="text-[13px] font-black text-amber-600 bg-amber-500/5 px-4 py-2 rounded-xl border border-amber-500/10 italic flex items-center gap-2 whitespace-nowrap inline-flex items-center justify-center">

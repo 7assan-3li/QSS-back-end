@@ -4,13 +4,12 @@
     <!-- Sidebar Header -->
     <div class="h-28 flex items-center px-10 mb-6 relative z-10 transition-all hover:bg-brand-primary/[0.02]">
         <div class="flex items-center gap-5">
-            <div
-                class="w-14 h-14 bg-gradient-to-tr from-brand-primary to-indigo-600 rounded-[1.25rem] flex items-center justify-center text-white text-3xl font-black shadow-lg transform hover:rotate-12 transition-all duration-500 font-mono italic">
-                Q</div>
+            <div class="w-20 h-14 flex items-center justify-center transform hover:scale-110 transition-all duration-500 overflow-hidden">
+                <img src="{{ asset('img/logo qss.png') }}" alt="QSS Logo" class="w-full h-full object-contain">
+            </div>
             <div class="flex flex-col leading-tight">
                 <span class="text-2xl font-black tracking-tighter italic">QSS</span>
-                <span
-                    class="text-[12px] uppercase font-black opacity-60 tracking-[0.4em] mt-1 font-Cairo italic">{{ __('لوحة الإدارة') }}</span>
+                <span class="text-[12px] uppercase font-black opacity-60 tracking-[0.4em] mt-1 font-Cairo italic">{{ __('لوحة الإدارة') }}</span>
             </div>
         </div>
     </div>

@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('img/logo qss.png') }}">
+
     <!-- CSS & JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -49,7 +52,9 @@
             <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-primary/20 rounded-full blur-3xl animate-pulse delay-700"></div>
 
             <div class="relative z-10 text-center flex flex-col items-center animate-fade-slide-up">
-                <div class="w-32 h-32 bg-[var(--glass-bg)]/10 backdrop-blur-2xl rounded-[3rem] border border-white/20 flex items-center justify-center text-white text-6xl font-black shadow-2xl mb-10 transform hover:rotate-12 transition-all duration-1000 font-mono italic">Q</div>
+                <div class="w-64 h-40 bg-white rounded-[2rem] shadow-2xl mb-10 transform hover:scale-105 transition-all duration-1000 overflow-hidden p-6 flex items-center justify-center">
+                    <img src="{{ asset('img/logo qss.png') }}" alt="QSS Logo" class="max-w-full max-h-full object-contain">
+                </div>
                 <h1 class="text-5xl font-black text-white tracking-tighter italic mb-6">QSS</h1>
                 <p class="text-lg text-white/80 font-bold max-w-md leading-relaxed">
                     {{ __('منصة متكاملة لإدارة الخدمات، تضمن لك الأمان والكفاءة في تنفيذ العمليات الرقمية.') }}
@@ -89,7 +94,9 @@
             <div class="flex-1 flex flex-col items-center justify-center">
                 <!-- Mobile Brand Mark -->
                 <div class="lg:hidden flex flex-col items-center mb-12 animate-fade-slide-up">
-                    <div class="w-16 h-16 bg-brand-primary rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-brand-primary/20 font-mono italic">Q</div>
+                    <div class="w-32 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden p-4">
+                        <img src="{{ asset('img/logo qss.png') }}" alt="QSS Logo" class="max-w-full max-h-full object-contain">
+                    </div>
                     <h2 class="text-2xl font-black mt-4 italic">QSS</h2>
                 </div>
 

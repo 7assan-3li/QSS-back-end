@@ -21,7 +21,15 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user->role === Role::ADMIN;
+        if ($user->role === Role::ADMIN) {
+            return true;
+        }
+
+        if ($user->role === Role::EMPLOYEE) {
+            return in_array($model->role, [Role::SEEKER, Role::PROVIDER]);
+        }
+
+        return false;
     }
 
     /**
@@ -37,7 +45,23 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        // Only Admin can update account data
         return $user->role === Role::ADMIN && $model->role !== Role::ADMIN;
+    }
+
+    public function suspend(User $user, User $model): bool
+    {
+        // Admin can suspend anyone except other Admins
+        if ($user->role === Role::ADMIN) {
+            return $model->role !== Role::ADMIN;
+        }
+
+        // Employee can suspend Seekers and Providers only
+        if ($user->role === Role::EMPLOYEE) {
+            return in_array($model->role, [Role::SEEKER, Role::PROVIDER]);
+        }
+
+        return false;
     }
 
     /**
@@ -45,7 +69,8 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return  ($user->role === Role::ADMIN) && $model->role !== Role::ADMIN;
+        // Only Admin can delete accounts
+        return ($user->role === Role::ADMIN) && $model->role !== Role::ADMIN;
     }
 
     /**

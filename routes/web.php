@@ -66,6 +66,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::put('/users/{user}/verify-email', [UserController::class, 'verifyEmailAdmin'])->name('users.verify.email');
+    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
 
     // Category Routes

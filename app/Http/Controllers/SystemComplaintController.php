@@ -119,23 +119,40 @@ class SystemComplaintController extends Controller
             SystemComplaintStatus::COMPLETED,
         ];
 
-        $waitingHours = $systemComplaint->created_at
-            ->diffInHours(
-                $systemComplaint->status === SystemComplaintStatus::IN_PROGRESS ||
-                $systemComplaint->status === SystemComplaintStatus::COMPLETED
-                ? $systemComplaint->updated_at
-                : now()
-            );
+        // تحديد نهاية وقت الانتظار
+        $endWaiting = $systemComplaint->status === SystemComplaintStatus::IN_PROGRESS ||
+                      $systemComplaint->status === SystemComplaintStatus::COMPLETED
+                      ? $systemComplaint->updated_at
+                      : now();
+        
+        // حساب وقت الانتظار بصيغة مقروءة (استخدام الدقائق لضمان دقة الحساب وتحويلها لساعات)
+        $totalWaitingMinutes = abs($systemComplaint->created_at->diffInMinutes($endWaiting));
+        $wHours = floor($totalWaitingMinutes / 60);
+        $wMinutes = $totalWaitingMinutes % 60;
+        $waitingHours = $wHours > 0 ? "{$wHours}h {$wMinutes}m" : "{$wMinutes}m";
 
-        $processingHours = $systemComplaint->status === SystemComplaintStatus::COMPLETED
-            ? $systemComplaint->updated_at->diffInHours($systemComplaint->created_at)
+        // حساب وقت المعالجة بصيغة مقروءة
+        $processingHours = '0m';
+        if ($systemComplaint->status === SystemComplaintStatus::COMPLETED) {
+            $totalProcMinutes = abs($systemComplaint->updated_at->diffInMinutes($systemComplaint->created_at));
+            $pHours = floor($totalProcMinutes / 60);
+            $pMinutes = $totalProcMinutes % 60;
+            $processingHours = $pHours > 0 ? "{$pHours}h {$pMinutes}m" : "{$pMinutes}m";
+        }
+
+        // قيم خام للرسم البياني (ساعات كأرقام عشرية مقربة)
+        $waitingHoursRaw = round($totalWaitingMinutes / 60, 2);
+        $processingHoursRaw = $systemComplaint->status === SystemComplaintStatus::COMPLETED
+            ? round($totalProcMinutes / 60, 2)
             : 0;
 
         return view('systemComplaints.show', compact(
             'systemComplaint',
             'statusSteps',
             'waitingHours',
-            'processingHours'
+            'processingHours',
+            'waitingHoursRaw',
+            'processingHoursRaw'
         ));
     }
 

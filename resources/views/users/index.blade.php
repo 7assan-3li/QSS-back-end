@@ -137,6 +137,7 @@
                         <th class="table-header-cell">{{ __('بيانات المستخدم') }}</th>
                         <th class="table-header-cell">{{ __('نوع الحساب / الدور') }}</th>
                         <th class="table-header-cell">{{ __('تاريخ التسجيل') }}</th>
+                        <th class="table-header-cell">{{ __('الحالة') }}</th>
                         <th class="table-header-cell text-center">{{ __('الإجراءات') }}</th>
                     </tr>
                 </thead>
@@ -180,6 +181,17 @@
                             <td class="px-10 py-8 text-start">
                                 <span class="text-[13px] font-black text-[var(--text-muted)] font-mono tracking-[0.2em] text-start italic">{{ $user->created_at->format('Y-m-d') }}</span>
                             </td>
+                            <td class="px-10 py-8 text-start">
+                                @if($user->status === 'active')
+                                    <span class="badge-status badge-status-success italic">
+                                        {{ __('نشط') }}
+                                    </span>
+                                @else
+                                    <span class="badge-status badge-status-danger italic">
+                                        {{ __('موقوف') }}
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-10 py-8 text-center font-Cairo">
                                 <div class="flex items-center justify-center gap-4 text-start font-Cairo">
                                     @can('view', $user)
@@ -192,6 +204,20 @@
                                         <a href="{{ route('users.edit', $user->id) }}" class="btn-action btn-action-edit" title="{{ __('تعديل البيانات') }}">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
+                                    @endcan
+
+                                    @can('suspend', $user)
+                                        <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn-action {{ $user->status === 'active' ? 'btn-action-danger' : 'btn-action-success' }}" title="{{ $user->status === 'active' ? __('إيقاف الحساب') : __('تنشيط الحساب') }}">
+                                                @if($user->status === 'active')
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                                @else
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                @endif
+                                            </button>
+                                        </form>
                                     @endcan
                                 </div>
                             </td>
