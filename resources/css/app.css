@@ -256,8 +256,8 @@
     background-color: #0d9488;
     background-image: 
         radial-gradient(at 0% 0%, #0ea5e9 0, transparent 50%), 
-        radial-gradient(at 50% 0%, #6366f1 0, transparent 50%), 
-        radial-gradient(at 100% 0%, #0d9488 0, transparent 50%);
+        radial-gradient(at 50% 0%, #0d9488 0, transparent 50%), 
+        radial-gradient(at 100% 0%, #0ea5e9 0, transparent 50%);
     filter: saturate(1.5) contrast(1.1);
 }
 
@@ -295,16 +295,16 @@
 }
 
 .btn-action-edit {
-    background-color: rgba(99, 102, 241, 0.1);
-    color: #4f46e5;
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    background-color: rgba(14, 165, 233, 0.1);
+    color: #0ea5e9;
+    border: 1px solid rgba(14, 165, 233, 0.2);
 }
 .dark .btn-action-edit {
-    background-color: rgba(99, 102, 241, 0.05);
-    color: #818cf8;
+    background-color: rgba(14, 165, 233, 0.05);
+    color: #38bdf8;
 }
 .btn-action-edit:hover {
-    background-color: #6366f1;
+    background-color: #0ea5e9;
     color: white;
 }
 
@@ -323,16 +323,16 @@
 }
 
 .btn-action-success {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background-color: rgba(13, 148, 136, 0.1);
+    color: #0d9488;
+    border: 1px solid rgba(13, 148, 136, 0.2);
 }
 .dark .btn-action-success {
-    background-color: rgba(16, 185, 129, 0.05);
-    color: #34d399;
+    background-color: rgba(13, 148, 136, 0.05);
+    color: #2dd4bf;
 }
 .btn-action-success:hover {
-    background-color: #10b981;
+    background-color: #0d9488;
     color: white;
 }
 
@@ -390,15 +390,15 @@
 }
 
 .badge-status-success {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    border-color: rgba(16, 185, 129, 0.2);
+    background-color: rgba(13, 148, 136, 0.1);
+    color: #0d9488;
+    border-color: rgba(13, 148, 136, 0.2);
 }
 .dark .badge-status-success {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #34d399;
-    border-color: rgba(16, 185, 129, 0.2);
-    box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.2);
+    background-color: rgba(13, 148, 136, 0.1);
+    color: #2dd4bf;
+    border-color: rgba(13, 148, 136, 0.2);
+    box-shadow: 0 0 15px -3px rgba(13, 148, 136, 0.2);
 }
 
 .badge-status-danger {

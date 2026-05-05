@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
-@section('title', __('إدارة المستخدمين'))
+@section('title', __('ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†'))
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
@@ -8,15 +8,15 @@
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start">
         <div class="text-start">
             <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
-                <span class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-3xl font-Cairo shadow-lg shadow-indigo-500/5 whitespace-nowrap inline-flex items-center justify-center">👥</span>
-                {{ __('سجل المستخدمين') }}
+                <span class="w-16 h-16 bg-brand-primary-500/10 rounded-2xl flex items-center justify-center text-brand-primary-600 text-3xl font-Cairo shadow-lg shadow-brand-primary-500/5 whitespace-nowrap inline-flex items-center justify-center">ًں‘¥</span>
+                {{ __('ط³ط¬ظ„ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†') }}
             </h3>
             <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo">
-                {{ __('إدارة بيانات المستخدمين، مراقبة التسجيلات، وتعديل الصلاحيات.') }}
+                {{ __('ط¥ط¯ط§ط±ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†طŒ ظ…ط±ط§ظ‚ط¨ط© ط§ظ„طھط³ط¬ظٹظ„ط§طھطŒ ظˆطھط¹ط¯ظٹظ„ ط§ظ„طµظ„ط§ط­ظٹط§طھ.') }}
             </p>
         </div>
-        <div class="px-8 py-3 bg-indigo-500/10 rounded-2xl border border-indigo-500/20 text-indigo-600 text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm animate-pulse text-start">
-            {{ __('معدل النمو اللحظي: نشط') }} 📊
+        <div class="px-8 py-3 bg-brand-primary-500/10 rounded-2xl border border-brand-primary-500/20 text-brand-primary-600 text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm animate-pulse text-start">
+            {{ __('ظ…ط¹ط¯ظ„ ط§ظ„ظ†ظ…ظˆ ط§ظ„ظ„ط­ط¸ظٹ: ظ†ط´ط·') }} ًں“ٹ
         </div>
     </div>
 
@@ -24,32 +24,32 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-start">
         <!-- Total Users -->
         <div class="card-premium glass-panel p-8 relative overflow-hidden group text-start">
-            <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-primary-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start">
-                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] font-Cairo text-start">{{ __('إجمالي المستخدمين') }}</span>
+                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] font-Cairo text-start">{{ __('ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†') }}</span>
                 <div class="flex items-baseline gap-3 text-start">
                     <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($users->count()) }}</span>
-                    <span class="text-[13px] font-black text-indigo-500 font-Cairo italic text-start">{{ __('مستخدم') }}</span>
+                    <span class="text-[13px] font-black text-brand-primary-500 font-Cairo italic text-start">{{ __('ظ…ط³طھط®ط¯ظ…') }}</span>
                 </div>
             </div>
-            <div class="mt-6 flex items-center gap-2 text-[13px] font-black text-emerald-500 font-Cairo text-start">
+            <div class="mt-6 flex items-center gap-2 text-[13px] font-black text-brand-primary-500 font-Cairo text-start">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                <span>{{ __('إجمالي المستخدمين المسجلين في النظام') }}</span>
+                <span>{{ __('ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ط§ظ„ظ…ط³ط¬ظ„ظٹظ† ظپظٹ ط§ظ„ظ†ط¸ط§ظ…') }}</span>
             </div>
         </div>
 
         <!-- Today's New Users -->
         <div class="card-premium glass-panel p-8 relative overflow-hidden group font-Cairo text-start">
-            <div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-primary-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start">
-                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-start font-Cairo">{{ __('المستخدمين الجدد اليوم') }}</span>
+                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-start font-Cairo">{{ __('ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ط§ظ„ط¬ط¯ط¯ ط§ظ„ظٹظˆظ…') }}</span>
                 <div class="flex items-baseline gap-3 text-start">
                     <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($todayUsers) }}</span>
-                    <span class="text-[13px] font-black text-emerald-500 italic text-start font-Cairo">{{ __('عضو جديد') }}</span>
+                    <span class="text-[13px] font-black text-brand-primary-500 italic text-start font-Cairo">{{ __('ط¹ط¶ظˆ ط¬ط¯ظٹط¯') }}</span>
                 </div>
             </div>
             <div class="mt-6 flex items-center gap-2 text-[13px] font-black text-[var(--text-muted)] tracking-[0.2em] font-Cairo uppercase text-start">
-                <span>{{ __('آخر 24 ساعة') }}</span>
+                <span>{{ __('ط¢ط®ط± 24 ط³ط§ط¹ط©') }}</span>
             </div>
         </div>
 
@@ -57,14 +57,14 @@
         <div class="card-premium glass-panel p-8 relative overflow-hidden group font-Cairo text-start">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start font-Cairo">
-                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-start font-Cairo">{{ __('منضمي هذا الأسبوع') }}</span>
+                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-start font-Cairo">{{ __('ظ…ظ†ط¶ظ…ظٹ ظ‡ط°ط§ ط§ظ„ط£ط³ط¨ظˆط¹') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-Cairo">
                     <span class="text-4xl font-black leading-none font-mono italic text-start">{{ number_format($weekUsers) }}</span>
-                    <span class="text-[13px] font-black text-amber-500 italic text-start font-Cairo">{{ __('مستخدم') }}</span>
+                    <span class="text-[13px] font-black text-amber-500 italic text-start font-Cairo">{{ __('ظ…ط³طھط®ط¯ظ…') }}</span>
                 </div>
             </div>
             <div class="mt-6 flex items-center gap-2 text-[13px] font-black text-[var(--text-muted)] tracking-[0.2em] uppercase text-start font-Cairo">
-                <span>{{ __('خلال آخر 7 أيام') }}</span>
+                <span>{{ __('ط®ظ„ط§ظ„ ط¢ط®ط± 7 ط£ظٹط§ظ…') }}</span>
             </div>
         </div>
 
@@ -72,14 +72,14 @@
         <div class="card-premium glass-panel p-8 relative overflow-hidden group font-Cairo text-start">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="flex flex-col gap-2 relative z-10 text-start font-Cairo">
-                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-start font-Cairo">{{ __('نسبة النمو الشهري') }}</span>
+                <span class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-start font-Cairo">{{ __('ظ†ط³ط¨ط© ط§ظ„ظ†ظ…ظˆ ط§ظ„ط´ظ‡ط±ظٹ') }}</span>
                 <div class="flex items-baseline gap-3 text-start font-Cairo">
                     <span class="text-4xl font-black leading-none font-mono italic text-start">{{ $growth }}%</span>
-                    <svg class="w-6 h-6 text-emerald-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <svg class="w-6 h-6 text-brand-primary-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
             </div>
             <div class="mt-6 flex items-center gap-2 text-[13px] font-black text-[var(--text-muted)] tracking-[0.2em] uppercase text-start font-Cairo">
-                <span>{{ __('مقارنة بالشهر السابق') }}</span>
+                <span>{{ __('ظ…ظ‚ط§ط±ظ†ط© ط¨ط§ظ„ط´ظ‡ط± ط§ظ„ط³ط§ط¨ظ‚') }}</span>
             </div>
         </div>
     </div>
@@ -89,10 +89,10 @@
         <div class="lg:col-span-8 card-premium glass-panel p-10 text-start font-Cairo">
             <div class="flex items-center justify-between mb-10 text-start font-Cairo">
                 <div class="text-start font-Cairo">
-                    <h4 class="text-xl font-black font-Cairo text-start italic">{{ __('المسار البياني للنمو السنوي') }}</h4>
-                    <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-2 font-Cairo text-start">{{ __('تتبع انضمام المستخدمين خلال العام الجاري.') }}</p>
+                    <h4 class="text-xl font-black font-Cairo text-start italic">{{ __('ط§ظ„ظ…ط³ط§ط± ط§ظ„ط¨ظٹط§ظ†ظٹ ظ„ظ„ظ†ظ…ظˆ ط§ظ„ط³ظ†ظˆظٹ') }}</h4>
+                    <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-2 font-Cairo text-start">{{ __('طھطھط¨ط¹ ط§ظ†ط¶ظ…ط§ظ… ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ط®ظ„ط§ظ„ ط§ظ„ط¹ط§ظ… ط§ظ„ط¬ط§ط±ظٹ.') }}</p>
                 </div>
-                <div class="p-4 bg-indigo-500/10 rounded-2xl text-indigo-600 shadow-sm font-Cairo"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg></div>
+                <div class="p-4 bg-brand-primary-500/10 rounded-2xl text-brand-primary-600 shadow-sm font-Cairo"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg></div>
             </div>
             <div class="h-[350px] font-Cairo">
                 <canvas id="usersChart"></canvas>
@@ -102,8 +102,8 @@
         <div class="lg:col-span-4 card-premium glass-panel p-10 text-start font-Cairo">
             <div class="flex items-center justify-between mb-10 text-start font-Cairo">
                 <div class="text-start font-Cairo">
-                    <h4 class="text-xl font-black font-Cairo text-start italic">{{ __('توزيع الأدوار') }}</h4>
-                    <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-2 font-Cairo text-start">{{ __('توزيع المستخدمين حسب نوع الحساب.') }}</p>
+                    <h4 class="text-xl font-black font-Cairo text-start italic">{{ __('طھظˆط²ظٹط¹ ط§ظ„ط£ط¯ظˆط§ط±') }}</h4>
+                    <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-2 font-Cairo text-start">{{ __('طھظˆط²ظٹط¹ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ط­ط³ط¨ ظ†ظˆط¹ ط§ظ„ط­ط³ط§ط¨.') }}</p>
                 </div>
                 <div class="p-4 bg-purple-500/10 rounded-2xl text-purple-600 shadow-sm font-Cairo"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg></div>
             </div>
@@ -117,15 +117,15 @@
     <div class="card-premium glass-panel rounded-[4.5rem] shadow-2xl border border-[var(--glass-border)] overflow-hidden font-Cairo text-start">
         <div class="p-12 border-b border-[var(--glass-border)] flex flex-col md:flex-row justify-between items-center gap-8 text-start">
             <div class="text-start">
-                <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('قائمة إدارة المستخدمين') }}</h4>
-                <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('عرض وتعديل بيانات المستخدمين والتحكم في صلاحياتهم.') }}</p>
+                <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('ظ‚ط§ط¦ظ…ط© ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†') }}</h4>
+                <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('ط¹ط±ط¶ ظˆطھط¹ط¯ظٹظ„ ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ظˆط§ظ„طھط­ظƒظ… ظپظٹ طµظ„ط§ط­ظٹط§طھظ‡ظ….') }}</p>
             </div>
             <div class="flex items-center gap-4 text-start font-Cairo">
                 <a href="{{ route('users.create') }}" class="bg-brand-primary text-white px-8 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-lg shadow-brand-primary/20 hover:scale-105 transition-all whitespace-nowrap inline-flex items-center justify-center gap-2 italic">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-                    {{ __('إضافة مستخدم جديد') }}
+                    {{ __('ط¥ط¶ط§ظپط© ظ…ط³طھط®ط¯ظ… ط¬ط¯ظٹط¯') }}
                 </a>
-                <span class="bg-indigo-500/10 text-indigo-600 px-6 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm whitespace-nowrap inline-flex items-center justify-center">{{ __('إدارة المستخدمين') }}</span>
+                <span class="bg-brand-primary-500/10 text-brand-primary-600 px-6 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm whitespace-nowrap inline-flex items-center justify-center">{{ __('ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†') }}</span>
             </div>
         </div>
         
@@ -133,12 +133,12 @@
             <table class="w-full text-start border-collapse font-Cairo">
                 <thead>
                     <tr class="bg-[var(--main-bg)] border-b border-[var(--glass-border)] text-start font-Cairo">
-                        <th class="table-header-cell">{{ __('المسلسل') }}</th>
-                        <th class="table-header-cell">{{ __('بيانات المستخدم') }}</th>
-                        <th class="table-header-cell">{{ __('نوع الحساب / الدور') }}</th>
-                        <th class="table-header-cell">{{ __('تاريخ التسجيل') }}</th>
-                        <th class="table-header-cell">{{ __('الحالة') }}</th>
-                        <th class="table-header-cell text-center">{{ __('الإجراءات') }}</th>
+                        <th class="table-header-cell">{{ __('ط§ظ„ظ…ط³ظ„ط³ظ„') }}</th>
+                        <th class="table-header-cell">{{ __('ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…') }}</th>
+                        <th class="table-header-cell">{{ __('ظ†ظˆط¹ ط§ظ„ط­ط³ط§ط¨ / ط§ظ„ط¯ظˆط±') }}</th>
+                        <th class="table-header-cell">{{ __('طھط§ط±ظٹط® ط§ظ„طھط³ط¬ظٹظ„') }}</th>
+                        <th class="table-header-cell">{{ __('ط§ظ„ط­ط§ظ„ط©') }}</th>
+                        <th class="table-header-cell text-center">{{ __('ط§ظ„ط¥ط¬ط±ط§ط،ط§طھ') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--glass-border)] text-start font-Cairo">
@@ -168,9 +168,9 @@
                                         default => 'badge-status'
                                     };
                                     $roleName = match($user->role) {
-                                        \App\constant\Role::EMPLOYEE => __('موظف'),
-                                        \App\constant\Role::PROVIDER => __('مزود خدمة'),
-                                        \App\constant\Role::SEEKER   => __('طالب خدمة'),
+                                        \App\constant\Role::EMPLOYEE => __('ظ…ظˆط¸ظپ'),
+                                        \App\constant\Role::PROVIDER => __('ظ…ط²ظˆط¯ ط®ط¯ظ…ط©'),
+                                        \App\constant\Role::SEEKER   => __('ط·ط§ظ„ط¨ ط®ط¯ظ…ط©'),
                                         default => $user->role
                                     };
                                 @endphp
@@ -184,24 +184,24 @@
                             <td class="px-10 py-8 text-start">
                                 @if($user->status === 'active')
                                     <span class="badge-status badge-status-success italic">
-                                        {{ __('نشط') }}
+                                        {{ __('ظ†ط´ط·') }}
                                     </span>
                                 @else
                                     <span class="badge-status badge-status-danger italic">
-                                        {{ __('موقوف') }}
+                                        {{ __('ظ…ظˆظ‚ظˆظپ') }}
                                     </span>
                                 @endif
                             </td>
                             <td class="px-10 py-8 text-center font-Cairo">
                                 <div class="flex items-center justify-center gap-4 text-start font-Cairo">
                                     @can('view', $user)
-                                        <a href="{{ route('users.show', $user->id) }}" class="btn-action btn-action-view" title="{{ __('عرض الملف الشخصي') }}">
+                                        <a href="{{ route('users.show', $user->id) }}" class="btn-action btn-action-view" title="{{ __('ط¹ط±ط¶ ط§ظ„ظ…ظ„ظپ ط§ظ„ط´ط®طµظٹ') }}">
                                             <svg class="w-5 h-5 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
                                     @endcan
 
                                     @can('update', $user)
-                                        <a href="{{ route('users.edit', $user->id) }}" class="btn-action btn-action-edit" title="{{ __('تعديل البيانات') }}">
+                                        <a href="{{ route('users.edit', $user->id) }}" class="btn-action btn-action-edit" title="{{ __('طھط¹ط¯ظٹظ„ ط§ظ„ط¨ظٹط§ظ†ط§طھ') }}">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
                                     @endcan
@@ -210,7 +210,7 @@
                                         <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn-action {{ $user->status === 'active' ? 'btn-action-danger' : 'btn-action-success' }}" title="{{ $user->status === 'active' ? __('إيقاف الحساب') : __('تنشيط الحساب') }}">
+                                            <button type="submit" class="btn-action {{ $user->status === 'active' ? 'btn-action-danger' : 'btn-action-success' }}" title="{{ $user->status === 'active' ? __('ط¥ظٹظ‚ط§ظپ ط§ظ„ط­ط³ط§ط¨') : __('طھظ†ط´ظٹط· ط§ظ„ط­ط³ط§ط¨') }}">
                                                 @if($user->status === 'active')
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                                                 @else
@@ -229,7 +229,7 @@
                                     <div class="w-24 h-24 bg-[var(--glass-border)] rounded-full flex items-center justify-center">
                                         <svg class="w-10 h-10 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                                     </div>
-                                    <span class="text-sm font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">{{ __('لا يوجد مستخدمين حالياً') }}</span>
+                                    <span class="text-sm font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">{{ __('ظ„ط§ ظٹظˆط¬ط¯ ظ…ط³طھط®ط¯ظ…ظٹظ† ط­ط§ظ„ظٹط§ظ‹') }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -260,7 +260,7 @@
             data: {
                 labels: @json($usersChart->keys()),
                 datasets: [{
-                    label: '{{ __('انضمام المستخدمين شهرياً') }}',
+                    label: '{{ __('ط§ظ†ط¶ظ…ط§ظ… ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ط´ظ‡ط±ظٹط§ظ‹') }}',
                     data: @json($usersChart->values()),
                     fill: true,
                     tension: 0.45,

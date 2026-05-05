@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
-@section('title', __('إدارة الإعلانات الترويجية'))
+@section('title', __('ط¥ط¯ط§ط±ط© ط§ظ„ط¥ط¹ظ„ط§ظ†ط§طھ ط§ظ„طھط±ظˆظٹط¬ظٹط©'))
 
 @section('content')
 <div class="h-full flex flex-col gap-8 font-Cairo py-6 animate-in fade-in duration-700">
@@ -9,11 +9,11 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div class="space-y-2">
             <h1 class="text-4xl font-black tracking-tighter italic text-[var(--main-text)] uppercase leading-tight">
-                {{ __('مركز الترويج') }} <span class="text-brand-primary italic">{{ __('الذكي') }}</span>
+                {{ __('ظ…ط±ظƒط² ط§ظ„طھط±ظˆظٹط¬') }} <span class="text-brand-primary italic">{{ __('ط§ظ„ط°ظƒظٹ') }}</span>
             </h1>
             <p class="text-[var(--text-muted)] font-bold text-sm flex items-center gap-2 italic">
                 <span class="w-8 h-[2px] bg-brand-primary inline-block"></span>
-                {{ __('إدارة البنرات الإعلانية والحملات الترويجية داخل التطبيق') }}
+                {{ __('ط¥ط¯ط§ط±ط© ط§ظ„ط¨ظ†ط±ط§طھ ط§ظ„ط¥ط¹ظ„ط§ظ†ظٹط© ظˆط§ظ„ط­ظ…ظ„ط§طھ ط§ظ„طھط±ظˆظٹط¬ظٹط© ط¯ط§ط®ظ„ ط§ظ„طھط·ط¨ظٹظ‚') }}
             </p>
         </div>
 
@@ -22,7 +22,7 @@
                 <svg class="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                <span>{{ __('تصدير التقرير') }}</span>
+                <span>{{ __('طھطµط¯ظٹط± ط§ظ„طھظ‚ط±ظٹط±') }}</span>
             </button>
 
             <a href="{{ route('advertisements.create') }}" class="group relative px-8 py-4 bg-brand-primary text-white rounded-2xl font-black text-sm transition-all duration-500 hover:scale-105 shadow-xl shadow-brand-primary/20 overflow-hidden">
@@ -31,7 +31,7 @@
                     <svg class="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    <span>{{ __('إضافة حملة جديدة') }}</span>
+                    <span>{{ __('ط¥ط¶ط§ظپط© ط­ظ…ظ„ط© ط¬ط¯ظٹط¯ط©') }}</span>
                 </div>
             </a>
         </div>
@@ -40,28 +40,28 @@
     <!-- Analytics Dashboard Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-2">
         <!-- Total Ads -->
-        <div class="card-premium p-6 flex items-center gap-6 group hover:border-indigo-500/50 transition-all duration-500">
-            <div class="w-16 h-16 rounded-[1.5rem] bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+        <div class="card-premium p-6 flex items-center gap-6 group hover:border-brand-primary-500/50 transition-all duration-500">
+            <div class="w-16 h-16 rounded-[1.5rem] bg-brand-primary-500/10 text-brand-primary-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
             </div>
             <div>
-                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('إجمالي الحملات') }}</span>
+                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ط­ظ…ظ„ط§طھ') }}</span>
                 <span class="text-3xl font-black text-[var(--main-text)] tabular-nums">{{ $stats['total'] }}</span>
             </div>
         </div>
 
         <!-- Active Ads -->
-        <div class="card-premium p-6 flex items-center gap-6 group hover:border-emerald-500/50 transition-all duration-500">
-            <div class="w-16 h-16 rounded-[1.5rem] bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+        <div class="card-premium p-6 flex items-center gap-6 group hover:border-brand-primary-500/50 transition-all duration-500">
+            <div class="w-16 h-16 rounded-[1.5rem] bg-brand-primary-500/10 text-brand-primary-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
             <div>
-                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('نشط حالياً') }}</span>
-                <span class="text-3xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">{{ $stats['active'] }}</span>
+                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('ظ†ط´ط· ط­ط§ظ„ظٹط§ظ‹') }}</span>
+                <span class="text-3xl font-black text-brand-primary-600 dark:text-brand-primary-400 tabular-nums">{{ $stats['active'] }}</span>
             </div>
         </div>
 
@@ -74,7 +74,7 @@
                 </svg>
             </div>
             <div>
-                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('إجمالي الظهور') }}</span>
+                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ط¸ظ‡ظˆط±') }}</span>
                 <span class="text-3xl font-black text-[var(--main-text)] tabular-nums">{{ number_format($stats['views']) }}</span>
             </div>
         </div>
@@ -87,7 +87,7 @@
                 </svg>
             </div>
             <div>
-                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('إجمالي التفاعل') }}</span>
+                <span class="block text-[13px] font-black uppercase tracking-[0.2em] opacity-40 mb-1">{{ __('ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„طھظپط§ط¹ظ„') }}</span>
                 <span class="text-3xl font-black text-brand-primary tabular-nums">{{ number_format($stats['clicks']) }}</span>
             </div>
         </div>
@@ -102,8 +102,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
                 </svg>
             </div>
-            <h3 class="text-2xl font-black text-[var(--main-text)] mb-2 italic">{{ __('لا توجد إعلانات حالياً') }}</h3>
-            <p class="text-[var(--text-muted)] font-bold max-w-md text-center italic">{{ __('ابدأ بإضافة أول بنر إعلاني ليظهر لمستخدمي تطبيق الجوال فوراً') }}</p>
+            <h3 class="text-2xl font-black text-[var(--main-text)] mb-2 italic">{{ __('ظ„ط§ طھظˆط¬ط¯ ط¥ط¹ظ„ط§ظ†ط§طھ ط­ط§ظ„ظٹط§ظ‹') }}</h3>
+            <p class="text-[var(--text-muted)] font-bold max-w-md text-center italic">{{ __('ط§ط¨ط¯ط£ ط¨ط¥ط¶ط§ظپط© ط£ظˆظ„ ط¨ظ†ط± ط¥ط¹ظ„ط§ظ†ظٹ ظ„ظٹط¸ظ‡ط± ظ„ظ…ط³طھط®ط¯ظ…ظٹ طھط·ط¨ظٹظ‚ ط§ظ„ط¬ظˆط§ظ„ ظپظˆط±ط§ظ‹') }}</p>
         </div>
     @else
         <!-- Ads Grid -->
@@ -151,12 +151,12 @@
                     <div class="p-8">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-xl font-black text-[var(--main-text)] line-clamp-1 italic tracking-tight uppercase">
-                                {{ $ad->title ?? __('بدون عنوان') }}
+                                {{ $ad->title ?? __('ط¨ط¯ظˆظ† ط¹ظ†ظˆط§ظ†') }}
                             </h3>
                             <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full {{ $ad->is_active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300' }}"></span>
+                                <span class="w-2 h-2 rounded-full {{ $ad->is_active ? 'bg-brand-primary-500 animate-pulse' : 'bg-slate-300' }}"></span>
                                 <span class="text-[12px] font-black uppercase tracking-widest opacity-60">
-                                    {{ $ad->is_active ? __('نشط') : __('متوقف') }}
+                                    {{ $ad->is_active ? __('ظ†ط´ط·') : __('ظ…طھظˆظ‚ظپ') }}
                                 </span>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                             <div class="flex flex-col gap-1.5 p-4 rounded-3xl bg-[var(--glass-bg)]/50 dark:bg-[var(--glass-bg)]/5 border border-[var(--glass-border)] shadow-sm transition-colors duration-500">
                                 <div class="flex items-center gap-2 text-[14px] font-black uppercase tracking-widest opacity-40 italic text-[var(--text-muted)]">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                                    {{ __('نوع التوجيه') }}
+                                    {{ __('ظ†ظˆط¹ ط§ظ„طھظˆط¬ظٹظ‡') }}
                                 </div>
                                 <div class="flex flex-col min-h-[30px] justify-center">
                                     <span class="text-[14px] font-black text-brand-primary italic uppercase leading-none">{{ __($ad->target_type) }}</span>
@@ -188,7 +188,7 @@
                             <div class="flex flex-col gap-1.5 p-4 rounded-3xl bg-[var(--glass-bg)]/50 dark:bg-[var(--glass-bg)]/5 border border-[var(--glass-border)] shadow-sm transition-colors duration-500">
                                 <div class="flex items-center gap-2 text-[14px] font-black uppercase tracking-widest opacity-40 italic text-[var(--text-muted)]">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
-                                    {{ __('ترتيب الظهور') }}
+                                    {{ __('طھط±طھظٹط¨ ط§ظ„ط¸ظ‡ظˆط±') }}
                                 </div>
                                 <div class="flex items-center min-h-[30px]">
                                     <span class="text-[16px] font-black text-[var(--main-text)] italic">#{{ $ad->sort_order }}</span>
@@ -200,15 +200,15 @@
                         <div class="space-y-4 bg-[var(--glass-bg)]/30 dark:bg-[var(--glass-bg)]/5 p-4 rounded-3xl border border-transparent border-[var(--glass-border)]">
                             <!-- Campaign Schedule -->
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0">
+                                <div class="w-10 h-10 rounded-2xl bg-brand-primary-500/10 text-brand-primary-500 flex items-center justify-center shrink-0">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-[14px] font-black uppercase tracking-wider opacity-40 italic text-[var(--text-muted)] mb-0.5">{{ __('الفترة الزمنية') }}</span>
+                                    <span class="text-[14px] font-black uppercase tracking-wider opacity-40 italic text-[var(--text-muted)] mb-0.5">{{ __('ط§ظ„ظپطھط±ط© ط§ظ„ط²ظ…ظ†ظٹط©') }}</span>
                                     <span class="text-[13px] font-black text-[var(--text-secondary)] tracking-tighter">
-                                        {{ $ad->starts_at->format('Y/m/d') }} <span class="mx-1 opacity-30">→</span> {{ $ad->ends_at ? $ad->ends_at->format('Y/m/d') : __('بلا نهاية') }}
+                                        {{ $ad->starts_at->format('Y/m/d') }} <span class="mx-1 opacity-30">â†’</span> {{ $ad->ends_at ? $ad->ends_at->format('Y/m/d') : __('ط¨ظ„ط§ ظ†ظ‡ط§ظٹط©') }}
                                     </span>
                                 </div>
                             </div>
@@ -218,12 +218,12 @@
                                 <div class="flex items-center gap-2">
                                     <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     <span class="text-xs font-black tabular-nums">{{ number_format($ad->views_count) }}</span>
-                                    <span class="text-[14px] font-bold opacity-40 uppercase">{{ __('مشاهدة') }}</span>
+                                    <span class="text-[14px] font-bold opacity-40 uppercase">{{ __('ظ…ط´ط§ظ‡ط¯ط©') }}</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-brand-primary">
                                     <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
                                     <span class="text-xs font-black tabular-nums">{{ number_format($ad->clicks_count) }}</span>
-                                    <span class="text-[14px] font-bold opacity-60 uppercase">{{ __('نقرة') }}</span>
+                                    <span class="text-[14px] font-bold opacity-60 uppercase">{{ __('ظ†ظ‚ط±ط©') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -244,13 +244,13 @@
     <table id="ads-table" class="hidden">
         <thead>
             <tr>
-                <th>{{ __('العنوان') }}</th>
-                <th>{{ __('النوع') }}</th>
-                <th>{{ __('المستهدف') }}</th>
-                <th>{{ __('الترتيب') }}</th>
-                <th>{{ __('المشاهدات') }}</th>
-                <th>{{ __('النقرات') }}</th>
-                <th>{{ __('الحالة') }}</th>
+                <th>{{ __('ط§ظ„ط¹ظ†ظˆط§ظ†') }}</th>
+                <th>{{ __('ط§ظ„ظ†ظˆط¹') }}</th>
+                <th>{{ __('ط§ظ„ظ…ط³طھظ‡ط¯ظپ') }}</th>
+                <th>{{ __('ط§ظ„طھط±طھظٹط¨') }}</th>
+                <th>{{ __('ط§ظ„ظ…ط´ط§ظ‡ط¯ط§طھ') }}</th>
+                <th>{{ __('ط§ظ„ظ†ظ‚ط±ط§طھ') }}</th>
+                <th>{{ __('ط§ظ„ط­ط§ظ„ط©') }}</th>
             </tr>
         </thead>
         <tbody>

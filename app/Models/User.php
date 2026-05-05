@@ -36,7 +36,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'google_id',
         'avatar',
         'id_card',
-        'status',
     ];
 
     /**
@@ -122,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function favoriteServices()
     {
         return $this->belongsToMany(Service::class, 'favorite_services', 'user_id', 'service_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     public function verificationPackages()
