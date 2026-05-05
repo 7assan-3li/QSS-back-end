@@ -63,10 +63,14 @@ class ProfileController extends Controller
         $validated = $request->validated();
         $user = Auth::user();
 
-        // 1. تحديث بيانات المستخدم (الاسم والإيميل)
-        $userData = array_intersect_key($validated, array_flip(['name']));
-        if (!empty($userData)) {
-            $this->userService->update($user->id, $userData);
+        // 1. تحديث بيانات المستخدم (الاسم) - يُمنع للمزودين
+        if (isset($validated['name'])) {
+            if ($user->role === \App\constant\Role::PROVIDER) {
+                return response()->json([
+                    'message' => 'عذراً، لا يمكن لمزودي الخدمة تغيير أسمائهم الرسمية بعد توثيق الحساب. يرجى التواصل مع الإدارة إذا كان هناك خطأ في الاسم.'
+                ], 403);
+            }
+            $this->userService->update($user->id, ['name' => $validated['name']]);
         }
 
         // 2. تحديث بيانات الملف الشخصي

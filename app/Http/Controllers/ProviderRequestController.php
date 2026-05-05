@@ -209,10 +209,15 @@ class ProviderRequestController extends Controller
 
             $user = User::findOrFail($providerRequest->user_id);
             if ($user->role === Role::PROVIDER) {
-                return back()->withErrors('لا يمكن تغيير الحالة من هذه الحالة.');
+                return back()->withErrors('المستخدم هو مزود خدمة بالفعل.');
             }
-            $user->role = Role::PROVIDER;
-            $user->save();
+
+            // تحديث بيانات المستخدم (الاسم الرسمي + صورة الهوية + الرتبة)
+            $user->update([
+                'role' => Role::PROVIDER,
+                'name' => $providerRequest->name,
+                'id_card' => $providerRequest->id_card,
+            ]);
 
             // التحقق من وجود خدمة مقابلة وخدمة مخصصة بالفعل
             $hasMeeting = \App\Models\Service::where('provider_id', $user->id)

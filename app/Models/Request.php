@@ -89,7 +89,7 @@ class Request extends Model
         }
 
         if ($defaultPercentage === null) {
-            $defaultPercentage = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
+            $defaultPercentage = \App\Models\Setting::getValue('provider_commission', 10);
         }
         
         // إذا كانت عمولة المزود 0، نستخدم العمولة الافتراضية للنظام

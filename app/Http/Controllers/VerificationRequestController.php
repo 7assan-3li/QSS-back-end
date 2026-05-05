@@ -144,7 +144,7 @@ class VerificationRequestController extends Controller
         );
 
         if (!$hasBeenVerifiedBefore) {
-            $freeDays = (int) (\App\Models\Setting::where('key', 'initial_free_verification_days')->value('value') ?? 365);
+            $freeDays = (int) (\App\Models\Setting::getValue('initial_free_verification_days', 365));
             $provider->verification_provider = true;
             $provider->provider_verified_until = now()->addDays($freeDays);
             $provider->save();
@@ -152,7 +152,7 @@ class VerificationRequestController extends Controller
         }
 
         // للمرات اللاحقة: منح فترة سماح قصيرة محددة من الإعدادات
-        $graceDays = (int) (\App\Models\Setting::where('key', 'returning_free_verification_days')->value('value') ?? 0);
+        $graceDays = (int) (\App\Models\Setting::getValue('returning_free_verification_days', 0));
 
         if ($graceDays > 0) {
             $currentDate = $provider->provider_verified_until ? \Carbon\Carbon::parse($provider->provider_verified_until) : null;
@@ -243,7 +243,7 @@ class VerificationRequestController extends Controller
             ->where('commission_paid', false)
             ->sum('total_price');
 
-        $defaultCommission = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
+        $defaultCommission = \App\Models\Setting::getValue('provider_commission', 10);
         $percentage = $provider->commission ?? $defaultCommission;
         $totalCommission = $totalCommission * ($percentage / 100);
 
@@ -257,6 +257,38 @@ class VerificationRequestController extends Controller
             $q->where('provider_id', $provider->id);
         })->count();
 
+        /*
+        |--------------------------------------------------------------------------
+        | معايير التوثيق (Verification Criteria)
+        |--------------------------------------------------------------------------
+        */
+        $criteria = [
+            'completed_requests' => [
+                'label' => __('الطلبات المكتملة'),
+                'value' => $completedRequests,
+                'min' => 5,
+                'met' => $completedRequests >= 5
+            ],
+            'rating' => [
+                'label' => __('متوسط التقييم'),
+                'value' => number_format($provider->rating_avg, 1),
+                'min' => 4.0,
+                'met' => $provider->rating_avg >= 4.0
+            ],
+            'complaints' => [
+                'label' => __('إجمالي الشكاوى'),
+                'value' => $complaintsCount,
+                'max' => 2,
+                'met' => $complaintsCount <= 2
+            ],
+            'services' => [
+                'label' => __('الخدمات المضافة'),
+                'value' => $servicesCount,
+                'min' => 1,
+                'met' => $servicesCount >= 1
+            ]
+        ];
+
         return view('verificationRequests.show', compact(
             'verificationRequest',
             'provider',
@@ -265,7 +297,8 @@ class VerificationRequestController extends Controller
             'completedRequests',
             'unpaidCommissionRequests',
             'totalCommission',
-            'complaintsCount'
+            'complaintsCount',
+            'criteria'
         ));
     }
 

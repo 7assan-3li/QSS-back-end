@@ -220,7 +220,7 @@ class PointsService
             }
 
             // حساب مبلغ المكافأة مع الحافز الديناميكي
-            $conversionBonusRate = \App\Models\Setting::where('key', 'provider_conversion_bonus')->value('value') ?? 1;
+            $conversionBonusRate = \App\Models\Setting::getValue('provider_conversion_bonus', 1);
             $bonusAmount = $amount * (1 + ($conversionBonusRate / 100));
 
             $user->paid_points -= $amount;
@@ -253,7 +253,7 @@ class PointsService
 
     private function calculateBonusPoints($request)
     {
-        $seekerBonusRate = \App\Models\Setting::where('key', 'seeker_bonus')->value('value') ?? 10;
+        $seekerBonusRate = \App\Models\Setting::getValue('seeker_bonus', 10);
         return $request->total_price * ($seekerBonusRate / 100);
     }
 

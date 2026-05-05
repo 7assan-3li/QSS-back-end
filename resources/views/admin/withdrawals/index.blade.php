@@ -54,7 +54,7 @@
                             </td>
                             <td class="px-8 py-6 text-center text-start font-Cairo">
                                 <span class="text-lg font-black font-Cairo">{{ number_format($w->amount, 2) }}</span>
-                                <span class="text-[12px] font-black text-emerald-500 font-Cairo mr-1 opacity-80">{{ __('ر.س') }}</span>
+                                <span class="text-[12px] font-black text-emerald-500 font-Cairo mr-1 opacity-80">{{ __('ر.ي') }}</span>
                             </td>
                             <td class="px-8 py-6 text-start font-Cairo">
                                 <span class="text-[13px] font-black font-Cairo leading-none opacity-60">{{ $w->created_at->format('Y-m-d H:i') }}</span>

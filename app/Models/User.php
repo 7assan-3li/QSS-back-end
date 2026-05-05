@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'provider_verified_until',
         'google_id',
         'avatar',
+        'id_card',
     ];
 
     /**
@@ -57,7 +58,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'provider_verified_until' => 'datetime',
+            'verification_provider' => 'boolean',
         ];
+    }
+
+    public function isVerified()
+    {
+        if ($this->role !== 'provider') {
+            return false;
+        }
+
+        if (!$this->verification_provider) {
+            return false;
+        }
+
+        return is_null($this->provider_verified_until) || $this->provider_verified_until->isFuture();
     }
 
     public function services()

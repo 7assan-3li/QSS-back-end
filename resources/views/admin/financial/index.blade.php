@@ -59,10 +59,10 @@
                 </button>
             </form>
 
-            <button onclick="window.print()" class="h-16 px-8 bg-slate-900 hover:bg-black text-white rounded-[2rem] font-black text-[14px] uppercase tracking-[0.2em] flex items-center gap-4 transition-all shadow-2xl shadow-slate-900/20 italic group font-Cairo">
-                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2H7a2 2 0 00-2 2v4m14 0h-2"></path></svg>
-                {{ __('تصدير التقرير الكامل') }}
-            </button>
+            <a href="{{ route('admin.financial.export', ['from_date' => $fromDate->format('Y-m-d'), 'to_date' => $toDate->format('Y-m-d')]) }}" class="h-16 px-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[2rem] font-black text-[14px] uppercase tracking-[0.2em] flex items-center gap-4 transition-all shadow-2xl shadow-emerald-600/20 italic group font-Cairo">
+                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                {{ __('تصدير كملف Excel') }}
+            </a>
         </div>
     </div>
 
@@ -80,7 +80,7 @@
                     </div>
                     <h2 class="text-5xl md:text-7xl font-black font-mono italic mt-8 text-emerald-600 leading-none">
                         {{ number_format($totalInflow, 2) }}
-                        <span class="text-sm opacity-40 ml-2 italic font-Cairo uppercase">{{ __('ر.س') }}</span>
+                        <span class="text-sm opacity-40 ml-2 italic font-Cairo uppercase">{{ __('ر.ي') }}</span>
                     </h2>
                 </div>
                 <div class="w-16 h-16 md:w-20 md:h-20 bg-[var(--glass-bg)] dark:bg-emerald-500/20 rounded-[2rem] flex items-center justify-center text-emerald-600 text-3xl md:text-4xl shadow-2xl shadow-emerald-500/10 transition-all group-hover:rotate-12">📥</div>
@@ -120,7 +120,7 @@
                     </div>
                     <h2 class="text-5xl md:text-7xl font-black font-mono italic mt-8 text-rose-600 leading-none">
                         {{ number_format($totalOutflow, 2) }}
-                        <span class="text-sm opacity-40 ml-2 italic font-Cairo uppercase font-Cairo text-start">{{ __('ر.س') }}</span>
+                        <span class="text-sm opacity-40 ml-2 italic font-Cairo uppercase font-Cairo text-start">{{ __('ر.ي') }}</span>
                     </h2>
                 </div>
                 <div class="w-16 h-16 md:w-20 md:h-20 bg-[var(--glass-bg)] dark:bg-rose-500/20 rounded-[2rem] flex items-center justify-center text-rose-600 text-3xl md:text-4xl shadow-2xl shadow-rose-500/10 transition-all group-hover:rotate-12">📤</div>
@@ -235,7 +235,7 @@
                 <h5 class="text-xs font-black italic text-[var(--text-muted)] mb-3 font-Cairo">{{ $item['label'] }}</h5>
                 <div class="flex items-baseline gap-3 text-start font-Cairo">
                     <span class="text-4xl font-black font-mono italic text-[var(--main-text)]">{{ number_format($item['val'], 2) }}</span>
-                    <span class="text-[14px] font-black opacity-20 italic uppercase tracking-widest font-Cairo">{{ __('ر.س') }}</span>
+                    <span class="text-[14px] font-black opacity-20 italic uppercase tracking-widest font-Cairo">{{ __('ر.ي') }}</span>
                 </div>
             </div>
 
@@ -301,7 +301,7 @@
                                     <td class="px-10 py-8 text-start font-Cairo">
                                         <div class="flex flex-col">
                                             <span class="text-sm font-black text-indigo-500 italic">{{ $item->package->name ?? __('باقة عامة') }}</span>
-                                            <span class="text-sm font-black text-emerald-500 font-mono mt-1">+{{ number_format($item->package->price ?? 0, 2) }} <span class="text-[12px] opacity-40 uppercase font-Cairo underline italic leading-tight">{{ __('ر.س') }}</span></span>
+                                            <span class="text-sm font-black text-emerald-500 font-mono mt-1">+{{ number_format($item->package->price ?? 0, 2) }} <span class="text-[12px] opacity-40 uppercase font-Cairo underline italic leading-tight">{{ __('ر.ي') }}</span></span>
                                         </div>
                                     </td>
                                     <td class="px-10 py-8 text-start font-Cairo">
@@ -347,7 +347,7 @@
                                     <td class="px-10 py-8 text-start font-Cairo">
                                         <div class="flex flex-col">
                                             <span class="text-sm font-black text-amber-600 italic leading-tight">{{ $item->verificationPackage->name ?? __('رسوم توثيق') }}</span>
-                                            <span class="text-sm font-black text-emerald-500 font-mono mt-1">+{{ number_format($item->verificationPackage->price ?? 0, 2) }} <span class="text-[12px] opacity-40 uppercase font-Cairo underline italic leading-tight">{{ __('ر.س') }}</span></span>
+                                            <span class="text-sm font-black text-emerald-500 font-mono mt-1">+{{ number_format($item->verificationPackage->price ?? 0, 2) }} <span class="text-[12px] opacity-40 uppercase font-Cairo underline italic leading-tight">{{ __('ر.ي') }}</span></span>
                                         </div>
                                     </td>
                                     <td class="px-10 py-8 text-start font-Cairo">
@@ -391,7 +391,7 @@
                                         </div>
                                     </td>
                                     <td class="px-10 py-8 text-start font-Cairo">
-                                        <span class="text-lg font-black text-rose-500 font-mono italic leading-none">-{{ number_format($item->amount, 2) }} <span class="text-[12px] opacity-40 uppercase font-Cairo underline italic leading-tight">{{ __('ر.س') }}</span></span>
+                                        <span class="text-lg font-black text-rose-500 font-mono italic leading-none">-{{ number_format($item->amount, 2) }} <span class="text-[12px] opacity-40 uppercase font-Cairo underline italic leading-tight">{{ __('ر.ي') }}</span></span>
                                     </td>
                                     <td class="px-10 py-8 text-start font-Cairo">
                                         <span class="px-4 py-2 bg-[var(--glass-bg)] dark:bg-[var(--glass-bg)]/5 rounded-xl text-[14px] font-black font-mono italic border border-white/5 whitespace-nowrap inline-flex items-center justify-center">PAY: {{ $item->bond_number ?? 'WD-' . $item->id }}</span>

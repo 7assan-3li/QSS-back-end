@@ -56,7 +56,7 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <p class="text-xs font-black text-white/70 uppercase tracking-widest mb-1">{{ __('العمولات المحصلة') }}</p>
-                <h3 class="text-3xl font-black mb-2">152,000 <span class="text-sm font-bold opacity-70">{{ __('ر.س') }}</span></h3>
+                <h3 class="text-3xl font-black mb-2">152,000 <span class="text-sm font-bold opacity-70">{{ __('ر.ي') }}</span></h3>
                 <p class="text-[13px] font-black inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-[var(--glass-bg)]/20">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg> 
                     +8.4% <span class="font-bold opacity-70">{{ __('هذا الشهر') }}</span>

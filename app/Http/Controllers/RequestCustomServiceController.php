@@ -83,7 +83,7 @@ class RequestCustomServiceController extends Controller
             $this->notificationService->sendToUser(
                 $customRequest->user_id,
                 'تم تحديد سعر الخدمة 💰',
-                "تم تحديد سعر طلبك المخصص بمبلغ {$data['price']} ريال. يمكنك الآن المتابعة للدقع.",
+                "تم تحديد سعر طلبك المخصص بمبلغ {$data['price']} ريال يمني. يمكنك الآن المتابعة للدفع.",
                 \App\Constants\NotificationType::REQUEST_ACCEPTED,
                 ['request_id' => $id]
             );

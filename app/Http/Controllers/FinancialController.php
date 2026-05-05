@@ -64,7 +64,7 @@ class FinancialController extends Controller
             $alerts[] = [
                 'type' => 'warning',
                 'title' => __('تنبيه سيولة نقدية'),
-                'message' => __('توجد طلبات سحب معلقة بمجموع :amount ر.س. يرجى التأكد من توفر الرصيد الكافي.', ['amount' => number_format($highPendingWithdrawals, 2)])
+                'message' => __('توجد طلبات سحب معلقة بمجموع :amount ر.ي. يرجى التأكد من توفر الرصيد الكافي.', ['amount' => number_format($highPendingWithdrawals, 2)])
             ];
         }
 
@@ -124,9 +124,8 @@ class FinancialController extends Controller
             ->get()
             ->sum(fn($uv) => $uv->verificationPackage->price ?? 0);
 
-        $paidCommissions = RequestModel::where('commission_paid', true)
-            ->whereBetween('created_at', [$from, $to])
-            ->sum('commission_amount');
+        $paidCommissions = RequestModel::whereBetween('created_at', [$from, $to])
+            ->sum('commission_amount_paid');
 
         $totalOutflow = WithdrawRequest::where('status', 'approved')
             ->whereBetween('created_at', [$from, $to])
@@ -135,9 +134,9 @@ class FinancialController extends Controller
         $totalInflow = $pointsRevenue + $verificationRevenue + $paidCommissions;
 
         $accruedCommissions = RequestModel::where('commission_paid', false)
-            ->where('commission_amount', '>', 0)
             ->whereBetween('created_at', [$from, $to])
-            ->sum('commission_amount');
+            ->select(DB::raw('SUM(commission_amount - commission_amount_paid) as unpaid'))
+            ->first()->unpaid ?? 0;
 
         // New: Global Point Liability Metrics
         $totalSystemPoints = \App\Models\User::sum(DB::raw('paid_points + bonus_points'));
@@ -154,6 +153,88 @@ class FinancialController extends Controller
             'totalSystemPoints' => (float)$totalSystemPoints,
             'withdrawablePoints' => (float)$withdrawablePoints,
         ];
+    }
+
+    /**
+     * Export the financial report to a CSV file (Excel compatible).
+     */
+    public function exportExcel(Request $request)
+    {
+        $fromDate = $request->input('from_date') ? Carbon::parse($request->input('from_date'))->startOfDay() : Carbon::now()->subDays(30)->startOfDay();
+        $toDate = $request->input('to_date') ? Carbon::parse($request->input('to_date'))->endOfDay() : Carbon::now()->endOfDay();
+
+        $metrics = $this->getFinancialMetrics($fromDate, $toDate);
+        
+        $filename = "Financial_Report_" . $fromDate->format('Y-m-d') . "_to_" . $toDate->format('Y-m-d') . ".csv";
+        
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use($fromDate, $toDate, $metrics) {
+            $file = fopen('php://output', 'w');
+            
+            // Add BOM for UTF-8 Arabic support in Excel
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // --- Section 1: Header ---
+            fputcsv($file, [__('التقرير المالي العام')]);
+            fputcsv($file, [__('الفترة من'), $fromDate->format('Y-m-d'), __('إلى'), $toDate->format('Y-m-d')]);
+            fputcsv($file, []); // Empty line
+
+            // --- Section 2: Summary Metrics ---
+            fputcsv($file, [__('ملخص المؤشرات المالية')]);
+            fputcsv($file, [__('المؤشر'), __('القيمة (ر.ي)')]);
+            fputcsv($file, [__('إجمالي التدفقات الداخلة'), number_format($metrics['totalInflow'], 2)]);
+            fputcsv($file, [__('إيرادات بيع النقاط'), number_format($metrics['pointsRevenue'], 2)]);
+            fputcsv($file, [__('إيرادات باقات التوثيق'), number_format($metrics['verificationRevenue'], 2)]);
+            fputcsv($file, [__('العمولات المحصلة'), number_format($metrics['paidCommissions'], 2)]);
+            fputcsv($file, [__('العمولات المستحقة (غير المحصلة)'), number_format($metrics['accruedCommissions'], 2)]);
+            fputcsv($file, [__('إجمالي التدفقات الخارجة (سحوبات)'), number_format($metrics['totalOutflow'], 2)]);
+            fputcsv($file, [__('إجمالي الربح الصافي'), number_format($metrics['totalProfit'], 2)]);
+            fputcsv($file, [__('إجمالي الالتزامات (نقاط في النظام)'), number_format($metrics['totalSystemPoints'], 2)]);
+            fputcsv($file, []); // Empty line
+
+            // --- Section 3: Points Sales Detail ---
+            fputcsv($file, [__('تفاصيل مبيعات باقات النقاط')]);
+            fputcsv($file, [__('التاريخ'), __('المستخدم'), __('الباقة'), __('المبلغ')]);
+            $detailedPoints = UserPointsPackage::where('status', 'approved')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->with(['user', 'package'])->get();
+            foreach ($detailedPoints as $p) {
+                fputcsv($file, [$p->created_at->format('Y-m-d H:i'), $p->user->name ?? 'N/A', $p->package->name ?? 'N/A', $p->package->price ?? 0]);
+            }
+            fputcsv($file, []);
+
+            // --- Section 4: Verifications Detail ---
+            fputcsv($file, [__('تفاصيل إيرادات التوثيق')]);
+            fputcsv($file, [__('التاريخ'), __('المستخدم'), __('نوع الباقة'), __('المبلغ')]);
+            $detailedVerifications = UserVerificationPackages::where('status', 'approved')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->with(['user', 'verificationPackage'])->get();
+            foreach ($detailedVerifications as $v) {
+                fputcsv($file, [$v->created_at->format('Y-m-d H:i'), $v->user->name ?? 'N/A', $v->verificationPackage->name ?? 'N/A', $v->verificationPackage->price ?? 0]);
+            }
+            fputcsv($file, []);
+
+            // --- Section 5: Withdrawals Detail ---
+            fputcsv($file, [__('تفاصيل طلبات السحب المعتمدة')]);
+            fputcsv($file, [__('التاريخ'), __('المستخدم'), __('المسؤول'), __('المبلغ')]);
+            $detailedWithdrawals = WithdrawRequest::where('status', 'approved')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->with(['user', 'admin'])->get();
+            foreach ($detailedWithdrawals as $w) {
+                fputcsv($file, [$w->created_at->format('Y-m-d H:i'), $w->user->name ?? 'N/A', $w->admin->name ?? 'Admin', $w->amount]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     private function calculateTrend($current, $previous)

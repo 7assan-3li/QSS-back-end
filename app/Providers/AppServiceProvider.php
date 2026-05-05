@@ -24,11 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Gate::before(function ($user, $ability) {
-        //     if ($user->role === Role::ADMIN) {
-        //         return true;
-        //     }
-        // });
+        Gate::before(function ($user, $ability) {
+            if ($user->role === Role::ADMIN) {
+                return true;
+            }
+        });
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(

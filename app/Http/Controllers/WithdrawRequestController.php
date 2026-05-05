@@ -21,7 +21,7 @@ class WithdrawRequestController extends Controller
     {
         $this->authorize('create', \App\Models\WithdrawRequest::class);
 
-        $minWithdrawal = \App\Models\Setting::where('key', 'min_withdrawal_amount')->value('value') ?? 50;
+        $minWithdrawal = \App\Models\Setting::getValue('min_withdrawal_amount', 50);
         $request->validate([
             'amount' => 'required|numeric|min:' . $minWithdrawal,
         ]);
@@ -33,7 +33,7 @@ class WithdrawRequestController extends Controller
             $this->notificationService->sendToUser(
                 Auth::id(),
                 'طلب السحب قيد المعالجة 🕒',
-                'لقد تم تقديم طلب سحب رصيد بقيمة ' . $request->amount . ' ريال بنجاح وهو قيد المراجعة.',
+                'لقد تم تقديم طلب سحب رصيد بقيمة ' . $request->amount . ' ريال يمني بنجاح وهو قيد المراجعة.',
                 \App\Constants\NotificationType::ADMIN_MSG
             );
 
@@ -90,7 +90,7 @@ class WithdrawRequestController extends Controller
             $this->notificationService->sendToUser(
                 $withdrawal->user_id,
                 'تم تنفيذ طلب السحب 💸',
-                'تمت الموافقة على طلب سحب الرصيد بقيمة ' . $withdrawal->amount . ' ريال . رقم السند: ' . $request->bond_number,
+                'تمت الموافقة على طلب سحب الرصيد بقيمة ' . $withdrawal->amount . ' ريال يمني . رقم السند: ' . $request->bond_number,
                 \App\Constants\NotificationType::ADMIN_MSG
             );
 

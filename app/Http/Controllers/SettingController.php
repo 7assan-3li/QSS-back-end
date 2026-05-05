@@ -24,12 +24,16 @@ class SettingController extends Controller
         foreach ($settingsData as $key => $value) {
             $setting = Setting::where('key', $key)->first();
             if ($setting) {
+                // Normalize line endings and trim for comparison
+                $oldValue = str_replace("\r\n", "\n", trim($setting->value));
+                $newValue = str_replace("\r\n", "\n", trim($value));
+
                 // Determine if we need to reset user policies (only if text changed)
-                if (in_array($key, ['seeker_policy_content', 'provider_policy_content']) && $setting->value !== $value) {
+                if (in_array($key, ['seeker_policy_content', 'provider_policy_content']) && $oldValue !== $newValue) {
                     if ($key === 'seeker_policy_content') {
-                        \App\Models\User::where('role', 'seeker')->update(['seeker_policy' => false]);
+                        \App\Models\User::query()->update(['seeker_policy' => false]);
                     } else {
-                        \App\Models\User::where('role', 'provider')->update(['provider_policy' => false]);
+                        \App\Models\User::query()->update(['provider_policy' => false]);
                     }
                 }
 

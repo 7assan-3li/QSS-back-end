@@ -9,14 +9,14 @@ class PolicyController extends Controller
 {
     public function getSeekerPolicy()
     {
-        $seekerPolicy = \App\Models\Setting::where('key', 'seeker_policy_content')->first();
+        $seekerPolicy = \App\Models\Setting::getValue('seeker_policy_content');
         return response()->json([
             'seeker_policy' => $seekerPolicy,
         ]);
     }
     public function getProviderPolicy()
     {
-        $providerPolicy = \App\Models\Setting::where('key', 'provider_policy_content')->first();
+        $providerPolicy = \App\Models\Setting::getValue('provider_policy_content');
         return response()->json([
             'provider_policy' => $providerPolicy,
         ]);

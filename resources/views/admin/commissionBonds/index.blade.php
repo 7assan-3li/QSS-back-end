@@ -54,7 +54,7 @@
                 <div class="w-16 h-16 bg-indigo-500 text-white rounded-2xl flex items-center justify-center text-2xl italic font-black">💰</div>
                 <div class="flex flex-col text-start">
                     <span class="text-2xl font-black text-indigo-600 font-mono leading-none text-start italic">{{ number_format($stats['total_amount'], 2) }}</span>
-                    <span class="text-[12px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-2 font-Cairo text-start opacity-80">{{ __('إجمالي المحصل (ر.س)') }}</span>
+                    <span class="text-[12px] font-black text-indigo-500 uppercase tracking-[0.2em] mt-2 font-Cairo text-start opacity-80">{{ __('إجمالي المحصل (ر.ي)') }}</span>
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@
                             </td>
                             <td class="px-10 py-7 text-center">
                                 <span class="text-base font-black font-mono text-emerald-600 italic">{{ number_format($bond->amount, 2) }}</span>
-                                <span class="text-[12px] font-bold opacity-40 ml-1 italic">ر.س</span>
+                                <span class="text-[12px] font-bold opacity-40 ml-1 italic">ر.ي</span>
                             </td>
                             <td class="px-10 py-7 text-center">
                                 <span class="px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-widest font-Cairo @if($bond->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20 @elseif($bond->status == 'approved') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif whitespace-nowrap inline-flex items-center justify-center">

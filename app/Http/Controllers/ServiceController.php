@@ -26,7 +26,7 @@ class ServiceController extends Controller
 
         $servicesQuery = Service::where('type', ServiceType::MAIN)
             ->where('is_active', true)
-            ->with(['provider.profile', 'category', 'children']);
+            ->with(['provider.profile', 'category', 'children', 'schedules.days']);
 
         // 1. Text Search (Name, Description, Hierarchical Category, Children)
         if ($queryText) {
@@ -55,23 +55,46 @@ class ServiceController extends Controller
         }
 
         // 3. Price Filter
-        if ($minPrice) {
-            $servicesQuery->where('price', '>=', $minPrice);
+        if ($request->filled('min_price')) {
+            $servicesQuery->where('price', '>=', $request->input('min_price'));
         }
-        if ($maxPrice) {
-            $servicesQuery->where('price', '<=', $maxPrice);
+        if ($request->filled('max_price')) {
+            $servicesQuery->where('price', '<=', $request->input('max_price'));
         }
 
-        $services = $servicesQuery->get();
+        // 4. Verified Provider Filter
+        if ($request->has('is_verified') && $request->boolean('is_verified')) {
+            $servicesQuery->whereHas('provider', function ($q) {
+                $q->where('verification_provider', true)
+                  ->where(function($sq) {
+                      $sq->whereNull('provider_verified_until')
+                        ->orWhere('provider_verified_until', '>', now());
+                  });
+            });
+        }
 
-        // 4. Calculate Availability and Distance
-        $services->map(function ($service) use ($lat, $lng) {
+        $services = $this->enrichServices($servicesQuery->get(), $lat, $lng);
+
+        return response()->json([
+            'message' => 'Search results retrieved successfully',
+            'count' => $services->count(),
+            'data' => $services
+        ]);
+    }
+
+    /**
+     * Enrich a collection of services with extra calculated data.
+     */
+    private function enrichServices($services, $lat = null, $lng = null)
+    {
+        $enriched = $services->map(function ($service) use ($lat, $lng) {
             $service->is_available_now = $service->isAvailableNow();
-            
+            $service->is_provider_verified = $service->provider ? $service->provider->isVerified() : false;
+
             if ($lat && $lng && $service->provider && $service->provider->profile) {
                 $pLat = $service->provider->profile->latitude;
                 $pLng = $service->provider->profile->longitude;
-                
+
                 if ($pLat && $pLng) {
                     $service->distance = $this->calculateDistance($lat, $lng, $pLat, $pLng);
                 } else {
@@ -83,16 +106,12 @@ class ServiceController extends Controller
             return $service;
         });
 
-        // 5. Sort by Distance if coordinates provided
+        // Sort by distance if coordinates are provided
         if ($lat && $lng) {
-            $services = $services->sortBy('distance')->values();
+            return $enriched->sortBy('distance')->values();
         }
 
-        return response()->json([
-            'message' => 'Search results retrieved successfully',
-            'count' => $services->count(),
-            'data' => $services
-        ]);
+        return $enriched;
     }
 
     private function calculateDistance($lat1, $lon1, $lat2, $lon2)
@@ -382,20 +401,25 @@ class ServiceController extends Controller
 
     public function showAll()
     {
-        $services = Service::where('type', ServiceType::MAIN)->with('provider')->get();
+        $services = Service::where('type', ServiceType::MAIN)->with(['provider.profile', 'category', 'schedules.days'])->get();
+        $services = $this->enrichServices($services);
         return response()->json($services, 200);
     }
 
     public function getTopRequestedServices(Request $request)
     {
-        $limit = $request->input('limit', 10); // Number of services to return
+        $limit = $request->input('limit', 10);
         
-        $services = Service::where('type', ServiceType::MAIN)
-            ->with(['provider', 'category'])
-            ->withCount('requests')
-            ->orderByDesc('requests_count')
-            ->take($limit)
-            ->get();
+        $services = \Illuminate\Support\Facades\Cache::remember("top_requested_services_{$limit}", now()->addMinutes(15), function () use ($limit) {
+            return Service::where('type', ServiceType::MAIN)
+                ->with(['provider.profile', 'category', 'schedules.days'])
+                ->withCount('requests')
+                ->orderByDesc('requests_count')
+                ->take($limit)
+                ->get();
+        });
+            
+        $services = $this->enrichServices($services);
             
         return response()->json($services, 200);
     }
@@ -404,20 +428,23 @@ class ServiceController extends Controller
     {
         $limit = $request->input('limit', 10);
         
-        $services = Service::where('type', ServiceType::MAIN)
-            ->where('is_active', true)
-            ->withCount('requests')
-            ->with(['provider.profile', 'category'])
-            // Add subquery for average rating
-            ->addSelect(['avg_rating' => \App\Models\Review::selectRaw('avg(rating)')
-                ->whereHas('request.services', function($q) {
-                    $q->whereColumn('services.id', 'service_id');
-                })
-            ])
-            ->orderByDesc('avg_rating')
-            ->orderByDesc('requests_count')
-            ->take($limit)
-            ->get();
+        $services = \Illuminate\Support\Facades\Cache::remember("recommended_services_{$limit}", now()->addMinutes(15), function () use ($limit) {
+            return Service::where('type', ServiceType::MAIN)
+                ->where('is_active', true)
+                ->withCount('requests')
+                ->with(['provider.profile', 'category', 'schedules.days'])
+                ->addSelect(['avg_rating' => \App\Models\Review::selectRaw('avg(rating)')
+                    ->whereHas('request.services', function($q) {
+                        $q->whereColumn('services.id', 'service_id');
+                    })
+                ])
+                ->orderByDesc('avg_rating')
+                ->orderByDesc('requests_count')
+                ->take($limit)
+                ->get();
+        });
+
+        $services = $this->enrichServices($services);
             
         return response()->json([
             'message' => 'Recommended services retrieved successfully',

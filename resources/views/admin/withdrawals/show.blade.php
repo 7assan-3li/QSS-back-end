@@ -237,7 +237,7 @@
                     <span class="text-[12px] font-black uppercase tracking-[0.3em] block font-Cairo text-start italic opacity-60">{{ __('رصيد الأرباح المحجوز حالياً') }}</span>
                     <div class="flex items-baseline gap-3 text-start font-Cairo font-mono">
                         <span class="text-4xl font-black text-emerald-600 italic text-start">{{ number_format($withdrawal->user->paid_points ?? 0, 0) }}</span>
-                        <span class="text-xs font-black tracking-widest text-start font-Cairo opacity-60">YER</span>
+                        <span class="text-xs font-black tracking-widest text-start font-Cairo opacity-60">{{ __('ر.ي') }}</span>
                     </div>
                 </div>
             </div>

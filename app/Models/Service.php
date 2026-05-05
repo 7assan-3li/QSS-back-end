@@ -69,9 +69,22 @@ class Service extends Model
      */
     public function isAvailableNow()
     {
-        $dayName = strtolower(now()->format('l')); // يجلب اسم اليوم (monday, sunday, etc.)
+        $dayName = strtolower(now()->format('l'));
         $currentTime = now()->format('H:i:s');
 
+        // If schedules are already loaded (eager loading), check in memory
+        if ($this->relationLoaded('schedules')) {
+            return $this->schedules->contains(function ($schedule) use ($dayName, $currentTime) {
+                if (!$schedule->is_active) return false;
+                
+                $hasDay = $schedule->days->contains('day', $dayName);
+                if (!$hasDay) return false;
+
+                return $schedule->start_time <= $currentTime && $schedule->end_time >= $currentTime;
+            });
+        }
+
+        // Fallback to database query if not loaded
         return $this->schedules()
             ->where('is_active', true)
             ->whereHas('days', function ($query) use ($dayName) {

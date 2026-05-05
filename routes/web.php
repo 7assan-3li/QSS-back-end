@@ -43,6 +43,7 @@ Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::clas
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/financial-report', [FinancialController::class, 'index'])->name('admin.financial.index');
+    Route::get('/admin/financial-report/export', [FinancialController::class, 'exportExcel'])->name('admin.financial.export');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
     Route::patch('/admin/reviews/{id}/toggle', [\App\Http\Controllers\ReviewController::class, 'toggleVisibilityAdmin'])->name('admin.reviews.toggle');
     

@@ -79,7 +79,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start font-Cairo">
                         <div class="space-y-3 text-start font-Cairo">
-                            <label class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest px-2 font-Cairo opacity-70 italic">{{ __('السعر الأساسي (بالريال)') }}</label>
+                            <label class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-widest px-2 font-Cairo opacity-70 italic">{{ __('السعر الأساسي (بالريال اليمني)') }}</label>
                             <input type="number" step="0.01" name="price" value="{{ old('price', $service->price) }}" required class="w-full px-8 py-5 bg-[var(--glass-bg)]/50 rounded-[1.8rem] border border-[var(--glass-border)] focus:ring-4 focus:ring-brand-primary/10 transition-all text-sm font-black italic font-mono text-start">
                         </div>
 

@@ -96,12 +96,20 @@ class RequestService
         ];
     }
 
-    public function markPaid($data)
+    public function markPaid($requestModel)
     {
-        // تحديث حالة الطلب
-        $data->update([
-            'commission_paid' => true
-        ]);
+        DB::transaction(function () use ($requestModel) {
+            // ضمان وجود مبلغ العمولة قبل التأشير
+            if ($requestModel->commission_amount <= 0) {
+                $requestModel->commission_amount = $requestModel->getCommissionAmount();
+            }
+
+            // تحديث حالة الطلب والمبالغ المدفوعة
+            $requestModel->update([
+                'commission_paid' => true,
+                'commission_amount_paid' => $requestModel->commission_amount
+            ]);
+        });
     }
 
     public function addToMoneyPaid($requestId, $addedAmount)
