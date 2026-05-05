@@ -42,6 +42,7 @@ class AdvertisementController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'image_path' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'type' => 'required|in:carousel,popup,section',
             'target_type' => 'required|in:service,category,external,none',
@@ -82,6 +83,7 @@ class AdvertisementController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'type' => 'required|in:carousel,popup,section',
             'target_type' => 'required|in:service,category,external,none',
@@ -143,6 +145,7 @@ class AdvertisementController extends Controller
                 return [
                     'id' => $ad->id,
                     'title' => $ad->title,
+                    'description' => $ad->description,
                     'image_url' => asset('storage/' . $ad->image_path),
                     'type' => $ad->type,
                     'target_type' => $ad->target_type,

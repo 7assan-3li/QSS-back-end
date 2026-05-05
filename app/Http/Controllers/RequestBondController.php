@@ -51,6 +51,14 @@ class RequestBondController extends Controller
 
         //التاكد من حالة الطلب
         $requestModel = RequestModel::findOrFail($validated['request_id']);
+
+        // التحقق من ملكية الطلب
+        if ($requestModel->user_id !== Auth::id()) {
+            return response()->json([
+                'message' => 'غير مصرح لك برفع سند لهذا الطلب'
+            ], 403);
+        }
+
         $requestStatus = $requestModel->status;
 
         if ($requestStatus !== RequestStatus::ACCEPTED_INITIAL && $requestStatus !== RequestStatus::ACCEPTED_PARTIAL_PAID) {

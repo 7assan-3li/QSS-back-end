@@ -161,6 +161,12 @@
                             </div>
                         </div>
 
+                        @if($ad->description)
+                        <p class="text-[14px] font-bold text-[var(--text-muted)] line-clamp-2 italic mb-4 opacity-80">
+                            {{ $ad->description }}
+                        </p>
+                        @endif
+
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <!-- Targeting Info -->
                             <div class="flex flex-col gap-1.5 p-4 rounded-3xl bg-[var(--glass-bg)]/50 dark:bg-[var(--glass-bg)]/5 border border-[var(--glass-border)] shadow-sm transition-colors duration-500">

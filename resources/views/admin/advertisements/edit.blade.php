@@ -68,6 +68,12 @@
                             <input type="text" name="title" value="{{ old('title', $advertisement->title) }}" placeholder="{{ __('مثال: عرض اليوم الوطني') }}" class="input-premium placeholder:opacity-30">
                         </div>
 
+                        <!-- Description -->
+                        <div class="md:col-span-2">
+                            <label class="block text-[13px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mb-3 italic px-1">{{ __('نص الإعلان (اختياري)') }}</label>
+                            <textarea name="description" placeholder="{{ __('اكتب تفاصيل العرض هنا ليراها المستخدم...') }}" class="input-premium placeholder:opacity-30 min-h-[100px] py-4">{{ old('description', $advertisement->description) }}</textarea>
+                        </div>
+
                         <!-- Type -->
                         <div>
                             <label class="block text-[13px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mb-3 italic px-1">{{ __('نوع العرض') }}</label>

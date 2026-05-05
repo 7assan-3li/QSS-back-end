@@ -13,6 +13,14 @@ class RequestCommissionBondService
     {
         $requestModel = RequestModel::findOrFail($data['request_id']);
 
+        // التحقق من أن المستخدم هو مزود الخدمة لهذا الطلب
+        $provider = $requestModel->serviceProvider();
+        if (!$provider || $provider->id !== auth()->id()) {
+             // استخدام response()->json() مباشرة قد لا يكون الأفضل في Service، 
+             // لكن بما أن الكنترولر لا يعالج الاستثناءات حالياً سنقوم بذلك لضمان التوافق
+            abort(403, 'غير مصرح لك برفع سند عمولة لهذا الطلب');
+        }
+
         // تحقق من حالة الطلب
         if ($requestModel->status !== RequestStatus::COMPLETED) {
             return response()->json([

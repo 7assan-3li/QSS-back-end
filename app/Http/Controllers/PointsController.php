@@ -39,7 +39,11 @@ class PointsController extends Controller
     }
     public function indexTransactions(Request $request)
     {
-        $transactions = \App\Models\PointTransaction::where('user_id', $request->user()->id)
+        $userId = $request->user()->id;
+        $transactions = \App\Models\PointTransaction::where(function($q) use ($userId) {
+                $q->where('seeker_id', $userId)
+                  ->orWhere('provider_id', $userId);
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
