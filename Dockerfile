@@ -23,7 +23,7 @@ COPY . /var/www/html
 
 # 2. تثبيت Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --optimize-autoloader --no-interaction
 
 # 3. تثبيت حزم npm وبناء ملفات Tailwind CSS (Vite)
 RUN npm install && npm run build
