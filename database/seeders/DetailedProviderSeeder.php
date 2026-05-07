@@ -140,6 +140,7 @@ class DetailedProviderSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+        
         // 10. Attach Verification Package
         $provider->verificationPackages()->attach($package->id, [
             'status' => 'approved',
