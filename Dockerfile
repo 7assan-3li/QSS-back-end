@@ -29,5 +29,8 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # الأمر النهائي مع تجنب توقف السيرفر إذا فشل الميغريشن
 CMD php artisan migrate --force || true && \
     php artisan db:seed --force || true && \
+    npm run build && \
+    (php artisan queue:work --daemon &) && \
+    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
     sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && \
     apache2-foreground
