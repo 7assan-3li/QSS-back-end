@@ -131,7 +131,7 @@ public function index()
     $users = User::all();
 
     // تسجيل المستخدمين حسب الشهور
-    $usersChart = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+    $usersChart = User::selectRaw('EXTRACT(MONTH FROM created_at) as month, COUNT(*) as count')
         ->whereYear('created_at', Carbon::now()->year)
         ->groupBy('month')
         ->orderBy('month')

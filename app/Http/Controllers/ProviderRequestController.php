@@ -124,7 +124,7 @@ class ProviderRequestController extends Controller
 
         /* ===== Daily chart ===== */
         $daily = ProviderRequest::select(
-            DB::raw('DATE(created_at) as date'),
+            DB::raw('CAST(created_at AS DATE) as date'),
             DB::raw('COUNT(*) as count')
         )
             ->where('created_at', '>=', Carbon::now()->subDays($days - 1))
