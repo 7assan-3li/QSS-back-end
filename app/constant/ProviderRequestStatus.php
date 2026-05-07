@@ -1,6 +1,6 @@
 <?php
 namespace App\constant;
-class providerRequestStatus
+class ProviderRequestStatus
 {
 const PENDING = 'pending';
 const REJECTED = 'rejected';

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\constant\providerRequestStatus;
+use App\constant\ProviderRequestStatus;
 use App\constant\Role;
 use App\Models\ProviderRequest;
 use App\Models\User;
@@ -117,9 +117,9 @@ class ProviderRequestController extends Controller
         /* ===== Stats (بدون فلترة حتى تبقى عامة) ===== */
         $stats = [
             'total' => ProviderRequest::count(),
-            'pending' => ProviderRequest::where('status', providerRequestStatus::PENDING)->count(),
-            'accepted' => ProviderRequest::where('status', providerRequestStatus::ACCEPTED)->count(),
-            'rejected' => ProviderRequest::where('status', providerRequestStatus::REJECTED)->count(),
+            'pending' => ProviderRequest::where('status', ProviderRequestStatus::PENDING)->count(),
+            'accepted' => ProviderRequest::where('status', ProviderRequestStatus::ACCEPTED)->count(),
+            'rejected' => ProviderRequest::where('status', ProviderRequestStatus::REJECTED)->count(),
         ];
 
         /* ===== Daily chart ===== */

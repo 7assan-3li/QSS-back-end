@@ -1,6 +1,6 @@
 <?php
 namespace App\constant;
-class requestComplaintStatus
+class RequestComplaintStatus
 {
 const PENDING = 'pending';
 const REVIEWED = 'reviewed';

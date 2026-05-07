@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\constant\providerRequestStatus;
+use App\constant\ProviderRequestStatus;
 use App\constant\Role;
 use App\Models\ProviderRequest;
 use App\Models\User;
@@ -88,7 +88,7 @@ class ProviderRequestPolicy
         if ($user->role !== Role::EMPLOYEE) {
             return Response::deny('غير مصرح لك بتحديث حالة الطلب.');
         }
-        if ($providerRequest->status !== providerRequestStatus::PENDING) {
+        if ($providerRequest->status !== ProviderRequestStatus::PENDING) {
             return Response::deny('لا يمكن تحديث حالة الطلب لأنه ليس في حالة الانتظار.');
         }
         return Response::allow();
