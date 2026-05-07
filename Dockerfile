@@ -35,8 +35,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 CMD php artisan config:clear && \
     php artisan cache:clear && \
     php artisan storage:link || true && \
-    php artisan migrate:fresh --force || true && \
-    php artisan db:seed --force || true && \
+    php artisan migrate --force || true && \
     chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build && \
     (php artisan queue:work &) && \
     sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && \
