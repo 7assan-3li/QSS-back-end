@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\constant\role;
+use App\constant\Role;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Bank;
