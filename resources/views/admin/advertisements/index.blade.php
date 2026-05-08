@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', __('إدارة الإعلانات الترويجية'))
 
@@ -9,7 +9,7 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div class="space-y-2">
             <h1 class="text-4xl font-black tracking-tighter italic text-[var(--main-text)] uppercase leading-tight">
-                {{ __('مركز الترويج') }} <span class="text-brand-primary italic">{{ __('الذكي') }}</span>
+                {{ __('مركز الترويج') }} <span class="text-brand-primary italic"></span>
             </h1>
             <p class="text-[var(--text-muted)] font-bold text-sm flex items-center gap-2 italic">
                 <span class="w-8 h-[2px] bg-brand-primary inline-block"></span>

@@ -32,9 +32,12 @@ class SocialAuthController extends Controller
             ], [
                 'name' => $googleUser->name,
                 'google_id' => $googleUser->id,
-                'avatar' => $googleUser->avatar,
                 'password' => Hash::make(Str::random(16)), // Random password for social login
                 'email_verified_at' => now(), // Social users are verified
+            ]);
+
+            $user->profile()->create([
+                'image_path'=> $googleUser->avatar,
             ]);
 
             $token = $user->createToken('SocialToken')->plainTextToken;
