@@ -50,6 +50,7 @@ ENV PORT=80
 
 CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && \
     php artisan storage:link --force || true && \
+    php artisan optimize:clear && \
     php artisan migrate --force || true && \
     (php artisan queue:work --tries=3 --timeout=90 &) && \
     apache2-foreground
