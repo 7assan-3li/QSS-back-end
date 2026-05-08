@@ -84,6 +84,13 @@ class ProviderRequestPolicy
         return Response::allow();
     }
 
+    public function adminView(User $user, ProviderRequest $providerRequest): Response{
+        if ($user->role !== Role::EMPLOYEE) {
+            return Response::deny('غير مصرح لك بعرض هذا الطلب.');
+        }
+        return Response::allow();
+    }
+
     public function updateStatus(User $user, ProviderRequest $providerRequest): Response{
         if ($user->role !== Role::EMPLOYEE) {
             return Response::deny('غير مصرح لك بتحديث حالة الطلب.');
