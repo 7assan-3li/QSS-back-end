@@ -41,7 +41,7 @@ class SocialAuthController extends Controller
                 if (!$user->google_id) {
                     $user->update(['google_id' => $googleUser->id]);
                 }
-                if(!$user->email_verified_at){
+                if(is_null($user->email_verified_at)){
                     $user->update(['email_verified_at' => now()]);
                 }
             }
