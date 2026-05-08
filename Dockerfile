@@ -2,7 +2,7 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --frozen-lockfile --network-timeout 100000
+RUN npm ci --no-audit --fund false
 COPY . .
 RUN npm run build
 
