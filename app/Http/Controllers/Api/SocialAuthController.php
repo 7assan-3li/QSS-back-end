@@ -41,6 +41,9 @@ class SocialAuthController extends Controller
                 if (!$user->google_id) {
                     $user->update(['google_id' => $googleUser->id]);
                 }
+                if(!$user->email_verified_at){
+                    $user->update(['email_verified_at' => now()]);
+                }
             }
 
             // Use updateOrCreate for profile to avoid duplicate key errors
