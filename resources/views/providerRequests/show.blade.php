@@ -60,7 +60,7 @@
                         <div class="w-16 h-16 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo italic">ID</div>
                         <div class="flex flex-col text-start">
                             <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('اسم المستخدم المرتبط') }}</span>
-                            <span class="text-sm font-black text-[var(--main-text)] font-Cairo text-start italic font-mono">{{ $providerRequest->user->name }}</span>
+                            <span class="text-sm font-black text-[var(--main-text)] font-Cairo text-start italic font-mono">{{ $providerRequest->user->name ?? __('مستخدم غير معروف') }}</span>
                         </div>
                     </div>
 

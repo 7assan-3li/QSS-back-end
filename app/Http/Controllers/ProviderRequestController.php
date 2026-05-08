@@ -162,8 +162,8 @@ class ProviderRequestController extends Controller
     {
         $this->authorize('adminView', $providerRequest);
 
-        $providerRequest->with(['user', 'admin']);
-        // return $providerRequest;
+        $providerRequest->load(['user', 'admin']);
+
         return view('providerRequests.show', [
             'providerRequest' => $providerRequest,
         ]);
