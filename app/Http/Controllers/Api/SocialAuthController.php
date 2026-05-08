@@ -33,20 +33,29 @@ class SocialAuthController extends Controller
                     'email' => $googleUser->email,
                     'name' => $googleUser->name,
                     'google_id' => $googleUser->id,
+                    'avatar' => $googleUser->avatar,
                     'password' => Hash::make(Str::random(16)),
                     'email_verified_at' => now(),
                 ]);
             } else {
-                // Update Google ID if not already set
+                // Combine updates into one array for efficiency
+                $updateData = [];
                 if (!$user->google_id) {
-                    $user->update(['google_id' => $googleUser->id]);
+                    $updateData['google_id'] = $googleUser->id;
                 }
-                if(is_null($user->email_verified_at)){
-                    $user->update(['email_verified_at' => now()]);
+                if (is_null($user->email_verified_at)) {
+                    $updateData['email_verified_at'] = now();
+                }
+                if (!$user->avatar) {
+                    $updateData['avatar'] = $googleUser->avatar;
+                }
+
+                if (!empty($updateData)) {
+                    $user->update($updateData);
                 }
             }
 
-            // Use updateOrCreate for profile to avoid duplicate key errors
+            // Use updateOrCreate for profile to ensure image_path is updated
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
                 ['image_path' => $googleUser->avatar]
