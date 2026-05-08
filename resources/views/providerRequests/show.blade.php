@@ -125,7 +125,7 @@
             </div>
 
             <!-- Take Action -->
-            @if ($providerRequest->status === \App\constant\providerRequestStatus::PENDING)
+            @if ($providerRequest->status === ProviderRequestStatus::PENDING)
                 <div class="card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-brand-primary/30 text-start font-Cairo overflow-hidden relative">
                     <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-emerald-500 via-brand-primary to-rose-600 opacity-60 font-Cairo"></div>
                      
