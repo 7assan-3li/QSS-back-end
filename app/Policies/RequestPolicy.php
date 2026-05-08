@@ -83,7 +83,8 @@ class RequestPolicy
     }
     public function updateStatusProvider(User $user, Request $request): bool
     {
-        return $user->id === $request->serviceProvider->id || $user->role === Role::ADMIN ;
+        $provider = $request->serviceProvider();
+        return ($provider && $user->id === $provider->id) || $user->role === Role::ADMIN ;
     }
 
     public function markPaid(User $user, Request $request): bool

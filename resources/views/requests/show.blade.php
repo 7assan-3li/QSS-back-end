@@ -48,7 +48,7 @@
                         </div>
                         <div class="flex flex-col text-start">
                             <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-2 font-Cairo text-start">{{ __('صاحب الطلب (العميل)') }}</span>
-                            <span class="text-lg font-black text-[var(--main-text)] font-Cairo text-start">{{ $request->user->name }}</span>
+                            <span class="text-lg font-black text-[var(--main-text)] font-Cairo text-start">{{ $request->user->name ?? __('مستخدم محذوف') }}</span>
                         </div>
                     </div>
 
