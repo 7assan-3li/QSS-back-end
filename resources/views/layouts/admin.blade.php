@@ -220,6 +220,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.body.addEventListener('click', function(e) {
+                // Ignore if clicking a button, input, or something inside a form
+                if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('textarea')) {
+                    return;
+                }
+
                 const link = e.target.closest('a');
                 if (!link || !link.href || link.href.includes('#') || link.hasAttribute('download') || link.getAttribute('target') === '_blank') return;
                 
