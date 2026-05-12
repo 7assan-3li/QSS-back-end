@@ -125,18 +125,36 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Geographic Location -->
+            @if($user->profile && $user->profile->latitude && $user->profile->longitude)
+            <div class="bg-[var(--glass-bg)] p-10 rounded-[3rem] border border-[var(--glass-border)] shadow-xl space-y-6 relative overflow-hidden mt-8">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl"></div>
+                <div class="flex items-center justify-between relative z-10">
+                    <h4 class="text-[14px] font-black text-[var(--text-muted)] uppercase tracking-widest italic">{{ __('الموقع الجغرافي') }}</h4>
+                    <span class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 font-bold italic whitespace-nowrap inline-flex items-center justify-center">📍</span>
+                </div>
+                <div id="userLocationMap" class="w-full h-72 rounded-[2rem] overflow-hidden border border-[var(--glass-border)] relative z-10 shadow-inner"></div>
+
+
+                <div class="flex justify-between items-center text-[12px] font-bold text-[var(--text-muted)] font-mono">
+                    <span>Lat: {{ $user->profile->latitude }}</span>
+                    <span>Lng: {{ $user->profile->longitude }}</span>
+                </div>
+            </div>
+            @endif
         </div>
 
         <!-- System & Compliance Sidebar -->
         <div class="space-y-10">
             <!-- Quick Actions Hub -->
-            <div class="bg-slate-900 p-10 rounded-[3.5rem] shadow-2xl space-y-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-brand-primary/20 to-transparent opacity-50 pointer-events-none"></div>
+            <div class="bg-[var(--glass-bg)] border border-[var(--glass-border)] p-10 rounded-[3.5rem] shadow-xl space-y-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-brand-primary/10 to-transparent opacity-50 pointer-events-none"></div>
                 
-                <h4 class="text-[13px] font-black text-white uppercase tracking-[0.3em] italic mb-10 opacity-60">{{ __('مركز العمليات الإدارية') }}</h4>
+                <h4 class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] italic mb-10">{{ __('مركز العمليات الإدارية') }}</h4>
                 
                 <div class="space-y-4 relative z-10">
-                    <a href="{{ route('users.edit', $user->id) }}" class="w-full py-5 bg-[var(--glass-bg)]/10 hover:bg-[var(--glass-bg)] text-white hover:text-brand-primary border border-white/10 rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic">
+                    <a href="{{ route('users.edit', $user->id) }}" class="w-full py-5 bg-[var(--main-bg)] hover:bg-[var(--glass-bg)] text-[var(--main-text)] hover:text-brand-primary border border-[var(--glass-border)] rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic shadow-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         {{ __('تعديل الهوية') }}
                     </a>
@@ -144,7 +162,7 @@
                     <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" class="inline w-full">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" onclick="return confirm('{{ $user->status === 'active' ? __('هل أنت متأكد من تعليق وصول هذا المستخدم؟') : __('هل أنت متأكد من تنشيط هذا المستخدم؟') }}')" class="w-full py-5 {{ $user->status === 'active' ? 'bg-rose-500/20 hover:bg-rose-600 text-rose-500 hover:text-white border-rose-500/20' : 'bg-emerald-500/20 hover:bg-emerald-600 text-emerald-500 hover:text-white border-emerald-500/20' }} border rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic">
+                        <button type="submit" onclick="return confirm('{{ $user->status === 'active' ? __('هل أنت متأكد من تعليق وصول هذا المستخدم؟') : __('هل أنت متأكد من تنشيط هذا المستخدم؟') }}')" class="w-full py-5 {{ $user->status === 'active' ? 'bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border-rose-500/20' : 'bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white border-emerald-500/20' }} border rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic shadow-sm">
                             @if($user->status === 'active')
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                                 {{ __('تعليق الوصول') }}
@@ -155,8 +173,8 @@
                         </button>
                     </form>
 
-                    <div class="pt-6 mt-6 border-t border-white/5 space-y-4">
-                        <div class="flex items-center justify-between text-[13px] font-bold text-white/40 uppercase tracking-widest italic">
+                    <div class="pt-6 mt-6 border-t border-[var(--glass-border)] space-y-4">
+                        <div class="flex items-center justify-between text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest italic">
                             <span>{{ __('توثيق البريد') }}</span>
                             <div class="flex items-center gap-2">
                                 <span class="{{ $user->email_verified_at ? 'text-emerald-500' : 'text-rose-500' }}">
@@ -166,16 +184,16 @@
                                 <form action="{{ route('users.verify.email', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" class="w-6 h-6 bg-emerald-500/20 hover:bg-emerald-600 text-emerald-500 hover:text-white rounded-md flex items-center justify-center transition-all" title="{{ __('توثيق يدوياً') }}">
+                                    <button type="submit" class="w-6 h-6 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white rounded-md flex items-center justify-center transition-all shadow-sm" title="{{ __('توثيق يدوياً') }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     </button>
                                 </form>
                                 @endif
                             </div>
                         </div>
-                        <div class="flex items-center justify-between text-[13px] font-bold text-white/40 uppercase tracking-widest italic">
+                        <div class="flex items-center justify-between text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest italic">
                             <span>{{ __('توثيق الهوية') }}</span>
-                            <span class="text-indigo-400">
+                            <span class="text-indigo-500">
                                 {{ $user->verification_requests_count > 0 ? __('بانتظار المراجعة') : __('لم يتم الطلب') }}
                             </span>
                         </div>
@@ -190,14 +208,14 @@
                 <div class="space-y-6">
                     @forelse($user->verificationRequests as $vReq)
                         <div class="flex items-start gap-5 group cursor-default">
-                            <div class="w-10 h-10 bg-[var(--glass-bg)] dark:bg-[var(--glass-bg)]/5 rounded-xl flex items-center justify-center text-[var(--text-muted)] group-hover:bg-brand-primary group-hover:text-white transition-all duration-500 font-bold italic">V</div>
+                            <div class="w-10 h-10 bg-[var(--main-bg)] rounded-xl flex items-center justify-center text-[var(--text-muted)] group-hover:bg-brand-primary group-hover:text-white transition-all duration-500 font-bold italic shadow-sm border border-[var(--glass-border)]">V</div>
                             <div class="flex-1 space-y-1">
-                                <p class="text-[14px] font-black text-[var(--main-text)] text-[var(--main-text)] transition-colors">{{ $vReq->status_text ?? __('طلب توثيق') }}</p>
+                                <p class="text-[14px] font-black text-[var(--main-text)] transition-colors">{{ $vReq->status_text ?? __('طلب توثيق') }}</p>
                                 <p class="text-[12px] font-bold text-[var(--text-muted)] italic uppercase">{{ $vReq->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
                     @empty
-                        <div class="text-center py-10 opacity-30 italic">
+                        <div class="text-center py-10 opacity-50 italic">
                             <p class="text-[13px] font-black uppercase tracking-widest text-[var(--text-muted)]">{{ __('لا توجد سجلات حالية') }}</p>
                         </div>
                     @endforelse
@@ -207,3 +225,53 @@
     </div>
 </div>
 @endsection
+
+@if($user->profile && $user->profile->latitude && $user->profile->longitude)
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    .leaflet-container { background: transparent !important; }
+    .dark .leaflet-tile { filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(85%); }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const mapContainer = document.getElementById('userLocationMap');
+            if (mapContainer) {
+                const lat = {{ $user->profile->latitude }};
+                const lng = {{ $user->profile->longitude }};
+                
+                const map = L.map('userLocationMap', {
+                    zoomControl: true,
+                    attributionControl: false,
+                    scrollWheelZoom: true,
+                    doubleClickZoom: true
+                }).setView([lat, lng], 14);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                const userIcon = L.divIcon({
+                    html: '<div class="w-5 h-5 bg-brand-primary border-[3px] border-white rounded-full shadow-[0_0_15px_rgba(79,70,229,0.8)] animate-pulse"></div>',
+                    className: 'custom-div-icon',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                L.marker([lat, lng], { icon: userIcon })
+                    .addTo(map)
+                    .bindPopup(`<div class="font-Cairo text-xs font-black p-1 text-[var(--main-text)]">{{ $user->name }}</div>`);
+
+                // Fix map rendering in grid/flex layouts
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 250);
+            }
+        } catch (e) { console.error('Map Initialization Failed:', e); }
+    });
+</script>
+@endpush
+@endif
