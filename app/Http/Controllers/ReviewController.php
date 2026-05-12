@@ -78,36 +78,41 @@ class ReviewController extends Controller
 
         $review = Review::create($validated);
 
-        // 1. تحديث تقييم الخدمة المعينة (المتوسط الحسابي لكل تقييمات هذه الخدمة)
-        $mainService = $requestModel->main_service->first();
-        $serviceRating = $mainService->requests()
-            ->join('reviews', 'reviews.request_id', '=', 'requests.id')
-            ->avg('reviews.rating');
+        // 1. تحديث تقييم جميع الخدمات الملحقة بالطلب (المتوسط الحسابي لكل خدمة)
+        $allServices = $requestModel->services;
+        foreach ($allServices as $service) {
+            $serviceRating = $service->requests()
+                ->join('reviews', 'reviews.request_id', '=', 'requests.id')
+                ->avg('reviews.rating');
 
-        $mainService->update([
-            'rating_avg' => round($serviceRating ?? 0, 2),
-        ]);
+            $service->update([
+                'rating_avg' => round($serviceRating ?? 0, 2),
+            ]);
+        }
 
         // 2. تحديث التقييم العام للمزود (المتوسط الحسابي لجميع التقييمات في كافة خدماته)
-        $provider = $mainService->provider;
-        $providerRating = Review::whereHas('request.services', function ($q) use ($provider) {
-            $q->where('provider_id', $provider->id);
-        })
-            ->avg('rating');
+        $mainService = $requestModel->main_service->first();
+        if ($mainService) {
+            $provider = $mainService->provider;
+            if ($provider) {
+                $providerRating = Review::whereHas('request.services', function ($q) use ($provider) {
+                    $q->where('provider_id', $provider->id);
+                })
+                    ->avg('rating');
 
-        $provider->update([
-            'rating_avg' => round($providerRating ?? 0, 2),
-        ]);
+                $provider->update([
+                    'rating_avg' => round($providerRating ?? 0, 2),
+                ]);
 
-
-
-        // 3. إشعار للمزود بوجود تقييم جديد
-        $this->notificationService->sendToUser(
-            $provider->id,
-            'لديك تقييم جديد ⭐',
-            'قام العميل ' . Auth::user()->name . ' بتقييم خدمتك بـ ' . $validated['rating'] . ' نجوم.',
-            \App\Constants\NotificationType::REQ_MSG
-        );
+                // 3. إشعار للمزود بوجود تقييم جديد
+                $this->notificationService->sendToUser(
+                    $provider->id,
+                    'لديك تقييم جديد ⭐',
+                    'قام العميل ' . Auth::user()->name . ' بتقييم خدمتك بـ ' . $validated['rating'] . ' نجوم.',
+                    \App\Constants\NotificationType::REQ_MSG
+                );
+            }
+        }
 
         return response()->json([
             'message' => 'تم إضافة التقييم بنجاح',
