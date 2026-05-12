@@ -96,6 +96,18 @@ class RequestService
         ];
     }
 
+    public function getUnpaidCommissionsProvider($providerId)
+    {
+        $requests = RequestModel::with(['user', 'services'])
+            ->where('status', \App\constant\RequestStatus::COMPLETED)
+            ->where('commission_paid', false)
+            ->whereHas('services', function ($q) use ($providerId) {
+                $q->where('provider_id', $providerId);
+            })->latest()->get();
+
+        return $requests;
+    }
+
     public function markPaid($requestModel)
     {
         DB::transaction(function () use ($requestModel) {

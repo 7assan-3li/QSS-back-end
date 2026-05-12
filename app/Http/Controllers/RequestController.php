@@ -40,6 +40,13 @@ class RequestController extends Controller
         $requests = $this->requestService->getAllProviderRequests(Auth::user()->id);
         return response()->json($requests);
     }
+    
+    public function unpaidCommissionsProvider()
+    {
+        $requests = $this->requestService->getUnpaidCommissionsProvider(Auth::user()->id);
+        return response()->json($requests);
+    }
+
     public function store(Request $request)
     {
 
