@@ -173,26 +173,30 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         // $this->authorize('view', $service);
-        $requiredPartialAmount = $service->getRequiredPartialAmount();
-        $service->required_partial_amount = $requiredPartialAmount;
+        
+        $service->load(['category', 'children', 'schedules.days', 'provider.profile']);
+
+        $service->setAttribute('required_partial_amount', $service->getRequiredPartialAmount());
 
         // إضافة معلومة التوفر الحالي
         $service->setAttribute('is_available_now', $service->isAvailableNow());
 
         // جلب التقييمات والمراجعات الخاصة بهذه الخدمة
-        $reviews = \App\Models\Review::whereHas('request.services', function($q) use ($service) {
+        $reviewsQuery = \App\Models\Review::whereHas('request.services', function($q) use ($service) {
                 $q->where('service_id', $service->id);
             })
-            ->where('is_hidden', false)
-            ->with(['request.user.profile'])
+            ->where('is_hidden', false);
+
+        $reviews = $reviewsQuery->with(['request.user.profile'])
             ->latest()
             ->get();
 
+        $service->setAttribute('reviews_count', $reviews->count());
         $service->setAttribute('reviews', \App\Http\Resources\ReviewResource::collection($reviews));
 
         return response()->json([
             'message' => 'Service retrieved successfully',
-            'data' => $service->load(['category', 'children', 'schedules.days', 'provider.profile'])
+            'data' => $service
         ]);
     }
 
@@ -491,10 +495,10 @@ class ServiceController extends Controller
             })->avg('rating') ?: 0,
         ];
 
-        // Get recent reviews for this service
+        // Get all reviews for this service
         $recentReviews = \App\Models\Review::whereHas('request.services', function($q) use ($service) {
             $q->where('service_id', $service->id);
-        })->with('request.user')->latest()->limit(10)->get();
+        })->with('request.user')->latest()->get();
 
         return view('services.show', compact('service', 'stats', 'recentReviews'));
     }

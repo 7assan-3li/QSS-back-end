@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'banks' => $this->whenLoaded('banks'),
             'main_services' => $this->whenLoaded('main_services'),
             'services' => $this->whenLoaded('services'),
+            'rating_avg' => (float) ($this->rating_avg ?? 0),
             'is_verified' => $this->isVerified(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
