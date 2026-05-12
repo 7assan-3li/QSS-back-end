@@ -124,11 +124,25 @@ class UserController extends Controller
 
     // wep functions ...
 
-public function index()
+public function index(Request $request)
 {
     $this->authorize('viewAny', User::class);
 
-    $users = User::all();
+    $query = User::query();
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('name', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%");
+        });
+    }
+
+    if ($request->filled('role')) {
+        $query->where('role', $request->role);
+    }
+
+    $users = $query->latest()->get();
 
     // تسجيل المستخدمين حسب الشهور
     $usersChart = User::selectRaw('EXTRACT(MONTH FROM created_at) as month, COUNT(*) as count')

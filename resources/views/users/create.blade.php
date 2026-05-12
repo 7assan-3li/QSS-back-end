@@ -49,7 +49,7 @@
                                 <span class="w-2 h-2 bg-brand-primary/60 rounded-full"></span>
                                 {{ __('البريد الإلكتروني') }}
                             </label>
-                            <input type="email" id="email" name="email" value="{{ old('email') }}" required class="input-premium w-full px-10 py-6 bg-[var(--main-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all text-[var(--main-text)] font-mono tracking-widest text-start italic shadow-sm uppercase">
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" required class="input-premium w-full px-10 py-6 bg-[var(--main-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all text-[var(--main-text)] font-mono tracking-widest text-start italic shadow-sm">
                         </div>
 
                         <div class="space-y-4 text-start font-Cairo">
@@ -134,10 +134,11 @@
                         <div class="flex items-center justify-between p-6 bg-rose-500/5 rounded-3xl border border-rose-500/10">
                             <div class="flex flex-col gap-1">
                                 <span class="text-[14px] font-black text-rose-600 dark:text-rose-400">{{ __('استثناء من العمولات') }}</span>
+                                <span class="text-[14px] font-black text-rose-400 uppercase tracking-tighter opacity-60">{{ __('NO_COMMISSION_MODE') }}</span>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
+                            <label class="relative inline-flex items-center cursor-pointer group">
                                 <input type="checkbox" name="no_commission" value="1" {{ old('no_commission') ? 'checked' : '' }} class="sr-only peer">
-                                <div class="w-14 h-8 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:inline-start-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-rose-500"></div>
+                                <div class="w-11 h-6 bg-slate-300/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:bg-rose-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:duration-300 after:shadow-sm group-hover:scale-105 transition-transform"></div>
                             </label>
                         </div>
                     </div>

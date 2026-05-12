@@ -141,17 +141,37 @@
                         {{ __('تعديل الهوية') }}
                     </a>
 
-                    <button class="w-full py-5 bg-rose-500/20 hover:bg-rose-600 text-rose-500 hover:text-white border border-rose-500/20 rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                        {{ __('تعليق الوصول') }}
-                    </button>
+                    <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" class="inline w-full">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" onclick="return confirm('{{ $user->status === 'active' ? __('هل أنت متأكد من تعليق وصول هذا المستخدم؟') : __('هل أنت متأكد من تنشيط هذا المستخدم؟') }}')" class="w-full py-5 {{ $user->status === 'active' ? 'bg-rose-500/20 hover:bg-rose-600 text-rose-500 hover:text-white border-rose-500/20' : 'bg-emerald-500/20 hover:bg-emerald-600 text-emerald-500 hover:text-white border-emerald-500/20' }} border rounded-2xl text-[13px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-3 italic">
+                            @if($user->status === 'active')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                {{ __('تعليق الوصول') }}
+                            @else
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {{ __('تنشيط الوصول') }}
+                            @endif
+                        </button>
+                    </form>
 
                     <div class="pt-6 mt-6 border-t border-white/5 space-y-4">
                         <div class="flex items-center justify-between text-[13px] font-bold text-white/40 uppercase tracking-widest italic">
                             <span>{{ __('توثيق البريد') }}</span>
-                            <span class="{{ $user->email_verified_at ? 'text-emerald-500' : 'text-rose-500' }}">
-                                {{ $user->email_verified_at ? __('مكتمل') : __('قيد الانتظار') }}
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span class="{{ $user->email_verified_at ? 'text-emerald-500' : 'text-rose-500' }}">
+                                    {{ $user->email_verified_at ? __('مكتمل') : __('قيد الانتظار') }}
+                                </span>
+                                @if(!$user->email_verified_at)
+                                <form action="{{ route('users.verify.email', $user->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="w-6 h-6 bg-emerald-500/20 hover:bg-emerald-600 text-emerald-500 hover:text-white rounded-md flex items-center justify-center transition-all" title="{{ __('توثيق يدوياً') }}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
                         </div>
                         <div class="flex items-center justify-between text-[13px] font-bold text-white/40 uppercase tracking-widest italic">
                             <span>{{ __('توثيق الهوية') }}</span>

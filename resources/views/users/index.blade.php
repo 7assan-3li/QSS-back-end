@@ -120,12 +120,43 @@
                 <h4 class="text-2xl font-black font-Cairo text-start italic">{{ __('قائمة إدارة المستخدمين') }}</h4>
                 <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('عرض وتعديل بيانات المستخدمين والتحكم في صلاحياتهم.') }}</p>
             </div>
-            <div class="flex items-center gap-4 text-start font-Cairo">
+            <div class="flex flex-col md:flex-row items-center gap-4 text-start font-Cairo">
+                <form action="{{ route('users.index') }}" method="GET" id="filterForm" class="flex flex-col md:flex-row items-center gap-4">
+                    <!-- Search Input -->
+                    <div class="relative group">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('البحث عن مستخدم...') }}" 
+                            class="bg-brand-primary-500/5 border border-brand-primary-500/10 rounded-2xl px-12 py-3 text-[13px] font-black outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 transition-all w-full md:w-64 font-Cairo italic">
+                        <svg class="w-5 h-5 text-brand-primary/40 absolute right-4 top-1/2 -translate-y-1/2 group-focus-within:text-brand-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        @if(request('search'))
+                            <a href="{{ route('users.index', array_merge(request()->except('search'), ['search' => ''])) }}" class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-rose-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </a>
+                        @endif
+                    </div>
+
+                    <!-- Role Filter -->
+                    <div class="relative group">
+                        <select name="role" onchange="document.getElementById('filterForm').submit()" 
+                            class="bg-brand-primary-500/5 border border-brand-primary-500/10 rounded-2xl px-10 py-3 text-[13px] font-black outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 appearance-none transition-all w-full md:w-48 font-Cairo italic cursor-pointer">
+                            <option value="">{{ __('كل الأدوار') }}</option>
+                            <option value="{{ \App\constant\Role::EMPLOYEE }}" {{ request('role') === \App\constant\Role::EMPLOYEE ? 'selected' : '' }}>{{ __('موظفين') }}</option>
+                            <option value="{{ \App\constant\Role::PROVIDER }}" {{ request('role') === \App\constant\Role::PROVIDER ? 'selected' : '' }}>{{ __('مزودي خدمات') }}</option>
+                            <option value="{{ \App\constant\Role::SEEKER }}" {{ request('role') === \App\constant\Role::SEEKER ? 'selected' : '' }}>{{ __('طلاب خدمة') }}</option>
+                        </select>
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-primary/40 group-focus-within:text-brand-primary transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="w-px h-10 bg-brand-primary-500/10 hidden md:block"></div>
+
                 <a href="{{ route('users.create') }}" class="bg-brand-primary text-white px-8 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-lg shadow-brand-primary/20 hover:scale-105 transition-all whitespace-nowrap inline-flex items-center justify-center gap-2 italic">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
                     {{ __('إضافة مستخدم جديد') }}
                 </a>
-                <span class="bg-brand-primary-500/10 text-brand-primary-600 px-6 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm whitespace-nowrap inline-flex items-center justify-center">{{ __('إدارة المستخدمين') }}</span>
             </div>
         </div>
         

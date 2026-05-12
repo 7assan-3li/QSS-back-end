@@ -54,7 +54,7 @@
                                 <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
                                 {{ __('البريد الإلكتروني المعتمد') }}
                             </label>
-                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="input-premium w-full px-10 py-6 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all text-[var(--main-text)] font-mono tracking-widest text-start italic shadow-sm uppercase">
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="input-premium w-full px-10 py-6 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all text-[var(--main-text)] font-mono tracking-widest text-start italic shadow-sm">
                         </div>
 
                         <div class="space-y-4 md:col-span-2 text-start font-Cairo">
@@ -142,11 +142,11 @@
                         <div class="flex items-center justify-between p-6 bg-rose-500/5 rounded-3xl border border-rose-500/10">
                             <div class="flex flex-col gap-1">
                                 <span class="text-[14px] font-black text-rose-600">{{ __('استثناء من العمولات') }}</span>
-                                <span class="text-[14px] font-black text-rose-400 uppercase">{{ __('NO_COMMISSION_MODE') }}</span>
+                                <span class="text-[14px] font-black text-rose-400 uppercase tracking-tighter opacity-60">{{ __('NO_COMMISSION_MODE') }}</span>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
+                            <label class="relative inline-flex items-center cursor-pointer group">
                                 <input type="checkbox" name="no_commission" value="1" {{ $user->no_commission ? 'checked' : '' }} class="sr-only peer">
-                                <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:inline-start-[4px] after:bg-[var(--glass-bg)] after:border-var(--glass-border) after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-var(--glass-border) peer-checked:bg-rose-500"></div>
+                                <div class="w-11 h-6 bg-slate-300/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:bg-rose-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:duration-300 after:shadow-sm group-hover:scale-105 transition-transform"></div>
                             </label>
                         </div>
 
@@ -205,6 +205,33 @@
             </form>
         </div>
     </div>
+
+    @if(!$user->email_verified_at)
+    <!-- Manual Email Verification -->
+    <div class="max-w-4xl mx-auto px-4 mt-12">
+        <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden text-start font-Cairo">
+            <div class="absolute -top-32 -right-32 w-80 h-80 bg-emerald-500/[0.05] rounded-full blur-3xl"></div>
+            
+            <div class="flex items-center gap-5 mb-8 text-start font-Cairo relative z-10">
+                <span class="w-3 h-10 bg-emerald-600 rounded-full shadow-lg shadow-emerald-600/30"></span>
+                <div class="text-start">
+                    <h4 class="text-2xl font-black font-Cairo text-start italic text-[var(--main-text)]">{{ __('توثيق البريد الإلكتروني') }} (EMAIL_VERIFICATION)</h4>
+                    <p class="text-[13px] font-black uppercase tracking-widest mt-2 opacity-50">{{ __('البريد الإلكتروني غير موثق، يمكنك توثيقه يدوياً من هنا.') }}</p>
+                </div>
+            </div>
+
+            <form action="{{ route('users.verify.email', $user->id) }}" method="POST" class="text-start font-Cairo relative z-10">
+                @csrf
+                @method('PUT')
+                
+                <button type="submit" onclick="return confirm('{{ __('هل أنت متأكد من توثيق البريد الإلكتروني لهذا المستخدم يدوياً؟') }}')" class="w-full py-7 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-2xl hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all duration-500 flex items-center justify-center gap-5 italic text-start">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    {{ __('توثيق البريد الإلكتروني يدوياً') }}
+                </button>
+            </form>
+        </div>
+    </div>
+    @endif
 </div>
 
 <style>
