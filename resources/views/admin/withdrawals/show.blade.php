@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', __('تدقيق تسوية مستحقات المزود'))
+@section('title', __('مراجعة طلب سحب رصيد المزود'))
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-12 mt-4 animate-fade-in text-start font-Cairo">
@@ -13,15 +13,15 @@
                 </a>
                 <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
                     <span class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl font-Cairo shadow-lg shadow-emerald-500/5 font-Cairo underline-offset-8 italic whitespace-nowrap inline-flex items-center justify-center">💸</span>
-                    {{ __('تفاصيل تسوية أرباح المزود') }}
+                    {{ __('تفاصيل طلب سحب الأرباح') }}
                 </h3>
             </div>
             <div class="flex items-center gap-3 text-[13px] font-black mt-3 mr-24 uppercase tracking-[0.2em] font-Cairo text-start opacity-60">
-                <span>{{ __('تصفية السيولة') }}</span>
+                <span>{{ __('إدارة الأموال') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span>{{ __('الميزانية الصادرة') }}</span>
+                <span>{{ __('المبالغ الخارجة') }}</span>
                 <svg class="w-2 h-2 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                <span class="text-brand-primary opacity-100">{{ __('مرجع التسوية') }} #{{ str_pad($withdrawal->id, 6, '0', STR_PAD_LEFT) }}</span>
+                <span class="text-brand-primary opacity-100">{{ __('رقم الطلب') }} #{{ str_pad($withdrawal->id, 6, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
                     <div class="space-y-6 text-start font-Cairo">
                         <label class="flex items-center gap-3 text-[13px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start opacity-60">
                             <span class="w-2 h-2 bg-rose-500 rounded-full shadow-sm"></span>
-                            {{ __('المبلغ الصافي واجب التصفية') }}
+                            {{ __('المبلغ المطلوب سحبه') }}
                         </label>
                         <div class="flex items-baseline gap-4 p-8 bg-[var(--main-bg)] rounded-[2.5rem] border border-[var(--glass-border)] shadow-inner text-start italic font-mono">
                             <span class="text-5xl font-black text-rose-600 dark:text-rose-400 tracking-tighter text-start">{{ number_format($withdrawal->amount, 0) }}</span>
@@ -62,7 +62,7 @@
                     <div class="space-y-6 text-start font-Cairo">
                         <label class="flex items-center gap-3 text-[13px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
                             <span class="w-2 h-2 bg-indigo-500 rounded-full shadow-sm font-Cairo"></span>
-                            {{ __('تاريخ استلام حزمة المتطلبات') }}
+                            {{ __('تاريخ طلب السحب') }}
                         </label>
                         <div class="p-8 bg-[var(--main-bg)] rounded-[2.5rem] border border-[var(--glass-border)] shadow-inner text-start font-mono italic">
                              <div class="flex flex-col gap-2 text-start font-Cairo">
@@ -81,12 +81,12 @@
                                 <h5 class="text-xs font-black text-amber-600 uppercase tracking-[0.3em] font-Cairo text-start font-Cairo italic">{{ __('إثبات عملية التحويل الخارجي') }}</h5>
                             </div>
                             <p class="text-[14px] font-bold font-Cairo leading-[1.8] mb-0 text-start italic font-Cairo opacity-60">
-                                {{ __('يرجى مراجعة بيانات الآيبان للمزود بدقة. عند إتمام الحوالة، يجب إرفاق مستند الإثبات المالي الصادر من البنك مع رقم السند المرجعي لإغلاق ملف التسوية بشكل آمن.') }}
+                                {{ __('يرجى مراجعة بيانات الحساب البنكي للمزود بدقة. عند إتمام الحوالة، يجب إرفاق صورة السند مع رقم المرجع لإكمال العملية بشكل آمن.') }}
                             </p>
                         </div>
 
                         
-                        <form action="{{ route('admin.withdrawals.approve', $withdrawal->id) }}" method="POST" enctype="multipart/form-data" class="space-y-12 text-start font-Cairo">
+                        <form id="approve-withdrawal-{{ $withdrawal->id }}" action="{{ route('admin.withdrawals.approve', $withdrawal->id) }}" method="POST" enctype="multipart/form-data" class="space-y-12 text-start font-Cairo">
                             @csrf
                             @method('PATCH')
                             
@@ -116,45 +116,51 @@
                             <div class="pt-8 flex flex-col sm:flex-row gap-8 text-start font-Cairo">
                                 <button type="button" 
                                     onclick="confirmAction('approve-withdrawal-{{ $withdrawal->id }}', {
-                                        title: '{{ __('مصادقة تصفية السيولة') }}',
-                                        text: '{{ __('هل أنت متأكد من اعتماد هذه الحوالة؟ سيتم خصم المبلغ من ميزانية المنصة وتأكيد الاستلام للمزود.') }}',
+                                        title: '{{ __('قبول طلب السحب') }}',
+                                        text: '{{ __('هل أنت متأكد من قبول هذا الطلب؟ سيتم خصم المبلغ من النظام وتأكيد الدفع للمزود.') }}',
                                         icon: 'success',
                                         confirmButtonText: '{{ __('تأكيد الصرف المالي') }}'
                                     })" class="flex-[3] px-12 py-7 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-15px_rgba(16,185,129,0.4)] hover:scale-[1.03] transition-all duration-500 font-Cairo flex items-center justify-center gap-5 text-start font-Cairo">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    {{ __('اعتماد الحوالة وتصفية الاستحقاق') }}
+                                    {{ __('قبول الطلب وتحويل المبلغ') }}
                                 </button>
                                 <button type="button" class="flex-1 px-10 py-7 bg-rose-500/5 text-rose-600 border border-rose-500/20 rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] hover:bg-rose-600 hover:text-white transition-all duration-500 font-Cairo flex items-center justify-center gap-4 text-start shadow-sm font-Cairo" onclick="document.getElementById('reject-form').classList.toggle('hidden')">
                                     <svg class="w-5 h-5 font-black uppercase" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    {{ __('تعليق الصرف') }}
+                                    {{ __('رفض الطلب') }}
                                 </button>
                             </div>
-                        </form>
-                        <form id="approve-withdrawal-{{ $withdrawal->id }}" action="{{ route('admin.withdrawals.approve', $withdrawal->id) }}" method="POST" enctype="multipart/form-data" class="hidden">
-                            @csrf
-                            @method('PATCH')
                         </form>
  
                         <!-- Enhanced Rejection Interface -->
                         <div id="reject-form" class="mt-12 p-12 bg-rose-50 dark:bg-rose-950/10 border-2 border-rose-500/20 rounded-[4rem] hidden animate-fade-in text-start font-Cairo">
+                            <div class="mb-10 p-8 bg-rose-500/10 rounded-[2.5rem] border border-rose-500/20 text-start">
+                                <div class="flex items-center gap-4 text-rose-600 mb-3">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    <h5 class="font-black text-sm uppercase tracking-widest font-Cairo">{{ __('تحذير إداري') }}</h5>
+                                </div>
+                                <p class="text-[13px] font-bold text-rose-600/80 leading-relaxed font-Cairo">
+                                    {{ __('انتبه: عملية الرفض ستؤدي إلى إعادة النقاط لمحفظة المزود وإغلاق الطلب الحالي. يرجى كتابة سبب الرفض بوضوح ليتمكن المزود من معرفة العائق.') }}
+                                </p>
+                            </div>
+
                             <form id="reject-withdrawal-{{ $withdrawal->id }}" action="{{ route('admin.withdrawals.reject', $withdrawal->id) }}" method="POST" class="space-y-8 text-start font-Cairo">
                                 @csrf
                                 @method('PATCH')
                                 <div class="space-y-4 text-start font-Cairo">
                                     <label class="flex items-center gap-3 text-[13px] font-black text-rose-500 uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo">
                                         <span class="w-2 h-2 bg-rose-500 rounded-full font-Cairo"></span>
-                                        {{ __('صياغة مسوغات تعليق الصرف المالي') }}
+                                        {{ __('سبب رفض طلب سحب المبلغ') }}
                                     </label>
                                     <textarea name="admin_note" rows="4" required placeholder="{{ __('توضيح النواقص أو أسباب الرفض الفني...') }}" class="w-full px-10 py-8 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] text-sm font-black outline-none focus:border-rose-500 focus:ring-[20px] focus:ring-rose-500/5 transition-all text-[var(--main-text)] font-Cairo shadow-inner italic text-start"></textarea>
                                 </div>
                                 <div class="flex gap-6 text-start font-Cairo">
                                     <button type="button" 
                                         onclick="confirmAction('reject-withdrawal-{{ $withdrawal->id }}', {
-                                            title: '{{ __('إيقاف عملية الصرف') }}',
-                                            text: '{{ __('هل أنت متأكد من تجميد هذا الطلب؟ سيتم إخطار المزود بالأسباب المذكورة.') }}',
+                                            title: '{{ __('رفض طلب سحب الرصيد') }}',
+                                            text: '{{ __('هل أنت متأكد من رفض هذا الطلب؟ سيتم إخطار المزود بالسبب.') }}',
                                             icon: 'error',
-                                            confirmButtonText: '{{ __('تأكيد التجميد') }}'
-                                        })" class="flex-1 bg-rose-600 text-white py-6 rounded-[2rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-xl shadow-rose-600/20 hover:scale-[1.02] transition-all font-Cairo text-start">{{ __('تجميد المطالبة نهائياً') }}</button>
+                                            confirmButtonText: '{{ __('تأكيد الرفض') }}'
+                                        })" class="flex-1 bg-rose-600 text-white py-6 rounded-[2rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-xl shadow-rose-600/20 hover:scale-[1.02] transition-all font-Cairo text-start">{{ __('رفض الطلب بشكل نهائي') }}</button>
                                     <button type="button" class="px-12 py-6 bg-slate-200 text-[var(--text-muted)] rounded-[2rem] text-[14px] font-black uppercase tracking-[0.2em] font-Cairo text-start" onclick="document.getElementById('reject-form').classList.add('hidden')">{{ __('إلغاء المعارضة') }}</button>
                                 </div>
                             </form>
@@ -167,9 +173,9 @@
                             <div class="flex items-center gap-6 text-start font-Cairo">
                                 <span class="text-[13px] font-black uppercase tracking-[0.3em] font-Cairo text-start opacity-60">{{ __('الحالة النهائية للطلب') }}</span>
                                 @if($withdrawal->status == 'approved')
-                                    <span class="px-10 py-4 bg-emerald-500/10 text-emerald-600 rounded-[2.5rem] text-[14px] font-black border border-emerald-500/20 shadow-xl shadow-emerald-500/10 font-Cairo italic text-start">{{ __('تمت التصفية البنكية بنجاح') }} ✓</span>
+                                    <span class="px-10 py-4 bg-emerald-500/10 text-emerald-600 rounded-[2.5rem] text-[14px] font-black border border-emerald-500/20 shadow-xl shadow-emerald-500/10 font-Cairo italic text-start">{{ __('تم تحويل المبلغ بنجاح') }} ✓</span>
                                 @else
-                                    <span class="px-10 py-4 bg-rose-500/10 text-rose-600 rounded-[2.5rem] text-[14px] font-black border border-rose-500/20 shadow-xl shadow-rose-500/5 font-Cairo italic text-start">{{ __('المطالبة مجمدة إدارياً') }} 🚫</span>
+                                    <span class="px-10 py-4 bg-rose-500/10 text-rose-600 rounded-[2.5rem] text-[14px] font-black border border-rose-500/20 shadow-xl shadow-rose-500/5 font-Cairo italic text-start">{{ __('الطلب مرفوض') }} 🚫</span>
                                 @endif
                             </div>
                             <div class="flex items-center gap-4 text-start font-Cairo">
@@ -208,7 +214,7 @@
                             </div>
                         @else
                             <div class="space-y-6 bg-rose-500/[0.03] p-12 rounded-[3.5rem] border border-rose-500/10 text-start font-Cairo italic shadow-inner">
-                                <span class="text-[13px] font-black text-rose-500 uppercase tracking-[0.3em] block font-Cairo text-start opacity-60">{{ __('مسببات تجميد المطالبة المالية') }}:</span>
+                                <span class="text-[13px] font-black text-rose-500 uppercase tracking-[0.3em] block font-Cairo text-start opacity-60">{{ __('سبب رفض الطلب') }}:</span>
                                 <p class="text-xl font-bold font-Cairo leading-[1.8] text-start font-Cairo opacity-70">" {{ $withdrawal->admin_note }}"</p>
                             </div>
                         @endif

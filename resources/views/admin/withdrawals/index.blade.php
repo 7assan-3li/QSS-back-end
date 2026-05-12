@@ -9,9 +9,9 @@
         <div class="text-start">
             <h3 class="font-black text-2xl flex items-center gap-3 text-start font-Cairo">
                 <span class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600 text-xl font-Cairo whitespace-nowrap inline-flex items-center justify-center">💸</span>
-                {{ __('مركز إدارة السيولة والمسحوبات') }}
+                {{ __('إدارة طلبات سحب الأموال') }}
             </h3>
-            <p class="text-xs font-bold mt-1 mr-14 font-Cairo text-start opacity-60">{{ __('مراجعة طلبات تصفية الأرباح لمزودي الخدمات، التحقق من الحسابات البنكية، وجدولة التحويلات الصادرة.') }}</p>
+            <p class="text-xs font-bold mt-1 mr-14 font-Cairo text-start opacity-60">{{ __('مراجعة طلبات سحب الأرباح لمزودي الخدمات، والتحقق من الحسابات البنكية.') }}</p>
         </div>
         <div class="px-6 py-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 text-emerald-600 text-[13px] font-black uppercase tracking-widest font-Cairo">
             {{ __('جاهزية التحويل') }}: {{ __('مكتملة') }} ✅
@@ -22,8 +22,8 @@
     <div class="card-premium glass-panel rounded-[3.5rem] shadow-2xl border border-[var(--glass-border)] overflow-hidden text-start">
         <div class="p-10 border-b border-[var(--glass-border)] flex flex-col md:flex-row justify-between items-center gap-6 text-start">
             <div class="text-start">
-                <h4 class="text-lg font-black font-Cairo text-start">{{ __('طلبات السحب المعلقة والمنفذة') }}</h4>
-                <p class="text-[13px] font-bold uppercase tracking-widest mt-1 text-start font-Cairo opacity-60">{{ __('تتبع التدفقات المالية الخارجة لضمان التزام المنصة تجاه الشركاء والمزودين.') }}</p>
+                <h4 class="text-lg font-black font-Cairo text-start">{{ __('قائمة طلبات السحب') }}</h4>
+                <p class="text-[13px] font-bold uppercase tracking-widest mt-1 text-start font-Cairo opacity-60">{{ __('تتبع المبالغ المالية المحولة للخارج لضمان حقوق الشركاء والمزودين.') }}</p>
             </div>
         </div>
         
@@ -33,9 +33,9 @@
                     <tr class="bg-[var(--main-bg)] border-b border-[var(--glass-border)] text-start font-Cairo tracking-widest uppercase text-[13px]">
                         <th class="table-header-cell">{{ __('مزود الخدمة') }}</th>
                         <th class="table-header-cell text-center">{{ __('القيمة الإجمالية') }}</th>
-                        <th class="table-header-cell">{{ __('تاريخ تقديم الطلب') }}</th>
-                        <th class="table-header-cell text-center">{{ __('وضعية الطلب') }}</th>
-                        <th class="table-header-cell text-end">{{ __('عمليات التدقيق') }}</th>
+                        <th class="table-header-cell">{{ __('تاريخ الطلب') }}</th>
+                        <th class="table-header-cell text-center">{{ __('حالة الطلب') }}</th>
+                        <th class="table-header-cell text-end">{{ __('التفاصيل') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--glass-border)] text-start">

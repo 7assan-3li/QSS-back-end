@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', __('التحصيل المالي والذكاء المحاسبي'))
+@section('title', __('إدارة الأموال والحسابات'))
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-16 mt-4 animate-fade-in text-start font-Cairo pb-32 print:p-0 print:m-0" x-data="{ activeTooltip: null, activeLedger: 'points' }">
@@ -38,8 +38,8 @@
                     </div>
                 </div>
                 <div class="flex flex-col text-start">
-                    <span class="italic text-[var(--main-text)]">{{ __('نظام الذكاء المحاسبي') }}</span>
-                    <span class="text-[13px] font-black text-[var(--text-muted)] mt-2 tracking-[0.5em] uppercase opacity-60">Complete Financial Ledger Control</span>
+                    <span class="italic text-[var(--main-text)]">{{ __('نظام الإدارة المالية') }}</span>
+                    <span class="text-[13px] font-black text-[var(--text-muted)] mt-2 tracking-[0.5em] uppercase opacity-60">Financial Management System</span>
                 </div>
             </h3>
         </div>
@@ -76,7 +76,7 @@
                 <div class="text-start">
                     <div class="flex items-center gap-3">
                         <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                        <span class="text-[14px] font-black text-emerald-600 uppercase tracking-[0.4em] italic">{{ __('إجمالي السيولة الداخلة المعتمدة') }}</span>
+                        <span class="text-[14px] font-black text-emerald-600 uppercase tracking-[0.4em] italic">{{ __('إجمالي المبالغ الداخلة') }}</span>
                     </div>
                     <h2 class="text-5xl md:text-7xl font-black font-mono italic mt-8 text-emerald-600 leading-none">
                         {{ number_format($totalInflow, 2) }}
@@ -103,8 +103,8 @@
 
             <div class="absolute inset-0 bg-emerald-600/95 backdrop-blur-xl p-12 flex flex-col justify-center items-center text-center text-white transition-all duration-500 opacity-0 group-hover:opacity-100 z-50 pointer-events-none" x-show="activeTooltip === 'master-in'" x-transition>
                 <span class="text-4xl mb-6 italic">💎</span>
-                <h5 class="text-xs font-black uppercase tracking-[0.5em] mb-4 opacity-70 italic">{{ __('المعادلة المحاسبية للمدخلات') }}</h5>
-                <p class="text-sm font-bold leading-relaxed max-w-sm font-Cairo italic">{{ __('إجمالي السيولة النقدية التي دخلت المنصة فعلياً من (نقاط العملاء + رسوم توثيق المزودين + العمولات المسددة).') }}</p>
+                <h5 class="text-xs font-black uppercase tracking-[0.5em] mb-4 opacity-70 italic">{{ __('تفاصيل المبالغ الداخلة') }}</h5>
+                <p class="text-sm font-bold leading-relaxed max-w-sm font-Cairo italic">{{ __('إجمالي المبالغ المالية التي دخلت المنصة فعلياً من (نقاط العملاء + رسوم توثيق المزودين + العمولات المسددة).') }}</p>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
                 <div class="text-start">
                     <div class="flex items-center gap-3">
                         <span class="w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse"></span>
-                        <span class="text-[14px] font-black text-rose-600 uppercase tracking-[0.4em] italic">{{ __('إجمالي السيولة الخارجة المعتمدة') }}</span>
+                        <span class="text-[14px] font-black text-rose-600 uppercase tracking-[0.4em] italic">{{ __('إجمالي المبالغ الخارجة') }}</span>
                     </div>
                     <h2 class="text-5xl md:text-7xl font-black font-mono italic mt-8 text-rose-600 leading-none">
                         {{ number_format($totalOutflow, 2) }}
@@ -138,8 +138,8 @@
 
             <div class="absolute inset-0 bg-rose-600/95 backdrop-blur-xl p-12 flex flex-col justify-center items-center text-center text-white transition-all duration-500 opacity-0 group-hover:opacity-100 z-50 pointer-events-none" x-show="activeTooltip === 'master-out'" x-transition>
                 <span class="text-4xl mb-6">📉</span>
-                <h5 class="text-xs font-black uppercase tracking-[0.5em] mb-4 opacity-70 italic">{{ __('المحاسبة المادية للمخرجات') }}</h5>
-                <p class="text-sm font-bold leading-relaxed max-w-sm font-Cairo italic">{{ __('إجمالي المبالغ النقدية الحقيقية التي تم تحويلها من حساب المنصة البنكي لمزودي الخدمة بناءً على طلبات سحب رصيدهم المعتمدة.') }}</p>
+                <h5 class="text-xs font-black uppercase tracking-[0.5em] mb-4 opacity-70 italic">{{ __('تفاصيل المبالغ الخارجة') }}</h5>
+                <p class="text-sm font-bold leading-relaxed max-w-sm font-Cairo italic">{{ __('إجمالي المبالغ المالية الحقيقية التي تم تحويلها من حساب المنصة البنكي لمزودي الخدمة بناءً على طلبات سحب رصيدهم.') }}</p>
             </div>
         </div>
     </div>
@@ -202,7 +202,7 @@
                     <span class="text-[14px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] mb-3 opacity-80 font-Cairo italic">{{ __('نقاط المزودين القابلة للسحب كاش') }}</span>
                     <div class="flex items-baseline gap-4 text-start">
                         <span class="text-5xl font-black font-mono italic text-amber-600">{{ number_format($withdrawablePoints, 0) }}</span>
-                        <span class="text-[14px] font-black opacity-30 uppercase tracking-widest leading-loose font-Cairo italic">{{ __('التزام سيولة') }}</span>
+                        <span class="text-[14px] font-black opacity-30 uppercase tracking-widest leading-loose font-Cairo italic">{{ __('التزام مالي') }}</span>
                     </div>
                 </div>
             </div>
@@ -417,7 +417,7 @@
         <div class="card-premium glass-panel p-16 rounded-[5rem] shadow-2xl relative border-2 border-brand-primary/10 overflow-hidden bg-[var(--glass-bg)]">
             <h4 class="text-3xl font-black font-Cairo text-start italic mb-12 flex items-center gap-6">
                 <span class="w-2.5 h-12 bg-brand-primary rounded-xl font-Cairo whitespace-nowrap inline-flex items-center justify-center"></span>
-                {{ __('الدليل الفني للرقابة المالية المتقدمة') }}
+                {{ __('دليل إدارة الحسابات') }}
             </h4>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-start font-Cairo">
@@ -434,8 +434,8 @@
                     <p class="text-[14px] font-bold text-[var(--text-muted)] leading-relaxed font-Cairo italic">{{ __('هو الحصاد الفعلي لمجهود المنصة؛ يُحسب من العمولات المقتطعة من العمليات الناجزة + عوائد التوثيق. هذا الرقم يعبر عن النمو الحقيقي.') }}</p>
                 </div>
                  <div class="text-start font-Cairo">
-                    <h6 class="text-base font-black italic text-rose-600 mb-5 font-Cairo">{{ __('إدارة مخاطر السحوبات') }}</h6>
-                    <p class="text-[14px] font-bold text-[var(--text-muted)] leading-relaxed font-Cairo italic">{{ __('نرصد كافة"النقاط القابلة للسحب" لضمان توفر رصيد بنكي موازٍ (Backing)، مما يضمن عدم حدوث فجوة في السيولة (Liquidity Gap).') }}</p>
+                    <h6 class="text-base font-black italic text-rose-600 mb-5 font-Cairo">{{ __('إدارة مبالغ السحوبات') }}</h6>
+                    <p class="text-[14px] font-bold text-[var(--text-muted)] leading-relaxed font-Cairo italic">{{ __('نتابع كافة"النقاط القابلة للسحب" لضمان توفر رصيد بنكي كافٍ، مما يضمن عدم حدوث عجز في المبالغ المتوفرة.') }}</p>
                 </div>
             </div>
         </div>

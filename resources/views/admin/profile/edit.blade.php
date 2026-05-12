@@ -141,7 +141,7 @@
                         <!-- Email Address -->
                         <div class="space-y-4 group/field">
                             <label class="text-xs font-black text-brand-primary/40 uppercase tracking-widest ms-6 italic block group-hover/field:text-brand-primary transition-colors">
-                                {{ __('البريد الإلكتروني الذكي') }}
+                                {{ __('البريد الإلكتروني') }}
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-brand-primary/20 group-hover/field:text-brand-primary transition-colors">
