@@ -184,8 +184,7 @@ class ServiceController extends Controller
         // جلب التقييمات والمراجعات الخاصة بهذه الخدمة
         $reviewsQuery = \App\Models\Review::whereHas('request.services', function($q) use ($service) {
                 $q->where('service_id', $service->id);
-            })
-            ->where('is_hidden', false);
+            });
 
         $reviews = $reviewsQuery->with(['request.user.profile'])
             ->latest()
