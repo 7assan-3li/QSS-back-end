@@ -216,9 +216,23 @@
 
     @stack('scripts')
     
-    <!-- Navigation Reliability Fix -->
+    <!-- Navigation Reliability & Sidebar Persistence Fix -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Restore Sidebar Scroll Position
+            const sidebarNav = document.getElementById('sidebar-nav');
+            if (sidebarNav) {
+                const scrollPos = sessionStorage.getItem('sidebar-scroll');
+                if (scrollPos) {
+                    sidebarNav.scrollTop = scrollPos;
+                }
+                
+                // Save scroll position before navigating
+                window.addEventListener('beforeunload', () => {
+                    sessionStorage.setItem('sidebar-scroll', sidebarNav.scrollTop);
+                });
+            }
+
             document.body.addEventListener('click', function(e) {
                 // Ignore if clicking a button, input, or something inside a form
                 if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('textarea')) {

@@ -15,7 +15,7 @@
     </div>
 
     <!-- Navigation Scroll Area -->
-    <nav class="flex-1 space-y-3 overflow-y-auto px-6 pb-40 custom-scrollbar relative z-10 font-Cairo">
+    <nav id="sidebar-nav" class="flex-1 space-y-3 overflow-y-auto px-6 pb-40 custom-scrollbar relative z-10 font-Cairo">
         <!-- Overview Section -->
         <div class="mb-8 font-Cairo">
             <p
@@ -280,9 +280,9 @@
             <div class="space-y-2 font-Cairo">
                 @can('viewAny', \App\Models\User::class)
                     <a href="{{ route('users.index') }}"
-                        class="sidebar-item {{ Request::routeIs('users.index') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                        class="sidebar-item {{ Request::routeIs('users.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                         <div
-                            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('users.index') ? 'bg-[var(--glass-bg)]/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-[var(--glass-bg)] dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('users.*') ? 'bg-[var(--glass-bg)]/20 text-white shadow-lg' : 'bg-brand-primary/5 group-hover:bg-[var(--glass-bg)] dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13.732 4c-.77.234-1.476.614-2.066 1.114M6.718 4c.77.234 1.476.614 2.066 1.114M12 7h.01">

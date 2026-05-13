@@ -73,12 +73,14 @@
                                 <span class="text-sm font-black text-[var(--main-text)]">{{ $user->created_at->format('Y-m-d') }}</span>
                             </div>
                             <div class="w-px h-8 bg-[var(--glass-bg)] dark:bg-[var(--glass-bg)]/5"></div>
-                            <div class="flex flex-col gap-1">
-                                <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">{{ __('الحالة الأمنية') }}</span>
-                                <span class="text-sm font-black text-emerald-500 flex items-center gap-2">
-                                    {{ __('نشط') }}
-                                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                                </span>
+                            <div class="space-y-1">
+                                <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest block">{{ __('حالة الحساب') }}</span>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full {{ $user->status === 'active' ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500' }} shadow-[0_0_10px_rgba(16,185,129,0.4)]"></div>
+                                    <span class="text-xl font-black {{ $user->status === 'active' ? 'text-emerald-500' : 'text-rose-500' }} uppercase tracking-tighter italic">
+                                        {{ $user->status === 'active' ? __('نشط') : __('موقوف') }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>

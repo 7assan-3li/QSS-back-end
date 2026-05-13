@@ -228,7 +228,7 @@
             
             <div class="flex items-center justify-between mb-10 text-start relative z-10 font-Cairo">
                 <div class="w-14 h-14 bg-{{ $item['col'] }}-500/10 rounded-2xl flex items-center justify-center text-{{ $item['col'] }}-600 text-2xl shadow-inner transition-transform group-hover:rotate-6">{{ $item['icon'] }}</div>
-                <span class="text-[12px] font-black text-slate-300 uppercase tracking-widest italic opacity-60 font-Cairo text-start">Source Breakdown</span>
+                <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest italic opacity-60 font-Cairo text-start">Source Breakdown</span>
             </div>
 
             <div class="text-start relative z-10">
@@ -239,10 +239,10 @@
                 </div>
             </div>
 
-            <div class="absolute inset-0 bg-slate-900/95 backdrop-blur-md p-8 flex flex-col justify-center items-center text-center text-white transition-all duration-500 group-hover:translate-y-0 translate-y-full z-50 pointer-events-none" 
+            <div class="absolute inset-0 {{ $item['col'] === 'indigo' ? 'bg-indigo-600' : ($item['col'] === 'amber' ? 'bg-amber-600' : 'bg-emerald-600') }} p-10 flex flex-col justify-center items-center text-center transition-all duration-500 group-hover:translate-y-0 translate-y-full z-50 pointer-events-none" 
                  x-show="activeTooltip === '{{ $item['id'] }}'" x-transition:enter="duration-500" x-transition:leave="duration-300">
-                <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center mb-4 italic text-sm">ℹ️</div>
-                <p class="text-[14px] font-bold leading-relaxed italic font-Cairo">{{ $item['help'] }}</p>
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-6 text-xl">💡</div>
+                <p class="text-[17px] font-black leading-snug font-Cairo text-white">{{ $item['help'] }}</p>
             </div>
             
             <div class="absolute -bottom-6 -right-6 text-7xl opacity-[0.03] group-hover:scale-110 transition-transform grayscale select-none">{{ $item['icon'] }}</div>

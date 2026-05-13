@@ -15,12 +15,12 @@
                 {{ __('إدارة قائمة الخدمات المتاحة، أسعارها، وتوافرها في المنصة.') }}
             </p>
         </div>
-        <a href="{{ route('services.create') }}" class="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-brand-primary text-white rounded-[1.75rem] text-xs font-black shadow-[0_20px_40px_-5px_rgba(var(--brand-primary-rgb),0.3)] hover:scale-[1.05] transition-all font-Cairo">
+        {{-- <a href="{{ route('services.create') }}" class="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-brand-primary text-white rounded-[1.75rem] text-xs font-black shadow-[0_20px_40px_-5px_rgba(var(--brand-primary-rgb),0.3)] hover:scale-[1.05] transition-all font-Cairo">
             <div class="w-6 h-6 bg-[var(--glass-bg)]/20 rounded-lg flex items-center justify-center group-hover:rotate-90 transition-transform">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
             </div>
             {{ __('إضافة خدمة جديدة') }}
-        </a>
+        </a> --}}
     </div>
 
     <!-- Service Statistics (6 Items) -->
