@@ -20,15 +20,17 @@ class ProviderDashboardController extends Controller
             return response()->json(['message' => 'Unauthorized. Only providers can access this dashboard.'], 403);
         }
 
-        // 1. عدد الخدمات
-        $totalServices = $user->services()->count();
+        // 1. عدد الخدمات الرئيسية فقط
+        $totalServices = $user->services()
+            ->where('type', \App\constant\ServiceType::MAIN)
+            ->whereNull('parent_service_id')
+            ->count();
 
-        // 2. عدد الطلبات لكل خدمة + الخدمات الأكثر طلباً
+        // 2. عدد الطلبات لكل خدمة رئيسية فقط + الخدمات الأكثر طلباً
         $servicesStats = $user->services()
-            ->withCount(['requests' => function ($query) {
-                // نعد فقط الطلبات التي تم التعامل معها أو المكتملة؟ 
-                // سأقوم بعد الكل حالياً كما طلب المستخدم "عدد الطلبات لكل خدمة"
-            }])
+            ->where('type', \App\constant\ServiceType::MAIN)
+            ->whereNull('parent_service_id')
+            ->withCount(['requests'])
             ->orderBy('requests_count', 'desc')
             ->get(['id', 'name', 'price']);
 

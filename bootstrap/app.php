@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'seeker.policy' => \App\Http\Middleware\CheckSeekerPolicy::class,
             'provider.policy' => \App\Http\Middleware\CheckProviderPolicy::class,
             'is_admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'check_user_status' => \App\Http\Middleware\CheckUserStatus::class,
         ]);
     })
     ->withExceptions(function ($exceptions) {
