@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\constant\RequestStatus;
 use App\Services\RequestCommissionBondService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RequestCommissionBondController extends Controller
 {
