@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'email_verified_at',
         'seeker_policy',
+        'provider_policy',
         'no_commission',
         'commission',
         'bonus_points',
