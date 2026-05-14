@@ -396,6 +396,18 @@ public function index(Request $request)
 
         $message = $newStatus === 'active' ? 'تم تنشيط الحساب بنجاح' : 'تم إيقاف الحساب بنجاح';
         
+        $statusMsg = $newStatus === 'active' ? 'تنشيط حسابك ✨' : 'إيقاف حسابك ⚠️';
+        $statusDesc = $newStatus === 'active' 
+            ? 'لقد تم إعادة تنشيط حسابك من قبل الإدارة. يمكنك الآن استخدام كافة ميزات التطبيق.' 
+            : 'عذراً، لقد تم إيقاف حسابك مؤقتاً من قبل الإدارة. يرجى التواصل مع الدعم الفني لمزيد من التفاصيل.';
+            
+        app(\App\Services\NotificationService::class)->sendToUser(
+            $user->id,
+            $statusMsg,
+            $statusDesc,
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+        
         return back()->with('success', $message);
     }
 

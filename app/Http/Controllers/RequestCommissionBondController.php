@@ -14,7 +14,8 @@ class RequestCommissionBondController extends Controller
 {
     public function __construct(
         private \App\Services\NotificationService $notificationService
-    ) {}
+    ) {
+    }
     public function index(Request $request)
     {
         $bonds = RequestCommissionBond::with('request.main_service')
@@ -28,7 +29,7 @@ class RequestCommissionBondController extends Controller
         return response()->json($bonds);
     }
 
-    public function store(RequestCommissionBondRequest $request,RequestCommissionBondService $service)
+    public function store(RequestCommissionBondRequest $request, RequestCommissionBondService $service)
     {
         $commissionBond = $service->create($request->validated());
 
@@ -49,12 +50,12 @@ class RequestCommissionBondController extends Controller
     {
         \DB::transaction(function () use ($bond) {
             $bond->update(['status' => 'approved']);
-            
+
             $request = $bond->request;
-            
+
             // تحديث المبلغ المقبوض كعمولة
             $request->commission_amount_paid += $bond->amount;
-            
+
             // حساب المبلغ الإجمالي المطلوب للعمولة إذا لم يكن مسجلاً
             if ($request->commission_amount <= 0) {
                 $request->commission_amount = $request->getCommissionAmount();
@@ -64,7 +65,7 @@ class RequestCommissionBondController extends Controller
             if ($request->commission_amount_paid >= $request->commission_amount) {
                 $request->commission_paid = true;
             }
-            
+
             $request->save();
 
             // إشعار للمزود بقبول سند العمولة
@@ -103,14 +104,14 @@ class RequestCommissionBondController extends Controller
             ->whereHas('main_service', function ($q) use ($userId) {
                 $q->where('provider_id', $userId);
             })
-            ->where(function($q) {
+            ->where(function ($q) {
                 // تضمين الطلبات المكتملة أو التي تم دفعها بالكامل أو جزئياً لضمان دقة البيانات
                 $q->where('commission_amount', '>', 0)
-                  ->orWhereIn('status', [
-                      RequestStatus::COMPLETED,
-                      RequestStatus::ACCEPTED_FULL_PAID,
-                      RequestStatus::ACCEPTED_PARTIAL_PAID
-                  ]);
+                    ->orWhereIn('status', [
+                        RequestStatus::COMPLETED,
+                        RequestStatus::ACCEPTED_FULL_PAID,
+                        RequestStatus::ACCEPTED_PARTIAL_PAID
+                    ]);
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -124,15 +125,15 @@ class RequestCommissionBondController extends Controller
             $commissionAmount = $req->getCommissionAmount($provider, $defaultCommission);
 
             return [
-                'id'                     => $req->id,
-                'seeker_name'            => $req->user->name ?? 'N/A',
-                'total_price'            => (float) $req->total_price,
-                'commission_amount'      => $commissionAmount,
-                'commission_rate'        => (float) $req->commission_rate,
+                'id' => $req->id,
+                'seeker_name' => $req->user->name ?? 'N/A',
+                'total_price' => (float) $req->total_price,
+                'commission_amount' => $commissionAmount,
+                'commission_rate' => (float) $req->commission_rate,
                 'commission_amount_paid' => (float) $req->commission_amount_paid,
                 'commission_paid_status' => (bool) $req->commission_paid,
-                'created_at'             => $req->created_at->toDateTimeString(),
-                'status'                 => $req->status,
+                'created_at' => $req->created_at->toDateTimeString(),
+                'status' => $req->status,
             ];
         });
 
@@ -142,10 +143,10 @@ class RequestCommissionBondController extends Controller
 
         return response()->json([
             'summary' => [
-                'total_commission_due'  => (float) $totalDue,
+                'total_commission_due' => (float) $totalDue,
                 'total_commission_paid' => (float) $totalPaid,
-                'remaining_balance'     => (float) $remaining,
-                'requests_count'        => $requests->count(),
+                'remaining_balance' => (float) $remaining,
+                'requests_count' => $requests->count(),
             ],
             'details' => $details,
         ]);

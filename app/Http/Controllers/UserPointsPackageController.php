@@ -79,15 +79,6 @@ class UserPointsPackageController extends Controller
         try {
             $result = $this->userPackageService->approve($id, Auth::id());
 
-            // إشعار بقبول طلب النقاط
-            $userPackage = \App\Models\UserPointsPackage::with('package')->find($id);
-            $this->notificationService->sendToUser(
-                $userPackage->user_id,
-                'تم إضافة النقاط إلى حسابك ✅',
-                "تمت الموافقة على طلبك بنجاح، تم إضافة {$userPackage->package->points} نقطة إلى رصيدك.",
-                \App\Constants\NotificationType::POINTS_RECEIVED
-            );
-
             return response()->json([
                 'message' => 'تمت الموافقة على الطلب وإضافة النقاط للمستخدم',
                 'data' => $result
@@ -104,15 +95,6 @@ class UserPointsPackageController extends Controller
 
         try {
             $result = $this->userPackageService->reject($id, Auth::id(), $request->admin_note);
-
-            // إشعار برفض طلب النقاط
-            $userPackage = \App\Models\UserPointsPackage::find($id);
-            $this->notificationService->sendToUser(
-                $userPackage->user_id,
-                'رفض طلب شراء النقاط ❌',
-                'للأسف، تم رفض طلب التحقق من سند شراء النقاط. السبب: ' . $request->admin_note,
-                \App\Constants\NotificationType::ADMIN_MSG
-            );
 
             return response()->json([
                 'message' => 'تم رفض طلب الاشتراك',

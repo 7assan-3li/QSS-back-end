@@ -23,10 +23,9 @@ class RequestCommissionBondService
 
         // تحقق من حالة الطلب
         if ($requestModel->status !== RequestStatus::COMPLETED) {
-            return response()->json([
-                'message' => 'لا يمكن رفع سند قبل اكتمال الطلب',
-                'requestStatus' => $requestModel->status,
-            ], 422);
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'request_id' => ['لا يمكن رفع سند عمولة لهذا الطلب لأن حالته الحالية هي: ' . $requestModel->status . '. يجب أن يكون الطلب مكتمل (completed) أولاً.']
+            ]);
         }
 
         // حفظ الصورة

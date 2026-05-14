@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class UserPointsPackageService
 {
-    public function __construct(private BondRegistryService $bondRegistryService) {}
+    public function __construct(
+        private BondRegistryService $bondRegistryService,
+        private NotificationService $notificationService
+    ) {}
 
     public function index($status = null)
     {
@@ -91,6 +94,14 @@ class UserPointsPackageService
                 'type' => 'package_purchase',
             ]);
 
+            // إرسال إشعار للمستخدم
+            $this->notificationService->sendToUser(
+                $user->id,
+                'تم تفعيل باقة النقاط ✅',
+                "تمت الموافقة على طلبك بنجاح، وتم إضافة {$totalPoints} نقطة إلى رصيدك.",
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+
             return $userPackage;
         });
     }
@@ -113,6 +124,14 @@ class UserPointsPackageService
             // إزالة من السجل المركزي ليتاح الرقم مجدداً إذا كان خطأ
             $this->bondRegistryService->reject('points_package', $userPackage->id);
             
+            // إرسال إشعار للمستخدم
+            $this->notificationService->sendToUser(
+                $userPackage->user_id,
+                'تم رفض طلب باقة النقاط ❌',
+                "نعتذر، تم رفض طلبك لشراء باقة النقاط. " . ($note ? "السبب: $note" : "يرجى مراجعة الإدارة."),
+                \App\Constants\NotificationType::ADMIN_MSG
+            );
+
             return $userPackage;
         });
     }

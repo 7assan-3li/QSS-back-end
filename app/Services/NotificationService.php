@@ -71,7 +71,15 @@ class NotificationService
 
             if ($sendReport->hasFailures()) {
                 foreach ($sendReport->failures()->getItems() as $failure) {
-                    \Illuminate\Support\Facades\Log::error('FCM Notification failure: ' . $failure->error()->getMessage());
+                    $errorMsg = $failure->error()->getMessage();
+                    \Illuminate\Support\Facades\Log::error('FCM Notification failure: ' . $errorMsg);
+
+                    // حذف التوكن إذا كان غير صالح أو محذوف من الجهاز
+                    if (str_contains($errorMsg, 'Requested entity was not found') || 
+                        str_contains($errorMsg, 'invalid') || 
+                        str_contains($errorMsg, 'NotRegistered')) {
+                        \App\Models\DeviceTokens::where('token', $failure->target()->value())->delete();
+                    }
                 }
             }
 

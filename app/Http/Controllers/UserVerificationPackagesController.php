@@ -124,14 +124,32 @@ class UserVerificationPackagesController extends Controller
     public function approveWebAdmin($id)
     {
         $this->authorize('updateStatus', UserVerificationPackages::class);
-        $this->verificationPackageService->approvePackage($id, Auth::id());
+        $userPackage = $this->verificationPackageService->approvePackage($id, Auth::id());
+        
+        // إشعار بقبول باقة التوثيق
+        $this->notificationService->sendToUser(
+            $userPackage->user_id,
+            'تفعيل باقة التوثيق ✨',
+            'تمت الموافقة على اشتراكك وتفعيل ميزات باقة التوثيق بنجاح.',
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return redirect()->back()->with('success', 'تم الموافقة على الطلب بنجاح');
     }
 
     public function rejectWebAdmin(Request $request, $id)
     {
         $this->authorize('updateStatus', UserVerificationPackages::class);
-        $this->verificationPackageService->rejectPackage($id, Auth::id(), $request->input('rejection_reason'));
+        $userPackage = $this->verificationPackageService->rejectPackage($id, Auth::id(), $request->input('rejection_reason'));
+        
+        // إشعار برفض باقة التوثيق
+        $this->notificationService->sendToUser(
+            $userPackage->user_id,
+            'رفض اشتراك باقة التوثيق ⚠️',
+            'للأسف، تم رفض طلب اشتراكك في باقة التوثيق. السبب: ' . ($request->input('rejection_reason') ?? 'يرجى مراجعة البيانات.'),
+            \App\Constants\NotificationType::ADMIN_MSG
+        );
+
         return redirect()->back()->with('success', 'تم رفض الطلب بنجاح');
     }
 }
