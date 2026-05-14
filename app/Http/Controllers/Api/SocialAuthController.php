@@ -26,33 +26,41 @@ class SocialAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->userFromToken($request->access_token);
 
-            $user = User::where('email', $googleUser->email)->first();
+            // 1. البحث عن طريق المعرف الخاص بجوجل أولاً (الطريقة الأدق)
+            $user = User::where('google_id', $googleUser->id)->first();
 
             if (!$user) {
-                $user = User::create([
-                    'email' => $googleUser->email,
-                    'name' => $googleUser->name,
-                    'google_id' => $googleUser->id,
-                    'avatar' => $googleUser->avatar,
-                    'password' => Hash::make(Str::random(16)),
-                    'email_verified_at' => now(),
-                ]);
-            } else {
-                // Combine updates into one array for efficiency
-                $updateData = [];
-                if (!$user->google_id) {
-                    $updateData['google_id'] = $googleUser->id;
-                }
-                if (is_null($user->email_verified_at)) {
-                    $updateData['email_verified_at'] = now();
-                }
-                if (!$user->avatar) {
-                    $updateData['avatar'] = $googleUser->avatar;
-                }
+                // 2. إذا لم يكن مسجلاً بالمعرف، نبحث عن طريق الإيميل (لربط الحسابين)
+                $user = User::where('email', $googleUser->email)->first();
 
-                if (!empty($updateData)) {
-                    $user->update($updateData);
+                if ($user) {
+                    // ربط حساب جوجل بالحساب الحالي
+                    $user->update(['google_id' => $googleUser->id]);
+                } else {
+                    // 3. إذا لم يكن الإيميل موجوداً، نقوم بإنشاء حساب جديد كلياً
+                    $user = User::create([
+                        'email' => $googleUser->email,
+                        'name' => $googleUser->name,
+                        'google_id' => $googleUser->id,
+                        'avatar' => $googleUser->avatar,
+                        'password' => Hash::make(Str::random(16)),
+                        'email_verified_at' => now(),
+                    ]);
                 }
+            }
+
+            // تحديث بيانات المستخدم (في حال كان موجوداً وناقصاً للتوثيق أو الصورة)
+            $updateData = [];
+            if (is_null($user->email_verified_at)) {
+                $updateData['email_verified_at'] = now();
+            }
+            // تحديث الصورة فقط إذا لم يكن لديه صورة سابقة
+            if (!$user->avatar && $googleUser->avatar) {
+                $updateData['avatar'] = $googleUser->avatar;
+            }
+
+            if (!empty($updateData)) {
+                $user->update($updateData);
             }
 
             // Use updateOrCreate for profile to ensure image_path is updated

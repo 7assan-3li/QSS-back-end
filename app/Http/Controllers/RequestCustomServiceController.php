@@ -9,7 +9,7 @@ class RequestCustomServiceController extends Controller
 {
 
     public function __construct(
-        private  $requestCustomServiceService,
+        private RequestCustomServiceService $requestCustomServiceService,
         private \App\Services\NotificationService $notificationService
     ) {}
 
