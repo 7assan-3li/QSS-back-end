@@ -66,7 +66,7 @@ class RequestMeetingServiceController extends Controller
 
             // إشعار لمزود الخدمة بطلب اجتماع جديد
             $meetingRequest = \App\Models\Request::find($result['request_id']);
-            $providerId = $meetingRequest->main_service->provider_id;
+            $providerId = $meetingRequest->main_service->first()->provider_id;
             $this->notificationService->sendToUser(
                 $providerId,
                 'طلب اجتماع جديد 🗓️',
