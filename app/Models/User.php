@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\constant\ServiceType;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -87,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function main_services()
     {
         return $this->hasMany(Service::class, 'provider_id')
-            ->whereNull('parent_service_id');
+            ->whereNull('parent_service_id')->where('type', ServiceType::MAIN);
     }
 
     public function banks()
