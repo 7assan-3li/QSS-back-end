@@ -62,21 +62,21 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start font-Cairo">
                 <!-- User Information -->
                 <div class="card-premium glass-panel p-12 rounded-[2rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden text-start font-Cairo">
-                    <div class="absolute top-0 left-0 w-32 h-32 bg-indigo-500/[0.04] rounded-br-[8rem] -ml-16 -mt-16 font-Cairo"></div>
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-brand-primary/[0.04] rounded-br-[8rem] -ml-16 -mt-16 font-Cairo"></div>
                     <div class="flex items-center gap-4 mb-12 text-start font-Cairo">
-                        <span class="w-3 h-10 bg-indigo-600 rounded-full shadow-lg shadow-indigo-600/30 font-Cairo"></span>
+                        <span class="w-3 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/30 font-Cairo"></span>
                         <h4 class="text-xl font-black text-[var(--main-text)] font-Cairo text-start italic">{{ __('معلومات مقدم الطلب') }}</h4>
                     </div>
                     <div class="space-y-10 relative z-10 text-start font-Cairo">
                         <div class="flex items-center gap-6 group font-Cairo">
-                            <div class="w-14 h-14 bg-[var(--main-bg)] text-indigo-500 rounded-[1.2rem] flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform font-Cairo italic">👤</div>
+                            <div class="w-14 h-14 bg-[var(--main-bg)] text-brand-primary rounded-[1.2rem] flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform font-Cairo italic">👤</div>
                             <div class="flex flex-col text-start font-Cairo">
                                 <span class="text-[13px] font-black text-[var(--text-muted)] mb-2 font-Cairo text-start">{{ __('الاسم الكامل') }}</span>
                                 <span class="text-sm font-black text-[var(--main-text)] font-Cairo text-start">{{ $userPackage->user->name ?? __('مستخدم غير معروف') }}</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-6 group text-start font-Cairo">
-                            <div class="w-14 h-14 bg-[var(--main-bg)] text-purple-500 rounded-[1.2rem] flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform font-Cairo italic">📧</div>
+                            <div class="w-14 h-14 bg-[var(--main-bg)] text-brand-secondary rounded-[1.2rem] flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform font-Cairo italic">📧</div>
                             <div class="flex flex-col text-start font-Cairo">
                                 <span class="text-[13px] font-black text-[var(--text-muted)] mb-2 font-Cairo text-start">{{ __('البريد الإلكتروني') }}</span>
                                 <span class="text-sm font-black text-[var(--main-text)] font-mono tracking-widest text-start font-Cairo">{{ $userPackage->user->email ?? 'N/A' }}</span>
@@ -203,7 +203,7 @@
                 <div class="absolute -top-12 -right-12 w-48 h-48 bg-[var(--glass-bg)]/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000 font-Cairo"></div>
                 <div class="relative z-10 font-Cairo text-start">
                     <h4 class="font-black text-white text-[14px] uppercase tracking-[0.4em] mb-6 flex items-center gap-4 font-Cairo text-start">
-                        <span class="w-10 h-10 bg-[var(--glass-bg)]/10 rounded-xl flex items-center justify-center text-indigo-400 font-Cairo whitespace-nowrap inline-flex items-center justify-center">⚖️</span>
+                        <span class="w-10 h-10 bg-[var(--glass-bg)]/10 rounded-xl flex items-center justify-center text-brand-secondary font-Cairo whitespace-nowrap inline-flex items-center justify-center">⚖️</span>
                         {{ __('ملاحظات إدارية هامة') }}
                     </h4>
                     <p class="text-[14px] leading-[2.2] font-black text-white/50 font-Cairo text-start italic">

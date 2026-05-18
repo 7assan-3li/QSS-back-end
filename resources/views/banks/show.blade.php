@@ -26,7 +26,7 @@
         </div>
 
         <div class="flex items-center gap-4 text-start font-Cairo">
-            <a href="{{ route('banks.edit', $bank->id) }}" class="px-10 py-5 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[2rem] text-[14px] font-black uppercase tracking-[0.2em] shadow-xl shadow-brand-primary/20 hover:scale-[1.05] transition-all font-Cairo flex items-center gap-3 text-start font-Cairo">
+            <a href="{{ route('banks.edit', $bank->id) }}" class="px-10 py-5 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[2rem] text-[14px] font-black uppercase tracking-[0.2em] shadow-xl shadow-brand-primary/20 hover:scale-[1.05] transition-all font-Cairo flex items-center gap-3 text-start font-Cairo">
                 <svg class="w-5 h-5 font-black uppercase" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                 {{ __('تعديل بيانات البنك') }}
             </a>
@@ -70,7 +70,7 @@
             <!-- Conceptual Documentation -->
             <div class="card-premium glass-panel p-14 rounded-[2rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden text-start font-Cairo">
                 <div class="flex items-center gap-5 mb-10 text-start font-Cairo">
-                    <span class="w-3 h-10 bg-indigo-600 rounded-full shadow-lg shadow-indigo-600/30 font-Cairo"></span>
+                    <span class="w-3 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/30 font-Cairo"></span>
                     <h4 class="text-2xl font-black text-[var(--main-text)] font-Cairo text-start italic">{{ __('وصف البنك') }}</h4>
                 </div>
                 <div class="p-10 bg-[var(--main-bg)] rounded-[1.5rem] border border-[var(--glass-border)] shadow-inner text-start font-Cairo">

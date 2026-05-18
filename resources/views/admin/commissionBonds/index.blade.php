@@ -117,18 +117,30 @@
                                     </a>
                                     
                                     @if($bond->status == 'pending')
-                                        <form action="{{ route('commission-bonds.approve', $bond) }}" method="POST">
+                                        <form id="approve-bond-{{ $bond->id }}" action="{{ route('commission-bonds.approve', $bond) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="w-10 h-10 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="{{ __('موافقة') }}">
+                                            <button type="button" 
+                                                onclick="confirmAction('approve-bond-{{ $bond->id }}', {
+                                                    title: '{{ __('قبول السند المالي') }}',
+                                                    text: '{{ __('هل تأكدت من صحة بيانات السند البنكي؟ سيتم اعتماد التحصيل المالي لهذا السجل.') }}',
+                                                    icon: 'success',
+                                                    confirmButtonText: '{{ __('تأكيد القبول') }}'
+                                                })" class="w-10 h-10 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="{{ __('موافقة') }}">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                             </button>
                                         </form>
 
-                                        <form action="{{ route('commission-bonds.reject', $bond) }}" method="POST">
+                                        <form id="reject-bond-{{ $bond->id }}" action="{{ route('commission-bonds.reject', $bond) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="w-10 h-10 bg-rose-500/10 text-rose-600 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm" title="{{ __('رفض') }}">
+                                            <button type="button" 
+                                                onclick="confirmAction('reject-bond-{{ $bond->id }}', {
+                                                    title: '{{ __('رفض السند المالي') }}',
+                                                    text: '{{ __('هل أنت متأكد من عدم صحة هذا السند؟ سيتم إخطار الطرف الأخر بالرفض.') }}',
+                                                    icon: 'error',
+                                                    confirmButtonText: '{{ __('تأكيد الرفض') }}'
+                                                })" class="w-10 h-10 bg-rose-500/10 text-rose-600 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm" title="{{ __('رفض') }}">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
                                         </form>

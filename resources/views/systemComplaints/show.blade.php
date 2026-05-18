@@ -89,10 +89,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-start font-Cairo">
                     <!-- Metadata Node: Source -->
                     <div class="card-premium glass-panel p-8 rounded-[2.5rem] border border-[var(--glass-border)] flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
-                        <div class="w-16 h-16 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📱</div>
+                        <div class="w-16 h-16 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📱</div>
                         <div class="flex flex-col text-start font-Cairo">
                             <span class="text-[12px] font-black uppercase tracking-[0.3em] mb-2 font-Cairo text-start opacity-60">{{ __('قناة الوارد') }}</span>
-                            <span class="text-sm font-black text-indigo-600 font-Cairo text-start">
+                            <span class="text-sm font-black text-brand-primary font-Cairo text-start">
                                 {{ $systemComplaint->app_source === 'provider' ? __('تطبيق المزود') : __('تطبيق العميل') }}
                             </span>
                         </div>
@@ -135,7 +135,7 @@
         <div class="lg:col-span-4 space-y-12 text-start font-Cairo">
             <!-- Status Control Terminal -->
             <div class="card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-[var(--glass-border)] text-start font-Cairo overflow-hidden relative">
-                 <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-600 opacity-60 font-Cairo"></div>
+                 <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-rose-500 via-pink-500 to-brand-primary opacity-60 font-Cairo"></div>
                  
                 <div class="flex items-center gap-4 mb-10 text-start font-Cairo">
                     <span class="w-2 h-8 bg-rose-600 rounded-full shadow-md font-Cairo"></span>
@@ -179,7 +179,7 @@
             <!-- Processing Efficiency -->
             <div class="card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-[var(--glass-border)] text-start font-Cairo">
                 <div class="flex items-center gap-4 mb-10 text-start font-Cairo">
-                    <span class="w-2 h-8 bg-indigo-500 rounded-full shadow-md font-Cairo"></span>
+                    <span class="w-2 h-8 bg-brand-primary rounded-full shadow-md font-Cairo"></span>
                     <h4 class="font-black font-Cairo text-sm uppercase tracking-[0.2em] text-start italic">{{ __('إحصائيات المعالجة') }}</h4>
                 </div>
                 <div class="relative h-64 text-start font-Cairo font-mono">

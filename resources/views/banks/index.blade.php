@@ -15,7 +15,7 @@
                 {{ __('إدارة الحسابات البنكية المعتمدة لاستقبال وتحويل المدفوعات في المنصة.') }}
             </p>
         </div>
-        <a href="{{ route('banks.create') }}" class="px-10 py-5 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[2rem] text-[14px] font-black uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(79,70,229,0.3)] hover:scale-[1.05] transition-all font-Cairo flex items-center gap-3 text-start font-Cairo">
+        <a href="{{ route('banks.create') }}" class="px-10 py-5 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[2rem] text-[14px] font-black uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(13,148,136,0.3)] hover:scale-[1.05] transition-all font-Cairo flex items-center gap-3 text-start font-Cairo">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
             {{ __('إضافة بنك جديد') }}
         </a>

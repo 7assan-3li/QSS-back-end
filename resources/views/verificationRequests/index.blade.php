@@ -154,7 +154,7 @@
                             </td>
                             <td class="px-10 py-7 text-start">
                                 <div class="flex items-center gap-4 text-start">
-                                    <div class="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-600 font-black text-[13px] shadow-inner group-hover:scale-110 transition-transform font-Cairo">
+                                    <div class="w-10 h-10 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary font-black text-[13px] shadow-inner group-hover:scale-110 transition-transform font-Cairo">
                                         {{ mb_substr($request->user->name ?? 'U', 0, 1) }}
                                     </div>
                                     <span class="font-black text-[13px] font-Cairo text-start">{{ $request->user->name ?? __('مستخدم غير معروف') }}</span>
@@ -301,8 +301,8 @@
         if (dailyCtx) {
             const dCtx = dailyCtx.getContext('2d');
             const gradient = dCtx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.2)');
-            gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+            gradient.addColorStop(0, 'rgba(13, 148, 136, 0.2)');
+            gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
 
             new Chart(dailyCtx, {
                 type: 'line',
@@ -311,14 +311,14 @@
                     datasets: [{
                         label: '{{ __("عدد الطلبات") }}',
                         data: @json($data),
-                        borderColor: '#4f46e5',
+                        borderColor: '#0d9488',
                         backgroundColor: gradient,
                         borderWidth: 5,
                         tension: 0.45,
                         fill: true,
                         pointRadius: 0,
                         pointHoverRadius: 8,
-                        pointHoverBackgroundColor: '#4f46e5',
+                        pointHoverBackgroundColor: '#0d9488',
                         pointHoverBorderColor: '#fff',
                         pointHoverBorderWidth: 4
                     }]

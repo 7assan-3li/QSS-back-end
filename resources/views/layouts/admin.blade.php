@@ -52,7 +52,7 @@
             const isDark = document.documentElement.classList.contains('dark');
             const isDanger = config.isDanger || config.icon === 'warning';
             
-            const confirmColor = isDanger ? '#e11d48' : '#4f46e5';
+            const confirmColor = isDanger ? '#e11d48' : '#0d9488';
             const defaultText = config.text || (isDanger ?"{{ __('تنبيه: أنت على وشك القيام بعملية مسح نهائية لا يمكن التراجع عنها!') }}" :"{{ __('هل أنت متأكد من القيام بهذه العملية الحساسة؟') }}");
             const defaultTitle = config.title || (isDanger ?"⚠️ {{ __('تأكيد الحذف النهائي') }}" :"{{ __('تأكيد إجراء إداري') }}");
             const confirmButtonText = config.confirmButtonText || (isDanger ?"{{ __('تأكيد المسح الآن') }}" :"{{ __('تأكيد التنفيذ') }}");
@@ -77,7 +77,7 @@
                     popup: `rounded-[2.5rem] border ${isDanger ? 'border-rose-500 shadow-rose-500/10' : 'border-[var(--glass-border)] shadow-2xl'} font-Cairo`,
                     title: 'font-black text-2xl font-Cairo !text-inherit',
                     htmlContainer: 'font-bold text-sm font-Cairo opacity-60',
-                    confirmButton: `px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105  font-Cairo shadow-lg ${isDanger ? 'shadow-rose-500/20' : 'shadow-indigo-500/20'}`,
+                    confirmButton: `px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105  font-Cairo shadow-lg ${isDanger ? 'shadow-rose-500/20' : 'shadow-brand-primary/20'}`,
                     cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105  font-Cairo'
                 }
             }).then((result) => {

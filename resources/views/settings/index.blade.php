@@ -7,8 +7,8 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between items-center gap-10 text-start font-Cairo">
         <div class="text-start font-Cairo">
-            <h3 class="font-black text-4xl flex items-center gap-5 text-start font-Cairo shadow-indigo-500/10">
-                <span class="w-16 h-16 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 text-3xl font-Cairo shadow-lg shadow-indigo-600/5 whitespace-nowrap inline-flex items-center justify-center">⚙️</span>
+            <h3 class="font-black text-4xl flex items-center gap-5 text-start font-Cairo shadow-brand-primary/10">
+                <span class="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-3xl font-Cairo shadow-lg shadow-brand-primary/5 whitespace-nowrap inline-flex items-center justify-center">⚙️</span>
                 {{ __('إعدادات العمولات والنسب') }}
             </h3>
             <p class="text-[14px] font-black uppercase tracking-[0.3em] mt-5 mr-24 text-start font-Cairo italic opacity-60">
@@ -43,9 +43,9 @@
                 @php
                     $isPolicy = in_array($setting->key, ['seeker_policy_content', 'provider_policy_content']);
                 @endphp
-                <div class="{{ $isPolicy ? 'lg:col-span-3' : '' }} card-premium glass-panel p-12 rounded-[4.5rem] shadow-2xl relative border border-[var(--glass-border)] flex flex-col group hover:-translate-y-4 transition-all duration-1000 text-start overflow-hidden font-Cairo shadow-indigo-500/5">
+                <div class="{{ $isPolicy ? 'lg:col-span-3' : '' }} card-premium glass-panel p-12 rounded-[4.5rem] shadow-2xl relative border border-[var(--glass-border)] flex flex-col group hover:-translate-y-4 transition-all duration-1000 text-start overflow-hidden font-Cairo shadow-brand-primary/5">
                     <!-- Vector Glow Nodes -->
-                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-indigo-600/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000 font-Cairo"></div>
+                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-brand-secondary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000 font-Cairo"></div>
                     
                     <div class="flex items-start justify-between mb-12 text-start font-Cairo">
                         <div class="text-start font-Cairo">
@@ -54,7 +54,7 @@
                                 {{ $isPolicy ? 'POLICY_STRATEGY' : 'FINANCIAL_SETTING_' . str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
                             </span>
                         </div>
-                        <div class="w-14 h-14 bg-[var(--glass-bg)] rounded-[1.5rem] flex items-center justify-center text-[var(--text-muted)] group-hover:text-indigo-600 group-hover:bg-indigo-600/10 transition-all duration-700 shadow-sm border border-[var(--glass-border)] font-Cairo italic">
+                        <div class="w-14 h-14 bg-[var(--glass-bg)] rounded-[1.5rem] flex items-center justify-center text-[var(--text-muted)] group-hover:text-brand-primary group-hover:bg-brand-primary/10 transition-all duration-700 shadow-sm border border-[var(--glass-border)] font-Cairo italic">
                             @if($isPolicy)
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             @else
@@ -77,7 +77,7 @@
                             <input type="number" step="0.01" min="0" max="1000000" 
                                 id="{{ $setting->key }}" name="{{ $setting->key }}" value="{{ $setting->value }}" required class="w-full bg-[var(--main-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] px-14 py-8 text-2xl font-black focus:border-brand-primary focus:ring-[20px] focus:ring-brand-primary/5 transition-all outline-none font-mono italic shadow-inner text-center">
                             @if(str_contains($setting->key, 'commission') || str_contains($setting->key, 'bonus'))
-                                <div class="absolute left-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white rounded-2xl flex items-center justify-center font-black text-base shadow-2xl shadow-indigo-600/30 italic">%</div>
+                                <div class="absolute left-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary text-white rounded-2xl flex items-center justify-center font-black text-base shadow-2xl shadow-brand-primary/30 italic">%</div>
                             @endif
                         @endif
                     </div>
@@ -99,9 +99,9 @@
         </div>
 
         <!-- Save Settings Section -->
-        <div class="card-premium glass-panel p-16 rounded-[5rem] shadow-[0_60px_120px_-20px_rgba(79,70,229,0.2)] relative border-4 border-[var(--glass-border)] overflow-hidden mt-20 text-start font-Cairo">
+        <div class="card-premium glass-panel p-16 rounded-[5rem] shadow-[0_60px_120px_-20px_rgba(13,148,136,0.2)] relative border-4 border-[var(--glass-border)] overflow-hidden mt-20 text-start font-Cairo">
             <div class="absolute top-0 right-0 w-80 h-80 bg-brand-primary/5 rounded-bl-[15rem] -mr-20 -mt-20 blur-3xl opacity-60 font-Cairo"></div>
-            <div class="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/5 rounded-tr-[12rem] -ml-20 -mb-20 blur-3xl opacity-60 font-Cairo"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-secondary/5 rounded-tr-[12rem] -ml-20 -mb-20 blur-3xl opacity-60 font-Cairo"></div>
             
             <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16 text-start font-Cairo">
                 <div class="text-start font-Cairo">
@@ -114,7 +114,7 @@
                     </p>
                 </div>
                 
-                <button type="submit" class="w-full lg:w-auto px-20 py-8 bg-gradient-to-r from-brand-primary to-indigo-700 text-white rounded-[3rem] text-[13px] font-black uppercase tracking-[0.3em] shadow-[0_30px_60px_-15px_rgba(79,70,229,0.5)] hover:scale-[1.05] transition-all duration-700 font-Cairo flex items-center justify-center gap-6 group shadow-indigo-600/20 italic text-start font-Cairo">
+                <button type="submit" class="w-full lg:w-auto px-20 py-8 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[3rem] text-[13px] font-black uppercase tracking-[0.3em] shadow-[0_30px_60px_-15px_rgba(13,148,136,0.5)] hover:scale-[1.05] transition-all duration-700 font-Cairo flex items-center justify-center gap-6 group shadow-brand-primary/20 italic text-start font-Cairo">
                     <svg class="w-7 h-7 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     {{ __('حفـــــظ الإعـــــدادات') }}
                 </button>

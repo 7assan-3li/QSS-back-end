@@ -75,7 +75,7 @@
                         <!-- Abstract Descriptor TextArea -->
                         <div class="flex flex-col gap-5 text-start font-Cairo">
                             <label class="flex items-center gap-3 text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] px-4 font-Cairo text-start font-Cairo">
-                                <span class="w-2 h-2 bg-indigo-500 rounded-full font-Cairo"></span>
+                                <span class="w-2 h-2 bg-brand-secondary rounded-full font-Cairo"></span>
                                 {{ __('تعديل الوصف والإرشادات') }}
                             </label>
                             <textarea name="description" rows="6" placeholder="{{ __('اكتب التعديلات المطلوبة للوصف...') }}" class="w-full bg-[var(--main-bg)] border-2 border-[var(--glass-border)] rounded-[3.5rem] px-10 py-8 text-sm font-black text-[var(--main-text)] text-[var(--main-text)] focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all outline-none resize-none leading-relaxed italic text-start font-Cairo shadow-inner">{{ old('description', $bank->description) }}</textarea>
@@ -114,7 +114,7 @@
 
                 <!-- Action Buttons Sidebar -->
                 <div class="p-10 bg-slate-950 rounded-[4rem] border border-slate-900 shadow-3xl text-start font-Cairo">
-                    <button type="submit" class="w-full py-7 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-15px_rgba(79,70,229,0.4)] hover:scale-[1.05] transition-all duration-500 font-Cairo flex items-center justify-center gap-5 italic text-start font-Cairo">
+                    <button type="submit" class="w-full py-7 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-15px_rgba(13,148,136,0.4)] hover:scale-[1.05] transition-all duration-500 font-Cairo flex items-center justify-center gap-5 italic text-start font-Cairo">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                         {{ __('حفظ التعديلات') }}
                     </button>

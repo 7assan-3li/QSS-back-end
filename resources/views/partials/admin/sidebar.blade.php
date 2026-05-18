@@ -137,7 +137,7 @@
                         class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('سندات العمولات') }}</span>
                     @if(isset($pending_commission_bonds_count) && $pending_commission_bonds_count > 0)
                         <span
-                            class="ms-auto bg-indigo-500 text-white text-[12px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-indigo-500/20 italic">{{ $pending_commission_bonds_count }}</span>
+                            class="ms-auto bg-brand-primary text-white text-[12px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-brand-primary/20 italic">{{ $pending_commission_bonds_count }}</span>
                     @endif
                 </a>
                 @endcan

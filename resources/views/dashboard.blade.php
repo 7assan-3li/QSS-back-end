@@ -50,10 +50,10 @@
 
         <!-- Users Card -->
         <div class="card-premium glass-panel p-8 relative overflow-hidden group">
-            <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-primary/5 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
             <div class="relative z-10 flex flex-col h-full">
                 <div class="flex justify-between items-start mb-6">
-                    <div class="w-14 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-indigo-600/20">👥</div>
+                    <div class="w-14 h-14 bg-brand-primary text-white rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-brand-primary/20">👥</div>
                     <div class="flex -space-x-4 rtl:space-x-reverse">
                         <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 shadow-sm"></div>
                         <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-300 shadow-sm"></div>
@@ -65,7 +65,7 @@
                     <h3 class="text-3xl font-black font-mono italic">{{ number_format($usersCount) }}</h3>
                     <div class="flex items-center justify-between text-[12px] font-bold opacity-60">
                         <div class="flex items-center gap-4">
-                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span> {{ $providersCount }} {{ __('مزود') }}</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-brand-primary rounded-full"></span> {{ $providersCount }} {{ __('مزود') }}</span>
                             <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-slate-400 rounded-full"></span> {{ $seekersCount }} {{ __('عميل') }}</span>
                         </div>
                         <span class="{{ $userGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500' }} font-black">{{ $userGrowth >= 0 ? '+' : '' }}{{ number_format($userGrowth, 1) }}%</span>
@@ -108,7 +108,7 @@
                     </div>
                     <div class="flex items-center justify-between text-[14px] font-black group/item cursor-pointer" onclick="window.location='{{ route('user-verification-packages.index') }}'">
                         <span class="opacity-60 group-hover/item:opacity-100 transition-opacity">🛡️ {{ __('توثيق خطط') }}</span>
-                        <span class="text-indigo-400 font-mono">{{ $pendingWebVerifications }}</span>
+                        <span class="text-brand-secondary font-mono">{{ $pendingWebVerifications }}</span>
                     </div>
                 </div>
             </div>
@@ -136,31 +136,31 @@
 
         <!-- Side Control Palette (Mission Control) -->
         <div class="lg:col-span-4 translate-y-2 flex flex-col gap-8">
-            <div class="card-premium glass-panel p-6 rounded-[3.5rem] shadow-2xl bg-gradient-to-br from-indigo-900 to-slate-950 border-0 text-white relative overflow-hidden flex flex-col">
+            <div class="card-premium glass-panel p-6 rounded-[3.5rem] shadow-2xl border border-[var(--glass-border)] text-[var(--main-text)] relative overflow-hidden flex flex-col">
                 <!-- Ambient Glow Background -->
-                <div class="absolute -top-20 -left-20 w-64 h-64 bg-brand-primary/10 rounded-full blur-[100px] animate-pulse"></div>
+                <div class="absolute -top-20 -left-20 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] animate-pulse pointer-events-none"></div>
                 
                 <!-- Card Header -->
                 <div class="flex items-center justify-between mb-8 px-2 relative z-10">
-                    <h4 class="font-black text-[13px] uppercase tracking-[0.3em] flex items-center gap-4 opacity-80">
-                        <span class="w-1.5 h-6 bg-brand-primary rounded-full shadow-[0_0_15px_rgba(79,70,229,0.5)]"></span>
+                    <h4 class="font-black text-[13px] uppercase tracking-[0.3em] flex items-center gap-4 opacity-80 text-[var(--main-text)]">
+                        <span class="w-1.5 h-6 bg-brand-primary rounded-full shadow-[0_0_15px_rgba(79,70,229,0.3)]"></span>
                         {{ __('مركز القيادة والتحكم') }}
                     </h4>
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-[var(--glass-bg)] rounded-full border border-[var(--glass-border)] shadow-sm">
                         <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
-                        <span class="text-[10px] font-black uppercase tracking-widest opacity-60">{{ __('مباشر') }}</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 opacity-90">{{ __('مباشر') }}</span>
                     </div>
                 </div>
 
                 <!-- Urgent Operations Section (Primary Response) -->
                 <div class="flex flex-col gap-4 mb-10 relative z-10">
-                    <span class="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] px-2">{{ __('الاستجابة الفورية') }}</span>
+                    <span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] px-2">{{ __('الاستجابة الفورية') }}</span>
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Request Complaints -->
                         <a href="{{ route('request-complaints.index') }}" class="relative group p-6 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-[2.2rem] transition-all duration-500 flex flex-col items-center gap-3 overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <span class="text-3xl filter dropshadow-lg group-hover:scale-125 transition-transform duration-500">⚖️</span>
-                            <span class="text-[12px] font-black text-rose-100/90 text-center leading-tight">{{ __('نزاعات الطلبات') }}</span>
+                            <span class="text-[12px] font-black text-rose-600 dark:text-rose-400 text-center leading-tight">{{ __('نزاعات الطلبات') }}</span>
                             @if($pendingComplaintsCount > 0)
                                 <span class="absolute top-4 right-4 bg-rose-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg shadow-rose-900/50 animate-pulse border border-white/20">{{ $pendingComplaintsCount }}</span>
                             @endif
@@ -170,7 +170,7 @@
                         <a href="{{ route('system-complaints.index') }}" class="relative group p-6 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 rounded-[2.2rem] transition-all duration-500 flex flex-col items-center gap-3 overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <span class="text-3xl filter dropshadow-lg group-hover:scale-125 transition-transform duration-500">📢</span>
-                            <span class="text-[12px] font-black text-amber-100/90 text-center leading-tight">{{ __('شكاوى النظام') }}</span>
+                            <span class="text-[12px] font-black text-amber-600 dark:text-amber-400 text-center leading-tight">{{ __('شكاوى النظام') }}</span>
                             @if($pendingSystemComplaintsCount > 0)
                                 <span class="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg shadow-amber-900/50 animate-pulse border border-white/20">{{ $pendingSystemComplaintsCount }}</span>
                             @endif
@@ -180,7 +180,7 @@
                         <a href="{{ route('admin.withdrawals.index') }}" class="relative group p-6 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-[2.2rem] transition-all duration-500 flex flex-col items-center gap-3 overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <span class="text-3xl filter dropshadow-lg group-hover:scale-125 transition-transform duration-500">🏦</span>
-                            <span class="text-[12px] font-black text-emerald-100/90 text-center leading-tight">{{ __('عمليات السحب') }}</span>
+                            <span class="text-[12px] font-black text-emerald-600 dark:text-emerald-400 text-center leading-tight">{{ __('عمليات السحب') }}</span>
                             @if($pendingWithdrawalsCount > 0)
                                 <span class="absolute top-4 right-4 bg-emerald-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg shadow-emerald-900/50 animate-pulse border border-white/20">{{ $pendingWithdrawalsCount }}</span>
                             @endif
@@ -190,7 +190,7 @@
                         <a href="{{ route('user-verification-packages.index') }}" class="relative group p-6 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 rounded-[2.2rem] transition-all duration-500 flex flex-col items-center gap-3 overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <span class="text-3xl filter dropshadow-lg group-hover:scale-125 transition-transform duration-500">🛡️</span>
-                            <span class="text-[12px] font-black text-indigo-100/90 text-center leading-tight">{{ __('توثيق الحسابات') }}</span>
+                            <span class="text-[12px] font-black text-indigo-600 dark:text-indigo-400 text-center leading-tight">{{ __('توثيق الحسابات') }}</span>
                             @if($pendingWebVerifications > 0)
                                 <span class="absolute top-4 right-4 bg-indigo-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg shadow-indigo-900/50 animate-pulse border border-white/20">{{ $pendingWebVerifications }}</span>
                             @endif
@@ -199,25 +199,25 @@
                 </div>
 
                 <!-- Management Tools Row (Balanced Secondary) -->
-                <div class="relative z-10 border-t border-white/5 pt-8">
-                    <span class="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] px-2 mb-4 block">{{ __('إدارة النظام') }}</span>
+                <div class="relative z-10 border-t border-[var(--glass-border)] pt-8">
+                    <span class="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] px-2 mb-4 block">{{ __('إدارة النظام') }}</span>
                     <div class="grid grid-cols-3 gap-3">
-                        <a href="{{ route('settings.index') }}" class="flex flex-col items-center gap-2 p-4 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/5 transition-all text-center group">
+                        <a href="{{ route('settings.index') }}" class="flex flex-col items-center gap-2 p-4 bg-[var(--glass-bg)] hover:bg-[var(--glass-border)]/40 rounded-3xl border border-[var(--glass-border)] transition-all text-center group">
                             <span class="text-xl group-hover:rotate-45 transition-transform duration-500">⚙️</span>
-                            <span class="text-[10px] font-black uppercase opacity-60 tracking-wider">{{ __('الإعدادات') }}</span>
+                            <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">{{ __('الإعدادات') }}</span>
                         </a>
-                        <a href="{{ route('admin.financial.index') }}" class="flex flex-col items-center gap-2 p-4 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/5 transition-all text-center group">
+                        <a href="{{ route('admin.financial.index') }}" class="flex flex-col items-center gap-2 p-4 bg-[var(--glass-bg)] hover:bg-[var(--glass-border)]/40 rounded-3xl border border-[var(--glass-border)] transition-all text-center group">
                             <span class="text-xl group-hover:scale-110 transition-transform">📊</span>
-                            <span class="text-[10px] font-black uppercase opacity-60 tracking-wider">{{ __('المالية') }}</span>
+                            <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">{{ __('المالية') }}</span>
                         </a>
-                        <a href="{{ route('users.index') }}" class="flex flex-col items-center gap-2 p-4 bg-white/5 hover:bg-white/10 rounded-3xl border border-white/5 transition-all text-center group">
+                        <a href="{{ route('users.index') }}" class="flex flex-col items-center gap-2 p-4 bg-[var(--glass-bg)] hover:bg-[var(--glass-border)]/40 rounded-3xl border border-[var(--glass-border)] transition-all text-center group">
                             <span class="text-xl group-hover:-translate-y-1 transition-transform">👥</span>
-                            <span class="text-[10px] font-black uppercase opacity-60 tracking-wider">{{ __('المستخدمين') }}</span>
+                            <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">{{ __('المستخدمين') }}</span>
                         </a>
                     </div>
                 </div>
                 
-                <p class="mt-8 text-[10px] font-black opacity-30 uppercase tracking-[0.4em] text-center font-mono relative z-10">QSS COMMAND PALETTE // v2.5</p>
+                <p class="mt-8 text-[10px] font-black text-[var(--text-muted)] opacity-40 uppercase tracking-[0.4em] text-center font-mono relative z-10">QSS COMMAND PALETTE // v2.5</p>
             </div>
 
             <!-- Revenue Mix Pie Chart -->
@@ -377,7 +377,7 @@
                 @foreach($topProviders as $tp)
                 <div class="flex items-center justify-between p-4 bg-[var(--glass-bg)]/40 hover:bg-[var(--glass-bg)]/60 rounded-[2.2rem] border border-[var(--glass-border)] transition-all hover:-translate-y-1 cursor-default group">
                     <div class="flex items-center gap-4">
-                        <div class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl flex items-center justify-center text-white font-black shadow-lg group-hover:scale-110 transition-transform">
+                        <div class="w-11 h-11 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center text-white font-black shadow-lg group-hover:scale-110 transition-transform">
                             {{ mb_substr($tp->name, 0, 1) }}
                         </div>
                         <div class="flex flex-col">

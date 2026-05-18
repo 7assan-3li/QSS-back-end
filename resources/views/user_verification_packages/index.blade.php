@@ -8,14 +8,14 @@
     <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-start font-Cairo">
         <div class="text-start font-Cairo">
             <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
-                <span class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-3xl font-Cairo shadow-lg shadow-indigo-500/5 whitespace-nowrap inline-flex items-center justify-center">💎</span>
+                <span class="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-3xl font-Cairo shadow-lg shadow-brand-primary/5 whitespace-nowrap inline-flex items-center justify-center">💎</span>
                 {{ __('سجل اشتراكات التوثيق') }}
             </h3>
             <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 mr-20 text-start font-Cairo">
                 {{ __('إدارة طلبات ترقية الحسابات ومراجعة سندات الدفع واعتماد توثيق الحسابات.') }}
             </p>
         </div>
-        <div class="px-8 py-3 bg-indigo-500/10 rounded-2xl border border-indigo-500/20 text-indigo-600 text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm animate-pulse text-start">
+        <div class="px-8 py-3 bg-brand-primary/10 rounded-2xl border border-brand-primary/20 text-brand-primary text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm animate-pulse text-start">
             {{ __('مراجعة الطلبات') }} 📊
         </div>
     </div>
@@ -95,7 +95,7 @@
                 <p class="text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-3 text-start font-Cairo">{{ __('مراجعة وإدارة طلبات اشتراك باقات التوثيق.') }}</p>
             </div>
             <div class="flex items-center gap-4 text-start font-Cairo">
-                <span class="bg-indigo-500/10 text-indigo-600 px-6 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm whitespace-nowrap inline-flex items-center justify-center">{{ __('إدارة مراجعة الطلبات') }}</span>
+                <span class="bg-brand-primary/10 text-brand-primary px-6 py-3 rounded-2xl text-[13px] font-black uppercase tracking-[0.2em] font-Cairo shadow-sm whitespace-nowrap inline-flex items-center justify-center">{{ __('إدارة مراجعة الطلبات') }}</span>
             </div>
         </div>
         
@@ -116,7 +116,7 @@
                         <tr class="hover:bg-brand-primary/[0.02] dark:hover:bg-brand-primary/[0.03] transition-all group text-start font-Cairo shadow-inner">
                             <td class="px-10 py-8 text-start font-Cairo">
                                 <div class="flex items-center gap-5 text-start font-Cairo">
-                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-600 font-black text-xs border border-[var(--glass-border)] shadow-sm group-hover:rotate-12 transition-transform font-mono italic">
+                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 flex items-center justify-center text-brand-primary font-black text-xs border border-[var(--glass-border)] shadow-sm group-hover:rotate-12 transition-transform font-mono italic">
                                         {{ mb_substr($request->user->name ?? 'U', 0, 1) }}
                                     </div>
                                     <div class="flex flex-col text-start font-Cairo">
@@ -127,7 +127,7 @@
                             </td>
                             <td class="px-10 py-8 text-start font-Cairo">
                                 <div class="flex flex-col text-start font-Cairo">
-                                    <span class="text-[13px] font-black text-indigo-600 dark:text-indigo-400 font-Cairo italic text-start">{{ $request->verificationPackage->name ?? __('باقة منتهية') }}</span>
+                                    <span class="text-[13px] font-black text-brand-primary font-Cairo italic text-start">{{ $request->verificationPackage->name ?? __('باقة منتهية') }}</span>
                                     <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-2 text-start italic">{{ __('باقة توثيق') }}</span>
                                 </div>
                             </td>

@@ -107,11 +107,11 @@
                 <label class="relative inline-flex items-center cursor-pointer group text-start font-Cairo">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" value="1" class="sr-only peer" {{ old('is_active', $package->is_active) ? 'checked' : '' }}>
-                    <div class="w-20 h-11 bg-slate-200 peer-focus:outline-none peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-[var(--glass-bg)] after:border-var(--glass-border) after:border after:rounded-full after:h-9 after:w-9 after:transition-all dark:border-var(--glass-border) peer-checked:bg-gradient-to-r peer-checked:from-brand-primary peer-checked:to-indigo-600 rounded-full group-hover:scale-110 transition-all shadow-inner font-Cairo"></div>
+                    <div class="w-20 h-11 bg-slate-200 peer-focus:outline-none peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-[var(--glass-bg)] after:border-var(--glass-border) after:border after:rounded-full after:h-9 after:w-9 after:transition-all dark:border-var(--glass-border) peer-checked:bg-gradient-to-r peer-checked:from-brand-primary peer-checked:to-brand-secondary rounded-full group-hover:scale-110 transition-all shadow-inner font-Cairo"></div>
                 </label>
                 
                 <div class="flex flex-wrap justify-center gap-6 text-start font-Cairo">
-                    <button type="submit" class="px-12 py-5 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[1.2rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-10px_rgba(var(--brand-primary-rgb),0.4)] hover:scale-[1.05] transition-all duration-500 font-Cairo text-start">
+                    <button type="submit" class="px-12 py-5 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[1.2rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_25px_50px_-10px_rgba(var(--brand-primary-rgb),0.4)] hover:scale-[1.05] transition-all duration-500 font-Cairo text-start">
                         {{ __('حفظ التعديلات 💾') }}
                     </button>
                     <a href="{{ route('verification-packages.show', $package->id) }}" class="px-12 py-5 bg-[var(--glass-bg)] text-[var(--text-secondary)] rounded-[1.2rem] text-[14px] font-black uppercase tracking-[0.3em] hover:bg-[var(--glass-bg)] dark:hover:bg-[var(--glass-border)] text-white transition-all font-Cairo border border-[var(--glass-border)] text-start">

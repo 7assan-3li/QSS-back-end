@@ -12,7 +12,7 @@
                     <svg class="w-6 h-6 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
                 <h3 class="font-black text-3xl text-[var(--main-text)] flex items-center gap-4 text-start font-Cairo">
-                    <span class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 text-2xl font-Cairo shadow-lg shadow-indigo-500/5 whitespace-nowrap inline-flex items-center justify-center">💎</span>
+                    <span class="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-brand-primary/5 whitespace-nowrap inline-flex items-center justify-center">💎</span>
                     {{ __('مواصفات باقة التوثيق') }}
                 </h3>
             </div>
@@ -48,7 +48,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-start font-Cairo">
                     <!-- Name ID Node -->
                     <div class="card-premium glass-panel p-8 rounded-[1.5rem] border border-[var(--glass-border)] flex items-center gap-6 group hover:scale-[1.03] transition-all shadow-sm text-start">
-                        <div class="w-16 h-16 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📦</div>
+                        <div class="w-16 h-16 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📦</div>
                         <div class="flex flex-col text-start">
                             <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] mb-2 font-Cairo text-start">{{ __('اسم الباقة') }}</span>
                             <span class="text-sm font-black text-[var(--main-text)] font-Cairo text-start">{{ $package->name }}</span>
@@ -89,10 +89,10 @@
 
             <!-- Descriptive Narrative Card -->
             <div class="card-premium glass-panel p-14 rounded-[2rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden text-start font-Cairo min-h-[350px]">
-                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-primary/[0.03] to-transparent pointer-events-none"></div>
                 
                 <div class="flex items-center gap-5 mb-14 text-start font-Cairo">
-                    <span class="w-3 h-10 bg-indigo-600 rounded-full shadow-lg shadow-indigo-600/30"></span>
+                    <span class="w-3 h-10 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/30"></span>
                     <h4 class="text-2xl font-black text-[var(--main-text)] font-Cairo text-start italic">{{ __('وصف الباقة ومميزاتها') }}</h4>
                 </div>
 
@@ -116,7 +116,7 @@
         <div class="lg:col-span-4 space-y-12 text-start font-Cairo">
             <!-- Control Panel Terminal -->
             <div class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl border border-[var(--glass-border)] text-start font-Cairo overflow-hidden relative">
-                 <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-brand-primary via-indigo-500 to-indigo-600 opacity-60"></div>
+                 <div class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-primary opacity-60"></div>
                  
                 <div class="flex items-center gap-4 mb-10 text-start">
                     <span class="w-2 h-8 bg-slate-800 dark:bg-[var(--glass-bg)] rounded-full shadow-md"></span>
@@ -124,7 +124,7 @@
                 </div>
 
                 <div class="space-y-6 text-start font-Cairo">
-                    <a href="{{ route('verification-packages.edit', $package->id) }}" class="w-full py-6 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[1.2rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(var(--brand-primary-rgb),0.3)] hover:scale-[1.03] transition-all duration-500 font-Cairo flex items-center justify-center gap-4 text-start">
+                    <a href="{{ route('verification-packages.edit', $package->id) }}" class="w-full py-6 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[1.2rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-[0_20px_40px_-10px_rgba(var(--brand-primary-rgb),0.3)] hover:scale-[1.03] transition-all duration-500 font-Cairo flex items-center justify-center gap-4 text-start">
                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                          {{ __('تعديل بيانات الباقة') }}
                     </a>

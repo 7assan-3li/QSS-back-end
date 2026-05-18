@@ -25,11 +25,11 @@
             <!-- Main Hub Card -->
             <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden font-Cairo text-start">
                 <div class="absolute -top-32 -right-32 w-80 h-80 bg-brand-primary/[0.05] rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-indigo-500/[0.05] rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-brand-secondary/[0.05] rounded-full blur-3xl"></div>
 
                 <div class="flex flex-col md:flex-row items-center gap-12 relative z-10 text-start font-Cairo">
                     <div class="relative group font-Cairo">
-                        <div class="w-44 h-44 rounded-[3.5rem] bg-gradient-to-br from-brand-primary to-indigo-600 flex items-center justify-center text-white text-7xl font-black shadow-2xl transform group-hover:scale-[1.03] transition-all duration-700 font-mono italic">
+                        <div class="w-44 h-44 rounded-[3.5rem] bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center text-white text-7xl font-black shadow-2xl transform group-hover:scale-[1.03] transition-all duration-700 font-mono italic">
                             {{ mb_substr($user->name, 0, 1) }}
                         </div>
                         <div class="absolute -bottom-2 -right-2 w-12 h-12 bg-[var(--glass-bg)] rounded-2xl flex items-center justify-center shadow-2xl border-4 border-[var(--glass-border)]">
@@ -110,10 +110,10 @@
 
                 <!-- Operational Sector -->
                 <div class="bg-[var(--glass-bg)] p-10 rounded-[3rem] border border-[var(--glass-border)] shadow-xl space-y-8 relative overflow-hidden">
-                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl"></div>
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-secondary/5 rounded-full blur-2xl"></div>
                     <div class="flex items-center justify-between">
                         <h4 class="text-[14px] font-black text-[var(--text-muted)] uppercase tracking-widest italic">{{ __('الأداء التشغيلي') }}</h4>
-                        <span class="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-600 font-bold italic whitespace-nowrap inline-flex items-center justify-center">⚡</span>
+                        <span class="w-10 h-10 bg-brand-secondary/10 rounded-xl flex items-center justify-center text-brand-secondary font-bold italic whitespace-nowrap inline-flex items-center justify-center">⚡</span>
                     </div>
                     <div class="grid grid-cols-2 gap-6">
                         <div class="space-y-1">
@@ -122,7 +122,7 @@
                         </div>
                         <div class="space-y-1">
                             <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest block">{{ __('الخدمات المضافة') }}</span>
-                            <span class="text-2xl font-black text-indigo-500">{{ $user->services_count }}</span>
+                            <span class="text-2xl font-black text-brand-secondary">{{ $user->services_count }}</span>
                         </div>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
                         </div>
                         <div class="flex items-center justify-between text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest italic">
                             <span>{{ __('توثيق الهوية') }}</span>
-                            <span class="text-indigo-500">
+                            <span class="text-brand-primary">
                                 {{ $user->verification_requests_count > 0 ? __('بانتظار المراجعة') : __('لم يتم الطلب') }}
                             </span>
                         </div>
@@ -257,7 +257,7 @@
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
                 const userIcon = L.divIcon({
-                    html: '<div class="w-5 h-5 bg-brand-primary border-[3px] border-white rounded-full shadow-[0_0_15px_rgba(79,70,229,0.8)] animate-pulse"></div>',
+                    html: '<div class="w-5 h-5 bg-brand-primary border-[3px] border-white rounded-full shadow-[0_0_15px_rgba(13,148,136,0.8)] animate-pulse"></div>',
                     className: 'custom-div-icon',
                     iconSize: [20, 20],
                     iconAnchor: [10, 10]

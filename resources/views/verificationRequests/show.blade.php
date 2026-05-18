@@ -54,7 +54,7 @@
 
                     <div class="flex flex-col md:flex-row items-center gap-10 relative z-10 text-start">
                         <div
-                            class="w-28 h-28 bg-gradient-to-br from-emerald-500 to-indigo-600 rounded-[1.5rem] flex items-center justify-center text-white text-4xl font-black shadow-[0_20px_50px_-10px_rgba(16,185,129,0.4)] transition-all duration-700 hover:rotate-6 hover:scale-105 font-Cairo">
+                            class="w-28 h-28 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-[1.5rem] flex items-center justify-center text-white text-4xl font-black shadow-[0_20px_50px_-10px_rgba(var(--brand-primary-rgb),0.4)] transition-all duration-700 hover:rotate-6 hover:scale-105 font-Cairo">
                             {{ mb_substr($provider->name, 0, 1) }}
                         </div>
                         <div class="flex-grow text-center md:text-start font-Cairo">
@@ -114,7 +114,7 @@
                     <div class="card-premium glass-panel p-8 rounded-[1.5rem] border border-[var(--glass-border)] flex flex-col items-center gap-4 group hover:scale-[1.05] transition-all cursor-default shadow-sm text-start"
                         dir="rtl">
                         <div
-                            class="w-14 h-14 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">
+                            class="w-14 h-14 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">
                             {{ $servicesCount }}
                         </div>
                         <span
@@ -245,7 +245,7 @@
                 <!-- Executive Decision Terminal -->
                 @if($verificationRequest->status === 'pending')
                     <div
-                        class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl border border-indigo-500/20 text-start font-Cairo bg-indigo-50/[0.02] dark:bg-indigo-950/[0.02]">
+                        class="card-premium glass-panel p-10 rounded-[2rem] shadow-2xl border border-brand-primary/20 text-start font-Cairo bg-brand-primary/[0.02] dark:bg-brand-primary/[0.02]">
                         <h4
                             class="font-black text-sm mb-10 text-center uppercase tracking-[0.2em] font-Cairo text-start italic">
                             {{ __('اتخاذ قرار إداري') }}</h4>

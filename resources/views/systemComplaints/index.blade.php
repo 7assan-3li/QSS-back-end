@@ -90,7 +90,7 @@
         <div class="lg:col-span-8 card-premium glass-panel p-10 rounded-[3.5rem] shadow-2xl border border-[var(--glass-border)] text-start font-Cairo">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 text-start">
                 <h4 class="font-black text-base flex items-center gap-3 font-Cairo text-start">
-                    <span class="w-2 h-6 bg-indigo-500 rounded-full shadow-lg shadow-indigo-500/20"></span>
+                    <span class="w-2 h-6 bg-brand-primary rounded-full shadow-lg shadow-brand-primary/20"></span>
                     {{ __('تحليل وتيرة الواردات اليومية') }}
                 </h4>
                 <div class="flex gap-2 bg-slate-900/5 dark:bg-[var(--glass-bg)]/5 p-1.5 rounded-2xl border border-[var(--glass-border)] text-start font-Cairo shadow-inner">
@@ -150,7 +150,7 @@
                             </td>
                             <td class="px-10 py-7 text-center">
                                 @if($complaint->app_source === 'provider')
-                                    <span class="px-4 py-1.5 bg-indigo-500/10 text-indigo-600 rounded-xl font-black text-[14px] border border-indigo-500/20 shadow-sm font-Cairo uppercase tracking-widest whitespace-nowrap inline-flex items-center justify-center">{{ __('تطبيق المزود') }}</span>
+                                    <span class="px-4 py-1.5 bg-brand-primary/10 text-brand-primary rounded-xl font-black text-[14px] border border-brand-primary/20 shadow-sm font-Cairo uppercase tracking-widest whitespace-nowrap inline-flex items-center justify-center">{{ __('تطبيق المزود') }}</span>
                                 @else
                                     <span class="px-4 py-1.5 bg-pink-500/10 text-pink-600 rounded-xl font-black text-[14px] border border-pink-500/20 shadow-sm font-Cairo uppercase tracking-widest whitespace-nowrap inline-flex items-center justify-center">{{ __('تطبيق العميل') }}</span>
                                 @endif
@@ -241,8 +241,8 @@
     if(dailyCtx) {
         const dCtx = dailyCtx.getContext('2d');
         const gradient = dCtx.createLinearGradient(0, 0, 0, 350);
-        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.2)');
-        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        gradient.addColorStop(0, 'rgba(13, 148, 136, 0.2)');
+        gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
 
         new Chart(dailyCtx, {
             type: 'line',
@@ -251,14 +251,14 @@
                 datasets: [{
                     label: '{{ __("نبض البلاغات") }}',
                     data: @json($data),
-                    borderColor: '#6366f1',
+                    borderColor: '#0d9488',
                     backgroundColor: gradient,
                     borderWidth: 5,
                     tension: 0.45,
                     fill: true,
                     pointRadius: 0,
                     pointHoverRadius: 8,
-                    pointHoverBackgroundColor: '#6366f1',
+                    pointHoverBackgroundColor: '#0d9488',
                     pointHoverBorderColor: '#fff',
                     pointHoverBorderWidth: 4
                 }]

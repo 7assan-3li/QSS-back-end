@@ -26,7 +26,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto font-Cairo text-start">
         <!-- Total Modules Node -->
         <div class="card-premium glass-panel p-8 rounded-[2rem] shadow-2xl border border-[var(--glass-border)] flex items-center gap-8 group hover:scale-[1.02] transition-all text-start">
-            <div class="w-16 h-16 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📦</div>
+            <div class="w-16 h-16 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:rotate-6 transition-transform font-Cairo">📦</div>
             <div class="flex flex-col text-start">
                 <span class="text-3xl font-black leading-none font-mono text-start">{{ str_pad($packages->count(), 2, '0', STR_PAD_LEFT) }}</span>
                 <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-2 font-Cairo text-start">{{ __('إجمالي الباقات') }}</span>

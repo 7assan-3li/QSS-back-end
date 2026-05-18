@@ -16,7 +16,7 @@
                     <svg class="w-6 h-6 rtl:rotate-0 ltr:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
                 <h3 class="font-black text-3xl flex items-center gap-4 text-start font-Cairo">
-                    <span class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-indigo-500/5 font-Cairo underline-offset-8 italic whitespace-nowrap inline-flex items-center justify-center">✍️</span>
+                    <span class="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary text-2xl font-Cairo shadow-lg shadow-brand-primary/5 font-Cairo underline-offset-8 italic whitespace-nowrap inline-flex items-center justify-center">✍️</span>
                     {{ __('تعديل الهوية') }}: {{ $user->name }}
                 </h3>
             </div>
@@ -51,7 +51,7 @@
 
                         <div class="space-y-4 text-start font-Cairo">
                             <label for="email" class="flex items-center gap-3 text-[13px] font-black uppercase tracking-[0.3em] px-3 font-Cairo text-start font-Cairo opacity-60">
-                                <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                                <span class="w-2 h-2 bg-brand-secondary rounded-full"></span>
                                 {{ __('البريد الإلكتروني المعتمد') }}
                             </label>
                             <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="input-premium w-full px-10 py-6 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[2.5rem] text-sm font-black outline-none focus:border-brand-primary focus:ring-[15px] focus:ring-brand-primary/5 transition-all text-[var(--main-text)] font-mono tracking-widest text-start italic shadow-sm">
@@ -97,7 +97,7 @@
 
                         <div class="space-y-4 md:col-span-2 text-start font-Cairo">
                             <label for="bio" class="flex items-center gap-3 text-[13px] font-black uppercase tracking-[0.3em] px-3 opacity-60">
-                                <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                                <span class="w-2 h-2 bg-brand-secondary rounded-full"></span>
                                 {{ __('السيرة الذاتية (Bio)') }}
                             </label>
                             <textarea id="bio" name="bio" rows="4" class="input-premium w-full px-10 py-8 bg-[var(--glass-bg)] border-2 border-[var(--glass-border)] rounded-[3rem] text-sm font-black outline-none focus:border-brand-primary transition-all text-[var(--main-text)] shadow-sm text-start font-Cairo leading-relaxed">{{ old('bio', $user->profile->bio ?? '') }}</textarea>
@@ -160,7 +160,7 @@
 
                 <!-- Safety Hub -->
                 <div class="card-premium glass-panel p-12 rounded-[4rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden text-start font-Cairo">
-                     <button type="submit" class="w-full py-7 bg-gradient-to-r from-brand-primary to-indigo-600 text-white rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-2xl hover:shadow-brand-primary/40 hover:scale-[1.02] transition-all duration-500 flex items-center justify-center gap-5 italic text-start">
+                     <button type="submit" class="w-full py-7 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-[2.5rem] text-[14px] font-black uppercase tracking-[0.3em] shadow-2xl hover:shadow-brand-primary/40 hover:scale-[1.02] transition-all duration-500 flex items-center justify-center gap-5 italic text-start">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v8"></path></svg>
                         {{ __('حفظ كافة التغييرات') }}
                     </button>

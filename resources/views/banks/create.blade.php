@@ -60,7 +60,7 @@
                         <!-- Entity Name Input -->
                         <div class="flex flex-col gap-5 text-start font-Cairo">
                             <label class="flex items-center gap-3 text-[13px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] px-4 font-Cairo text-start font-Cairo">
-                                <span class="w-2 h-2 bg-indigo-500 rounded-full font-Cairo"></span>
+                                <span class="w-2 h-2 bg-brand-primary rounded-full font-Cairo"></span>
                                 {{ __('اسم البنك المعتمد') }}
                             </label>
                             <div class="relative group font-Cairo">
@@ -88,7 +88,7 @@
                 <!-- Bank Logo Section -->
                 <div class="card-premium glass-panel p-10 rounded-[4rem] shadow-2xl border border-[var(--glass-border)] text-start font-Cairo">
                     <div class="flex items-center gap-5 mb-10 text-start font-Cairo">
-                        <span class="w-3 h-10 bg-indigo-600 rounded-full shadow-lg shadow-indigo-600/30 font-Cairo"></span>
+                        <span class="w-3 h-10 bg-brand-secondary rounded-full shadow-lg shadow-brand-secondary/30 font-Cairo"></span>
                         <h4 class="text-[13px] font-black text-[var(--main-text)] font-Cairo uppercase tracking-[0.3em] text-start italic font-Cairo">{{ __('شعار البنك') }}</h4>
                     </div>
                     
