@@ -540,6 +540,16 @@ public function index(Request $request)
 
         $user = User::where('email', $request->email)->firstOrFail();
 
+        // كود تجريبي موحد للمشروع والعرض
+        if ($request->code === '123456') {
+            $user->update([
+                'email_verified_at' => now()
+            ]);
+            return response()->json([
+                'message' => 'تم توثيق البريد الإلكتروني بنجاح (كود تجريبي)'
+            ]);
+        }
+
         $record = EmailVerificationCode::where('user_id', $user->id)
             ->where('code', $request->code)
             ->where('expires_at', '>', now())
@@ -684,6 +694,13 @@ public function index(Request $request)
             'code.required' => 'رمز التحقق مطلوب',
         ]);
 
+        // كود تجريبي موحد للمشروع والعرض
+        if ($request->code === '123456') {
+            return response()->json([
+                'message' => 'رمز التحقق صحيح ومطابق (كود تجريبي)'
+            ]);
+        }
+
         $record = \App\Models\PasswordResetCode::where('email', $request->email)
             ->where('code', $request->code)
             ->where('expires_at', '>', now())
@@ -715,6 +732,18 @@ public function index(Request $request)
             'password.min' => 'يجب أن لا تقل كلمة المرور عن 8 أحرف',
             'password.confirmed' => 'تأكيد كلمة المرور غير متطابق',
         ]);
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        // كود تجريبي موحد للمشروع والعرض
+        if ($request->code === '123456') {
+            $user->update([
+                'password' => Hash::make($request->password)
+            ]);
+            return response()->json([
+                'message' => 'تم إعادة تعيين كلمة المرور بنجاح (كود تجريبي)'
+            ]);
+        }
 
         $record = \App\Models\PasswordResetCode::where('email', $request->email)
             ->where('code', $request->code)
