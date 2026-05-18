@@ -70,6 +70,32 @@ class UserController extends Controller
             'expires_at' => now()->addMinutes(10)
         ]);
 
+        // حفظ توكن الجهاز إذا تم إرساله مع طلب التسجيل
+        if ($request->has('fcm_token')) {
+            \App\Models\DeviceTokens::updateOrCreate(
+                ['token' => $request->fcm_token],
+                ['user_id' => $user->id]
+            );
+        } elseif ($request->has('device_token')) {
+            \App\Models\DeviceTokens::updateOrCreate(
+                ['token' => $request->device_token],
+                ['user_id' => $user->id]
+            );
+        }
+
+        // إرسال كود التحقق كإشعار للهاتف باستخدام Firebase
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->sendToUser(
+                $user->id,
+                'رمز تأكيد الحساب QSS',
+                "رمز التحقق الخاص بك هو: {$code}",
+                \App\Constants\NotificationType::GENERAL
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('FCM Registration Notification failed: ' . $e->getMessage());
+        }
+
         SendEmailVerificationCode::dispatch($user, $code);
 
         $token = $user->createToken('api-token')->plainTextToken;
@@ -79,9 +105,10 @@ class UserController extends Controller
 
         // $user->sendEmailVerificationNotification();
         return response()->json([
-            'message' => 'تم إنشاء الحساب، تحقق من بريدك الإلكتروني',
+            'message' => 'تم إنشاء الحساب، تحقق من بريدك الإلكتروني أو الإشعارات',
             'token' => $token,
             'user' => $user,
+            'code' => $code, // إرجاع الكود بالـ API للتجربة السريعة
             'email_verified' => false
         ], 201);
     }
@@ -675,10 +702,24 @@ public function index(Request $request)
             ]
         );
 
+        // إرسال كود استعادة كلمة المرور كإشعار للهاتف باستخدام Firebase
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->sendToUser(
+                $user->id,
+                'رمز استعادة كلمة المرور QSS',
+                "رمز التحقق الخاص بك هو: {$code}",
+                \App\Constants\NotificationType::GENERAL
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('FCM Reset Password Notification failed: ' . $e->getMessage());
+        }
+
         \App\Jobs\SendPasswordResetCode::dispatch($user, $code);
 
         return response()->json([
-            'message' => 'تم إرسال رمز استعادة كلمة المرور إلى بريدك الإلكتروني'
+            'message' => 'تم إرسال رمز استعادة كلمة المرور إلى بريدك الإلكتروني أو الإشعارات',
+            'code' => $code // إرجاع الكود بالـ API للتجربة السريعة
         ]);
     }
 
