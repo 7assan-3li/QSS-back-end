@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfilePhoneController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'seeker.policy', 'check_unpaid_commissions'])->group(function () {
     //bank routes
     Route::get('/profile-phones', [ProfilePhoneController::class, 'index']);
     Route::get('/profile-phones/{id}', [ProfilePhoneController::class, 'show']);

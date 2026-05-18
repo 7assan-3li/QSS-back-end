@@ -75,6 +75,11 @@ class RequestCommissionBondController extends Controller
                 'تم قبول سند دفع العمولة الخاص بالطلب #' . $request->id . ' بنجاح.',
                 \App\Constants\NotificationType::ADMIN_MSG
             );
+
+            // مسح الكاش الخاص بعدد العمولات غير المدفوعة ليتم فك الحظر إن وجد
+            if ($provider = $request->serviceProvider()) {
+                \Illuminate\Support\Facades\Cache::forget('unpaid_commissions_count_' . $provider->id);
+            }
         });
 
         return back()->with('success', 'تم قبول السند وتحديث رصيد العمولة');
@@ -104,15 +109,7 @@ class RequestCommissionBondController extends Controller
             ->whereHas('main_service', function ($q) use ($userId) {
                 $q->where('provider_id', $userId);
             })
-            ->where(function ($q) {
-                // تضمين الطلبات المكتملة أو التي تم دفعها بالكامل أو جزئياً لضمان دقة البيانات
-                $q->where('commission_amount', '>', 0)
-                    ->orWhereIn('status', [
-                        RequestStatus::COMPLETED,
-                        RequestStatus::ACCEPTED_FULL_PAID,
-                        RequestStatus::ACCEPTED_PARTIAL_PAID
-                    ]);
-            })
+            ->where('status', RequestStatus::COMPLETED)
             ->orderBy('created_at', 'desc')
             ->get();
 

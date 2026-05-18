@@ -134,4 +134,41 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withPivot(['id', 'image_bond', 'number_bond', 'status', 'admin_id'])
             ->withTimestamps();
     }
+
+    public function getUnpaidCommissionsCount()
+    {
+        if ($this->role !== \App\constant\Role::PROVIDER) {
+            return 0;
+        }
+
+        $cacheKey = 'unpaid_commissions_count_' . $this->id;
+        
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, now()->addMinutes(30), function () {
+            $requests = \App\Models\Request::whereHas('main_service', function ($q) {
+                    $q->where('provider_id', $this->id);
+                })
+                ->where('status', \App\constant\RequestStatus::COMPLETED)
+                ->where('commission_paid', false)
+                ->get();
+
+            $count = 0;
+            $defaultCommission = \App\Models\Setting::where('key', 'provider_commission')->value('value') ?? 10;
+
+            foreach ($requests as $req) {
+                $commissionAmount = $req->getCommissionAmount($this, $defaultCommission);
+                
+                if ($commissionAmount > 0 && $req->commission_amount_paid < $commissionAmount) {
+                    $hasPendingBond = \App\Models\RequestCommissionBond::where('request_id', $req->id)
+                        ->where('status', 'pending')
+                        ->exists();
+                        
+                    if (!$hasPendingBond) {
+                        $count++;
+                    }
+                }
+            }
+
+            return $count;
+        });
+    }
 }

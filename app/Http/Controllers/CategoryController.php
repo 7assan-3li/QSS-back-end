@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\constant\ServiceType;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -46,7 +47,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $category->with(['children','services'])->get();
+        $category->with(['children', 'services'])->get();
 
         return view('categories.show', compact('category'));
     }
@@ -136,9 +137,15 @@ class CategoryController extends Controller
         return response()->json(['categories' => $categories], 200);
     }
 
-    public function showCategory($category_id){
-        $category = Category::with(['children','services'])->findOrFail($category_id);
-                return response()->json(['category' => $category], 200);
+    public function showCategory($category_id)
+    {
+        $category = Category::with([
+            'children', 
+            'services' => function ($query) {
+                $query->where('type', ServiceType::MAIN);
+            }
+        ])->findOrFail($category_id);
 
+        return response()->json(['category' => $category], 200);
     }
 }

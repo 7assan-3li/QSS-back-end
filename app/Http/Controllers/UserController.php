@@ -106,10 +106,14 @@ class UserController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
+        $isSuspendedForCommissions = $user->getUnpaidCommissionsCount() >= 3;
+
         return response()->json([
             'token' => $token,
             'user' => $user,
-            'email_verified' => $user->hasVerifiedEmail()
+            'email_verified' => $user->hasVerifiedEmail(),
+            'is_suspended_for_commissions' => $isSuspendedForCommissions,
+            'suspended_message' => $isSuspendedForCommissions ? 'عذراً، لديك 3 عمولات أو أكثر غير مدفوعة. يرجى سداد العمولات المستحقة لتتمكن من استخدام كافة ميزات التطبيق.' : null,
         ]);
     }
 

@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'provider.policy' => \App\Http\Middleware\CheckProviderPolicy::class,
             'is_admin' => \App\Http\Middleware\AdminMiddleware::class,
             'check_user_status' => \App\Http\Middleware\CheckUserStatus::class,
+            'check_unpaid_commissions' => \App\Http\Middleware\CheckUnpaidCommissions::class,
         ]);
     })
     ->withExceptions(function ($exceptions) {

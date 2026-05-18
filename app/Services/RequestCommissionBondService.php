@@ -28,6 +28,13 @@ class RequestCommissionBondService
             ]);
         }
 
+        // تحقق مما إذا كانت العمولة قد دفعت بالكامل بالفعل
+        if ($requestModel->commission_paid) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'request_id' => ['تم دفع عمولة هذا الطلب بالكامل بالفعل.']
+            ]);
+        }
+
         // حفظ الصورة
         $path = $data['image']->store('CommissionBonds', 'public');
 

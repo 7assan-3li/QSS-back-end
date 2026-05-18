@@ -493,6 +493,10 @@ class RequestController extends Controller
             return response()->json(['message' => 'لا يمكن دفع العمولة إلا للطلبات المكتملة'], 422);
         }
 
+        if ($requestModel->commission_paid) {
+            return response()->json(['message' => 'تم دفع عمولة هذا الطلب بالكامل بالفعل'], 422);
+        }
+
         try {
             $updatedRequest = $this->pointsService->payCommissionFromPoints($id);
             return response()->json([

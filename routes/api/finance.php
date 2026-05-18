@@ -12,7 +12,7 @@ Route::get('banks', [BankController::class, 'getAllBanks']);
 Route::middleware(['auth:sanctum', 'verified','seeker.policy'])->group(function () {
     Route::get('points/transactions', [PointsController::class, 'indexTransactions']);
     Route::get('points/balance', [PointsController::class, 'getPointsBalance']);
-    Route::middleware('provider.policy')->group(function () {
+    Route::middleware(['provider.policy', 'check_unpaid_commissions'])->group(function () {
         Route::post('points/convert', [PointsController::class, 'convertPaidToBonus']);
     });
 });

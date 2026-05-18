@@ -7,7 +7,7 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
     //previous work routes
     Route::get('/previous-work', [PreviousWorkController::class, 'index']);
     Route::get('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'show']);
-    Route::middleware('provider.policy')->group(function () {
+    Route::middleware(['provider.policy','check_unpaid_commissions'])->group(function () {
         Route::post('/previous-work', [PreviousWorkController::class, 'store']);
         Route::put('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'update']);
         Route::delete('/previous-work/{previousWork_id}', [PreviousWorkController::class, 'destroy']);

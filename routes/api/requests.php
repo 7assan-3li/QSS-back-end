@@ -17,7 +17,7 @@ Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function
         Route::post('/requests/{request}/payByPoints', [RequestController::class, 'payByPoints']);
 
     // 2. Provider Specific Operations (Requires Provider Policy Acceptance)
-    Route::middleware('provider.policy')->group(function () {
+    Route::middleware(['provider.policy', 'check_unpaid_commissions'])->group(function () {
         Route::get('/requests/provider', [RequestController::class, 'indexProvider']);
         Route::get('/requests/unpaid-commissions', [RequestController::class, 'unpaidCommissionsProvider']);
         Route::get('/requests/meeting-provider', [App\Http\Controllers\RequestMeetingServiceController::class, 'indexProvider']);

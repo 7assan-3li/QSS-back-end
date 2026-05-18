@@ -11,7 +11,7 @@ Route::get('/top-requested-services', [ServiceController::class, 'getTopRequeste
 Route::get('/recommended-services', [ServiceController::class, 'getRecommendedServices']);
 Route::get('/services/search', [ServiceController::class, 'search']);
 Route::get('/services/{service}', [ServiceController::class, 'show']);
-Route::middleware(['auth:sanctum', 'verified', 'seeker.policy'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'seeker.policy', 'check_unpaid_commissions'])->group(function () {
     Route::get('/services', [ServiceController::class, 'index']);
     Route::post('/services', [ServiceController::class, 'store']);
     Route::put('/services/{service}', [ServiceController::class, 'update']);
