@@ -230,6 +230,7 @@ class PointsService
             \App\Models\PointTransaction::create([
                 'seeker_id'   => null,
                 'provider_id' => $userId,
+                'amount'      => $amount,
                 'type'        => 'points_conversion',
                 'description' => "تحويل $amount من الأرباح إلى $bonusAmount من المكافآت (حافز $conversionBonusRate%)"
             ]);
