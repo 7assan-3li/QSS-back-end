@@ -643,4 +643,99 @@ public function index(Request $request)
         Auth::logout();
         return to_route('login');
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ], [
+            'email.required' => 'البريد الإلكتروني مطلوب',
+            'email.email' => 'يجب إدخال بريد إلكتروني صحيح',
+            'email.exists' => 'البريد الإلكتروني غير مسجل لدينا',
+        ]);
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $code = (string) random_int(100000, 999999);
+
+        \App\Models\PasswordResetCode::updateOrCreate(
+            ['email' => $request->email],
+            [
+                'code' => $code,
+                'expires_at' => now()->addMinutes(10)
+            ]
+        );
+
+        \App\Jobs\SendPasswordResetCode::dispatch($user, $code);
+
+        return response()->json([
+            'message' => 'تم إرسال رمز استعادة كلمة المرور إلى بريدك الإلكتروني'
+        ]);
+    }
+
+    public function verifyResetCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'code' => 'required'
+        ], [
+            'email.required' => 'البريد الإلكتروني مطلوب',
+            'email.email' => 'يجب إدخال بريد إلكتروني صحيح',
+            'email.exists' => 'البريد الإلكتروني غير مسجل لدينا',
+            'code.required' => 'رمز التحقق مطلوب',
+        ]);
+
+        $record = \App\Models\PasswordResetCode::where('email', $request->email)
+            ->where('code', $request->code)
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$record) {
+            return response()->json([
+                'message' => 'رمز التحقق غير صحيح أو منتهي الصلاحية'
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => 'رمز التحقق صحيح ومطابق'
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'code' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ], [
+            'email.required' => 'البريد الإلكتروني مطلوب',
+            'email.email' => 'يجب إدخال بريد إلكتروني صحيح',
+            'email.exists' => 'البريد الإلكتروني غير مسجل لدينا',
+            'code.required' => 'رمز التحقق مطلوب',
+            'password.required' => 'كلمة المرور الجديدة مطلوبة',
+            'password.min' => 'يجب أن لا تقل كلمة المرور عن 8 أحرف',
+            'password.confirmed' => 'تأكيد كلمة المرور غير متطابق',
+        ]);
+
+        $record = \App\Models\PasswordResetCode::where('email', $request->email)
+            ->where('code', $request->code)
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$record) {
+            return response()->json([
+                'message' => 'رمز التحقق غير صحيح أو منتهي الصلاحية'
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        $record->delete();
+
+        return response()->json([
+            'message' => 'تم إعادة تعيين كلمة المرور بنجاح'
+        ]);
+    }
 }

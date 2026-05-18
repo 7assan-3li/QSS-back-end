@@ -100,11 +100,11 @@
                         <div class="space-y-4">
                             <label class="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] italic opacity-80 block mb-2">{{ __('رقم الحساب الرقمي') }}</label>
                             <div class="relative group/num">
-                                <div class="w-full bg-[var(--main-text)] text-emerald-400 font-mono text-xl py-6 px-8 rounded-3xl tracking-[0.3em] shadow-inner flex items-center justify-between group-hover/num:text-[var(--main-bg)] transition-colors duration-500 border border-white/5 cursor-pointer" onclick="copyToClipboard('{{ $account->account_number }}', this)">
+                                <div class="w-full bg-slate-900/5 dark:bg-slate-950/40 text-emerald-600 dark:text-emerald-400 font-mono text-xl py-6 px-8 rounded-3xl tracking-[0.3em] shadow-inner flex items-center justify-between hover:bg-slate-900/10 dark:hover:bg-slate-950/60 transition-all duration-300 border border-[var(--glass-border)] cursor-pointer" onclick="copyToClipboard('{{ $account->account_number }}', this)">
                                     <span>{{ $account->account_number }}</span>
                                     <div class="relative w-5 h-5 flex items-center justify-center">
                                         <!-- Copy Icon -->
-                                        <svg class="copy-icon w-5 h-5 text-[var(--text-muted)] hover:text-emerald-400 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        <svg class="copy-icon w-5 h-5 text-emerald-600/70 hover:text-emerald-700 dark:text-emerald-400/70 dark:hover:text-emerald-300 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         <!-- Success Icon (Hidden) -->
                                         <svg class="success-icon absolute inset-0 w-5 h-5 text-emerald-500 opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
@@ -123,7 +123,7 @@
                         <div class="mt-8 pt-8 border-t border-dashed border-[var(--glass-border)]">
                             <div class="flex gap-4 italic opacity-60">
                                 <svg class="w-5 h-5 flex-shrink-0 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <p class="text-[12px] font-bold leading-relaxed line-clamp-2">{{ $account->note }}</p>
+                                <p class="text-[12px] font-bold text-[var(--text-secondary)] leading-relaxed line-clamp-2">{{ $account->note }}</p>
                             </div>
                         </div>
                     @endif

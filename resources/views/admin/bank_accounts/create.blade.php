@@ -50,7 +50,7 @@
                         {{ __('تحديد البنك أو المحفظة') }}
                     </label>
                     <div class="relative group">
-                        <select name="bank_id" class="w-full bg-[var(--main-bg)] border-2 border-transparent focus:border-blue-500/30 rounded-[2.5rem] px-10 py-7 text-sm font-black text-[var(--main-text)] appearance-none focus:ring-[15px] focus:ring-blue-500/5 transition-all outline-none shadow-xl italic" required>
+                        <select name="bank_id" class="w-full bg-[var(--main-bg)] border-2 border-[var(--glass-border)] focus:border-blue-500/30 rounded-[2.5rem] px-10 py-7 text-sm font-black text-[var(--main-text)] appearance-none focus:ring-[15px] focus:ring-blue-500/5 transition-all outline-none shadow-xl italic" required>
                             <option value="" disabled selected>{{ __('اختر المؤسسة المالية...') }}</option>
                             @foreach($banks as $bank)
                                 <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>{{ $bank->bank_name }}</option>
@@ -69,7 +69,7 @@
                         {{ __('رقم الحساب أو المحفظة') }}
                     </label>
                     <div class="relative group">
-                        <input type="text" name="account_number" value="{{ old('account_number') }}" placeholder="{{ __('أدخل الرقم هنا...') }}" class="w-full bg-[var(--main-bg)] border-2 border-transparent focus:border-emerald-500/30 rounded-[2.5rem] px-10 py-7 text-sm font-black text-[var(--main-text)] focus:ring-[15px] focus:ring-emerald-500/5 transition-all outline-none shadow-xl italic tracking-[0.1em]" required>
+                        <input type="text" name="account_number" value="{{ old('account_number') }}" placeholder="{{ __('أدخل الرقم هنا...') }}" class="w-full bg-[var(--main-bg)] border-2 border-[var(--glass-border)] focus:border-emerald-500/30 rounded-[2.5rem] px-10 py-7 text-sm font-black text-[var(--main-text)] focus:ring-[15px] focus:ring-emerald-500/5 transition-all outline-none shadow-xl italic tracking-[0.1em]" required>
                         <div class="absolute left-8 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-emerald-500 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1V5a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1V5a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1V5a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1V5a1 1 0 011-1h2a1 1 0 011 1v2"></path></svg>
                         </div>
@@ -83,7 +83,7 @@
                         {{ __('الاسم القانوني لصاحب الحساب') }}
                     </label>
                     <div class="relative group">
-                        <input type="text" name="account_name" value="{{ old('account_name') }}" placeholder="{{ __('مثلاً: مؤسسة QSS للتجارة') }}" class="w-full bg-[var(--main-bg)] border-2 border-transparent focus:border-amber-500/30 rounded-[2.5rem] px-10 py-7 text-sm font-black text-[var(--main-text)] focus:ring-[15px] focus:ring-amber-500/5 transition-all outline-none shadow-xl italic" required>
+                        <input type="text" name="account_name" value="{{ old('account_name') }}" placeholder="{{ __('مثلاً: مؤسسة QSS للتجارة') }}" class="w-full bg-[var(--main-bg)] border-2 border-[var(--glass-border)] focus:border-amber-500/30 rounded-[2.5rem] px-10 py-7 text-sm font-black text-[var(--main-text)] focus:ring-[15px] focus:ring-amber-500/5 transition-all outline-none shadow-xl italic" required>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@
                         <div class="w-2 h-2 bg-purple-600 rounded-full shadow-lg shadow-purple-600/50"></div>
                         {{ __('تعليمات الدفع للمستخدم') }}
                     </label>
-                    <textarea name="note" rows="5" placeholder="{{ __('اكتب هنا أي تعليمات إضافية تظهر للمستخدم عند اختيار هذا الحساب...') }}" class="w-full bg-[var(--main-bg)] border-2 border-transparent focus:border-purple-500/30 rounded-[3.5rem] px-10 py-8 text-sm font-black text-[var(--main-text)] focus:ring-[15px] focus:ring-purple-500/5 transition-all outline-none resize-none leading-relaxed italic shadow-xl">{{ old('note') }}</textarea>
+                    <textarea name="note" rows="5" placeholder="{{ __('اكتب هنا أي تعليمات إضافية تظهر للمستخدم عند اختيار هذا الحساب...') }}" class="w-full bg-[var(--main-bg)] border-2 border-[var(--glass-border)] focus:border-purple-500/30 rounded-[3.5rem] px-10 py-8 text-sm font-black text-[var(--main-text)] focus:ring-[15px] focus:ring-purple-500/5 transition-all outline-none resize-none leading-relaxed italic shadow-xl">{{ old('note') }}</textarea>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@
                             <label class="relative inline-flex items-center cursor-pointer group">
                                 <input type="hidden" name="is_active" value="0">
                                 <input type="checkbox" name="is_active" value="1" class="sr-only peer" checked>
-                                <div class="w-20 h-11 bg-[var(--main-bg)] border-2 border-[var(--glass-border)] peer-focus:outline-none peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:dark:bg-slate-200 after:border-var(--glass-border) after:border after:rounded-full after:h-9 after:w-9 after:transition-all dark:border-var(--glass-border) peer-checked:bg-gradient-to-r peer-checked:from-brand-primary peer-checked:to-indigo-600 rounded-full group-hover:scale-110 transition-all shadow-inner"></div>
+                                <div class="w-20 h-11 bg-[var(--main-bg)] border-2 border-[var(--glass-border)] peer-focus:outline-none peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:dark:bg-slate-200 after:border-[var(--glass-border)] after:border after:rounded-full after:h-9 after:w-9 after:transition-all dark:border-[var(--glass-border)] peer-checked:bg-gradient-to-r peer-checked:from-brand-primary peer-checked:to-indigo-600 rounded-full group-hover:scale-110 transition-all shadow-inner"></div>
                             </label>
                         </div>
                         <p class="text-[10px] font-bold text-[var(--text-muted)] text-center italic leading-relaxed px-4">

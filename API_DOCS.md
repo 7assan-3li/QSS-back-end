@@ -154,6 +154,154 @@ Authorization: Bearer {your_token}
 }
 ```
 
+### 1.10 دورة استعادة كلمة المرور الكاملة للهواتف الذكية (Forgot Password API Flow)
+
+تم تصميم وتطوير هذه الواجهات البرمجية (APIs) خصيصاً لتناسب تطبيقات الهواتف الذكية (Flutter, React Native, Native Swift/Kotlin). تعتمد بالكامل على نظام **بدون حالة (Stateless)** ولا تحتاج إلى جلسات (Sessions) أو ملفات تعريف ارتباط (Cookies). يتم التحقق باستخدام كود OTP مكون من 6 أرقام يتم إرساله إلى البريد الإلكتروني.
+
+---
+
+#### 🗺️ مخطط تدفق العمليات في تطبيق الجوال (Workflow Diagram)
+```mermaid
+sequenceDiagram
+    actor User as المستخدم
+    participant Mobile as تطبيق الجوال (API Client)
+    participant Server as خادم الباك إند (API Server)
+    participant Mail as خادم البريد (SMTP)
+
+    Note over User, Mail: خطوة 1: طلب استعادة كلمة المرور
+    User->>Mobile: يكتب بريده الإلكتروني ويضغط "استعادة"
+    Mobile->>Server: POST /api/forgot-password {email}
+    Server->>Server: توليد كود عشوائي وصلاحية (10 دقائق)
+    Server->>Mail: إرسال الرمز في الخلفية (Queue Job)
+    Mail-->>User: وصول كود OTP (مثال: 872585)
+    Server-->>Mobile: استجابة بالنجاح (200 OK)
+
+    Note over User, Mail: خطوة 2: التحقق من كود الـ OTP
+    User->>Mobile: يدخل الكود المستلم (6 أرقام)
+    Mobile->>Server: POST /api/verify-reset-code {email, code}
+    Server-->>Mobile: استجابة بالنجاح (200 OK)
+
+    Note over User, Mail: خطوة 3: تعيين كلمة المرور الجديدة
+    User->>Mobile: يدخل كلمة المرور الجديدة وتأكيدها
+    Mobile->>Server: POST /api/reset-password {email, code, password, password_confirmation}
+    Server->>Server: تشفير وتحديث الباسورد وحذف الكود
+    Server-->>Mobile: استجابة بالنجاح وتأكيد الحفظ (200 OK)
+```
+
+---
+
+#### 🛠️ التفاصيل التقنية للـ Endpoints
+
+##### 📌 1. طلب إرسال رمز التحقق (Request Reset OTP)
+* **المسار (URL):** `POST /api/forgot-password` (عام)
+* **الـ Headers المطلوبة:**
+  ```http
+  Accept: application/json
+  Content-Type: application/json
+  ```
+* **البيانات المطلوبة في الطلب (Body JSON):**
+  | الحقل | النوع | الحوكمة والتحقق (Validation Rules) | الوصف |
+  | :--- | :--- | :--- | :--- |
+  | `email` | String | `required \| email \| exists:users,email` | البريد الإلكتروني للمستخدم المراد استعادة حسابه. |
+
+* **نموذج استجابة النجاح (200 OK):**
+  ```json
+  {
+      "message": "تم إرسال رمز استعادة كلمة المرور إلى بريدك الإلكتروني"
+  }
+  ```
+
+* **نموذج استجابة الخطأ (في حال الإيميل غير موجود بالمنصة - 422 Unprocessable Content):**
+  ```json
+  {
+      "message": "البريد الإلكتروني غير مسجل لدينا",
+      "errors": {
+          "email": [
+              "البريد الإلكتروني غير مسجل لدينا"
+          ]
+      }
+  }
+  ```
+
+---
+
+##### 📌 2. التحقق من كود الـ OTP (Verify Reset OTP)
+* **المسار (URL):** `POST /api/verify-reset-code` (عام)
+* **الـ Headers المطلوبة:**
+  ```http
+  Accept: application/json
+  Content-Type: application/json
+  ```
+* **البيانات المطلوبة في الطلب (Body JSON):**
+  | الحقل | النوع | الحوكمة والتحقق (Validation Rules) | الوصف |
+  | :--- | :--- | :--- | :--- |
+  | `email` | String | `required \| email \| exists:users,email` | البريد الإلكتروني. |
+  | `code` | String | `required` | الرمز المكون من 6 أرقام الذي استلمه المستخدم بالإيميل. |
+
+* **نموذج استجابة النجاح (200 OK):**
+  ```json
+  {
+      "message": "رمز التحقق صحيح ومطابق"
+  }
+  ```
+
+* **نموذج استجابة الخطأ (في حال الكود خاطئ أو منتهي الصلاحية - 422 Unprocessable Content):**
+  ```json
+  {
+      "message": "رمز التحقق غير صحيح أو منتهي الصلاحية"
+  }
+  ```
+
+---
+
+##### 📌 3. تعيين كلمة المرور الجديدة (Reset Password Action)
+* **المسار (URL):** `POST /api/reset-password` (عام)
+* **الـ Headers المطلوبة:**
+  ```http
+  Accept: application/json
+  Content-Type: application/json
+  ```
+* **البيانات المطلوبة في الطلب (Body JSON):**
+  | الحقل | النوع | الحوكمة والتحقق (Validation Rules) | الوصف |
+  | :--- | :--- | :--- | :--- |
+  | `email` | String | `required \| email \| exists:users,email` | البريد الإلكتروني. |
+  | `code` | String | `required` | الرمز المكون من 6 أرقام (OTP). |
+  | `password` | String | `required \| min:8 \| confirmed` | كلمة المرور الجديدة (8 أحرف أو أكثر). |
+  | `password_confirmation` | String | `required` | تأكيد تطابق كلمة المرور الجديدة تماماً. |
+
+* **نموذج استجابة النجاح (200 OK):**
+  ```json
+  {
+      "message": "تم إعادة تعيين كلمة المرور بنجاح"
+  }
+  ```
+
+* **نموذج استجابة الخطأ (في حال عدم تطابق تأكيد كلمة المرور - 422 Unprocessable Content):**
+  ```json
+  {
+      "message": "تأكيد كلمة المرور غير متطابق",
+      "errors": {
+          "password": [
+              "تأكيد كلمة المرور غير متطابق"
+          ]
+      }
+  }
+  ```
+
+* **نموذج استجابة الخطأ (في حال تجاوز صلاحية الكود أو كونه خاطئاً أثناء الخطوة الأخيرة - 422):**
+  ```json
+  {
+      "message": "رمز التحقق غير صحيح أو منتهي الصلاحية"
+  }
+  ```
+
+---
+
+#### 🛡️ تدابير الحماية والحد من الطلبات (Rate Limiting & Security)
+1. **نظام الكبح (Throttle Middleware):** تم حماية هذه المسارات الثلاثة لمنع هجمات التخمين والـ Brute-Force؛ حيث يُسمح بالوصول إليها بمعدل **5 طلبات كحد أقصى لكل دقيقة واحدة** لكل عنوان IP. في حال تجاوز الحد، سيعيد الخادم خطأ **`429 Too Many Requests`**.
+2. **صلاحية زمنية صارمة:** ينتهي كود التحقق تلقائياً بعد مرور **10 دقائق** من إرساله، ولا يمكن استخدامه بعد ذلك.
+3. **الاستخدام لمرة واحدة (One-Time Execution):** بمجرد إتمام عملية تعيين كلمة المرور بنجاح في الخطوة الثالثة، يتم **حذف الكود فوراً وبشكل نهائي** من قاعدة البيانات، مما يجعل من المستحيل على أي طرف إعادة استخدام نفس الكود مرة أخرى.
+
 ---
 
 ## 2. الملفات الشخصية (Profiles & Details)
