@@ -544,17 +544,46 @@ public function index(Request $request)
         // 🔢 توليد كود جديد
         $code = random_int(100000, 999999);
 
-        EmailVerificationCode::updateOrCreate([
-            'user_id' => $user->id,
-            'code' => $code,
-            'expires_at' => now()->addMinutes(10)
-        ]);
+        // حفظ توكن الجهاز إذا تم إرساله مع طلب إعادة الإرسال
+        if ($request->has('fcm_token')) {
+            \App\Models\DeviceTokens::updateOrCreate(
+                ['token' => $request->fcm_token],
+                ['user_id' => $user->id]
+            );
+        } elseif ($request->has('device_token')) {
+            \App\Models\DeviceTokens::updateOrCreate(
+                ['token' => $request->device_token],
+                ['user_id' => $user->id]
+            );
+        }
+
+        EmailVerificationCode::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'code' => $code,
+                'expires_at' => now()->addMinutes(10)
+            ]
+        );
+
+        // إرسال كود التحقق الجديد كإشعار للهاتف باستخدام Firebase
+        try {
+            $notificationService = app(\App\Services\NotificationService::class);
+            $notificationService->sendToUser(
+                $user->id,
+                'إعادة إرسال رمز التحقق QSS',
+                "رمز التحقق الجديد الخاص بك هو: {$code}",
+                \App\Constants\NotificationType::GENERAL
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('FCM Resend Code Notification failed: ' . $e->getMessage());
+        }
 
         // 📬 إرسال الإيميل عبر Queue
         SendEmailVerificationCode::dispatch($user, $code);
 
         return response()->json([
-            'message' => 'تم إرسال رمز التحقق مرة أخرى'
+            'message' => 'تم إرسال رمز التحقق مرة أخرى',
+            'code' => $code // إرجاع الكود بالـ API للتجربة السريعة
         ]);
     }
 
