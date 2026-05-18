@@ -48,6 +48,7 @@ class SocialAuthController extends Controller
                             'avatar' => $googleUser->avatar,
                             'password' => Hash::make(Str::random(16)),
                             'email_verified_at' => now(),
+                            'seeker_policy' => true, // قبول شروط طالب الخدمة تلقائياً لمستخدمي جوجل لتفادي الحظر الفوري
                             'role' => \App\constant\Role::SEEKER, // تحديد الدور الافتراضي كطالب خدمة
                         ]);
                     }
@@ -72,6 +73,13 @@ class SocialAuthController extends Controller
 
                 if (!empty($updateData)) {
                     $user->update($updateData);
+                }
+
+                // ضمان وجود ملف شخصي (Profile) دائماً لأي مستخدم يسجل دخوله عبر جوجل
+                if (!$user->profile) {
+                    $user->profile()->create([
+                        'image_path' => $user->avatar,
+                    ]);
                 }
 
                 return $user;

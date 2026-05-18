@@ -28,6 +28,11 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($user_id);
         $profile = $user->profile;
+        if (!$profile) {
+            $profile = Profile::create([
+                'user_id' => $user->id,
+            ]);
+        }
         $profile->load(['user.banks', 'user.main_services', 'user.services', 'profilePhones', 'previousWorks']);
         return response()->json([
             'message' => 'Profile retrieved successfully',
@@ -38,6 +43,11 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $profile = $user->profile;
+        if (!$profile) {
+            $profile = Profile::create([
+                'user_id' => $user->id,
+            ]);
+        }
         $profile->load(['user.banks', 'user.main_services', 'user.services', 'profilePhones', 'previousWorks']);
         return response()->json([
             'message' => 'Profile retrieved successfully',
@@ -74,7 +84,13 @@ class ProfileController extends Controller
         }
 
         // 2. تحديث بيانات الملف الشخصي
-        $profileId = $user->profile->id;
+        $profile = $user->profile;
+        if (!$profile) {
+            $profile = Profile::create([
+                'user_id' => $user->id,
+            ]);
+        }
+        $profileId = $profile->id;
         $profileData = array_diff_key($validated, array_flip(['name', 'email']));
         $profile = $profileService->update($profileData, $request, $profileId);
 
