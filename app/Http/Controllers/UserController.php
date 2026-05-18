@@ -723,6 +723,19 @@ public function index(Request $request)
         $user = User::where('email', $request->email)->firstOrFail();
         $code = (string) random_int(100000, 999999);
 
+        // حفظ توكن الجهاز إذا تم إرساله مع طلب استعادة كلمة المرور
+        if ($request->has('fcm_token')) {
+            \App\Models\DeviceTokens::updateOrCreate(
+                ['token' => $request->fcm_token],
+                ['user_id' => $user->id]
+            );
+        } elseif ($request->has('device_token')) {
+            \App\Models\DeviceTokens::updateOrCreate(
+                ['token' => $request->device_token],
+                ['user_id' => $user->id]
+            );
+        }
+
         \App\Models\PasswordResetCode::updateOrCreate(
             ['email' => $request->email],
             [
