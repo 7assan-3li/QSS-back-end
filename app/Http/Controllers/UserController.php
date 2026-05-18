@@ -124,7 +124,7 @@ class UserController extends Controller
         }
 
         $user = Auth::user();
-        
+
         if ($user->status === 'suspended') {
             return response()->json([
                 'message' => 'عذراً، لقد تم إيقاف حسابك من قبل الإدارة. يرجى التواصل مع الدعم الفني.'
@@ -155,67 +155,67 @@ class UserController extends Controller
 
     // wep functions ...
 
-public function index(Request $request)
-{
-    $this->authorize('viewAny', User::class);
+    public function index(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
 
-    $query = User::query();
+        $query = User::query();
 
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('name', 'LIKE', "%{$search}%")
-              ->orWhere('email', 'LIKE', "%{$search}%");
-        });
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->latest()->get();
+
+        // تسجيل المستخدمين حسب الشهور
+        $usersChart = User::selectRaw('EXTRACT(MONTH FROM created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->mapWithKeys(function ($count, $month) {
+                return [
+                    Carbon::create()->month($month)->translatedFormat('F') => $count
+                ];
+            });
+
+        // توزيع المستخدمين حسب الدور
+        $rolesChart = User::selectRaw('role, COUNT(*) as count')
+            ->groupBy('role')
+            ->pluck('count', 'role');
+
+        // تقارير ذكية
+        $todayUsers = User::whereDate('created_at', today())->count();
+
+        $weekUsers = User::whereBetween('created_at', [
+            now()->startOfWeek(),
+            now()->endOfWeek()
+        ])->count();
+
+        $currentMonth = User::whereMonth('created_at', now()->month)->count();
+        $lastMonth = User::whereMonth('created_at', now()->subMonth()->month)->count();
+
+        $growth = $lastMonth > 0
+            ? round((($currentMonth - $lastMonth) / $lastMonth) * 100, 1)
+            : 100;
+
+        return view('users.index', compact(
+            'users',
+            'usersChart',
+            'rolesChart',
+            'todayUsers',
+            'weekUsers',
+            'growth'
+        ));
     }
-
-    if ($request->filled('role')) {
-        $query->where('role', $request->role);
-    }
-
-    $users = $query->latest()->get();
-
-    // تسجيل المستخدمين حسب الشهور
-    $usersChart = User::selectRaw('EXTRACT(MONTH FROM created_at) as month, COUNT(*) as count')
-        ->whereYear('created_at', Carbon::now()->year)
-        ->groupBy('month')
-        ->orderBy('month')
-        ->pluck('count', 'month')
-        ->mapWithKeys(function ($count, $month) {
-            return [
-                Carbon::create()->month($month)->translatedFormat('F') => $count
-            ];
-        });
-
-    // توزيع المستخدمين حسب الدور
-    $rolesChart = User::selectRaw('role, COUNT(*) as count')
-        ->groupBy('role')
-        ->pluck('count', 'role');
-
-    // تقارير ذكية
-    $todayUsers = User::whereDate('created_at', today())->count();
-
-    $weekUsers = User::whereBetween('created_at', [
-        now()->startOfWeek(),
-        now()->endOfWeek()
-    ])->count();
-
-    $currentMonth = User::whereMonth('created_at', now()->month)->count();
-    $lastMonth = User::whereMonth('created_at', now()->subMonth()->month)->count();
-
-    $growth = $lastMonth > 0
-        ? round((($currentMonth - $lastMonth) / $lastMonth) * 100, 1)
-        : 100;
-
-    return view('users.index', compact(
-        'users',
-        'usersChart',
-        'rolesChart',
-        'todayUsers',
-        'weekUsers',
-        'growth'
-    ));
-}
 
 
     public function show(User $user)
@@ -225,7 +225,8 @@ public function index(Request $request)
         // Eager load everything for the Executive Identity Matrix
         $user->load([
             'profile',
-            'verificationRequests' => function($q) { $q->latest()->limit(5); }
+            'verificationRequests' => function ($q) {
+                $q->latest()->limit(5); }
         ]);
 
         $user->loadCount(['requests', 'services', 'verificationRequests']);
@@ -243,7 +244,7 @@ public function index(Request $request)
     public function store(Request $request)
     {
         $this->authorize('create', User::class);
-        
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -305,7 +306,7 @@ public function index(Request $request)
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
-        
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -425,24 +426,24 @@ public function index(Request $request)
     public function toggleStatus(User $user)
     {
         $this->authorize('suspend', $user);
-        
+
         $newStatus = $user->status === 'active' ? 'suspended' : 'active';
         $user->update(['status' => $newStatus]);
 
         $message = $newStatus === 'active' ? 'تم تنشيط الحساب بنجاح' : 'تم إيقاف الحساب بنجاح';
-        
+
         $statusMsg = $newStatus === 'active' ? 'تنشيط حسابك ✨' : 'إيقاف حسابك ⚠️';
-        $statusDesc = $newStatus === 'active' 
-            ? 'لقد تم إعادة تنشيط حسابك من قبل الإدارة. يمكنك الآن استخدام كافة ميزات التطبيق.' 
+        $statusDesc = $newStatus === 'active'
+            ? 'لقد تم إعادة تنشيط حسابك من قبل الإدارة. يمكنك الآن استخدام كافة ميزات التطبيق.'
             : 'عذراً، لقد تم إيقاف حسابك مؤقتاً من قبل الإدارة. يرجى التواصل مع الدعم الفني لمزيد من التفاصيل.';
-            
+
         app(\App\Services\NotificationService::class)->sendToUser(
             $user->id,
             $statusMsg,
             $statusDesc,
             \App\Constants\NotificationType::ADMIN_MSG
         );
-        
+
         return back()->with('success', $message);
     }
 
@@ -504,7 +505,7 @@ public function index(Request $request)
 
     public function verifyEmailAdmin(User $user)
     {
-        if($user->email_verified_at){
+        if ($user->email_verified_at) {
             return back()->with('info', 'المستخدم موثق بالفعل');
         }
         $user->update([
@@ -690,7 +691,7 @@ public function index(Request $request)
         }
 
         $user->name = $request->name;
-        
+
         if ($user->role === Role::ADMIN && $request->has('email')) {
             $user->email = $request->email;
         }
