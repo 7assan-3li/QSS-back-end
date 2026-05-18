@@ -307,7 +307,11 @@ public function index(Request $request)
         ];
 
         if ($request->role === Role::PROVIDER) {
-            $userFields['commission'] = $validated['commission'] ?? null;
+            $commission = $request->input('commission');
+            if (is_null($commission) || $commission === '') {
+                $commission = ($user->commission > 0) ? $user->commission : 10;
+            }
+            $userFields['commission'] = $commission;
             $userFields['no_commission'] = $request->has('no_commission');
             $userFields['provider_verified_until'] = $validated['provider_verified_until'] ?? null;
         }

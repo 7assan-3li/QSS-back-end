@@ -1701,5 +1701,10 @@
     "كلمة المرور الحالية": "Current Password",
     "إدخل الكلمة الحالية...": "Enter current password...",
     "تحديث الهوية الرقمية": "Update Digital Identity",
-    "تعديل الملف الشخصي": "Edit Profile"
+    "تعديل الملف الشخصي": "Edit Profile",
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "resolved": "Resolved",
+    "reviewed": "Reviewed"
 }
