@@ -396,13 +396,13 @@
             </div>
             
             <div class="mt-8 p-6 bg-white/5 rounded-[2.2rem] border border-white/5">
-                <div class="flex justify-between items-center text-[12px] font-black">
+                {{-- <div class="flex justify-between items-center text-[12px] font-black">
                     <span class="opacity-40 uppercase tracking-widest">{{ __('معدل رضا المستخدمين') }}</span>
                     <span class="text-brand-primary">98.4%</span>
                 </div>
                 <div class="w-full h-1.5 bg-slate-200/5 rounded-full mt-3 overflow-hidden shadow-inner">
                     <div class="h-full bg-brand-primary w-[98.4%] shadow-[0_0_10px_#4f46e5]"></div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

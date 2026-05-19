@@ -210,6 +210,7 @@ class ServiceController extends Controller
             'status'                      => 'sometimes|nullable|string|in:available,unavailable',
             'is_active'                   => 'sometimes|boolean',
             'distance_based_price'        => 'sometimes|boolean',
+            'category_id'                 => 'sometimes|required|exists:categories,id',
             'price_per_km'                => 'required_if:distance_based_price,true|nullable|numeric|min:0',
             'required_partial_percentage' => 'sometimes|integer|min:0|max:100',
         ]);
