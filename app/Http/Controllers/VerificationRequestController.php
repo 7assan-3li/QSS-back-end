@@ -174,6 +174,11 @@ class VerificationRequestController extends Controller
     {
         $verificationRequest = VerificationRequest::findOrFail($id);
         $this->authorize('updateStatus', $verificationRequest); 
+        
+        $request->validate([
+            'rejection_reason' => 'required|string|max:255'
+        ]);
+
         $verificationRequest->update([
             'status' => 'rejected',
             'rejection_reason' => $request->input('rejection_reason')

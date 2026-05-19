@@ -324,7 +324,7 @@
 
             Swal.fire({
                 title: '{{ __('سبب رفض التوثيق') }}',
-                text: '{{ __('يرجى كتابة سبب الرفض لتوضيحه للمستخدم (اختياري ولكن يفضل)') }}',
+                text: '{{ __('يرجى كتابة سبب الرفض لتوضيحه للمستخدم:') }}',
                 input: 'textarea',
                 inputPlaceholder: '{{ __('اكتب سبب الرفض هنا...') }}',
                 showCancelButton: true,
@@ -339,13 +339,18 @@
                     input: 'font-bold text-sm font-Cairo rounded-2xl border-[var(--glass-border)] focus:ring-rose-500 focus:border-rose-500',
                     confirmButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest font-Cairo shadow-lg shadow-rose-500/20',
                     cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest font-Cairo'
+                },
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return '{{ __('يجب إدخال سبب الرفض!') }}';
+                    }
                 }
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result.isConfirmed && result.value) {
                     const form = document.getElementById(formId);
                     const reasonField = document.getElementById('rejection_reason_field');
                     if (form && reasonField) {
-                        reasonField.value = result.value || '';
+                        reasonField.value = result.value.trim();
                         form.submit();
                     }
                 }

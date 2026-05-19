@@ -176,10 +176,17 @@
                                         default => 'badge-status-danger'
                                     };
                                 @endphp
-                                <span class="badge-status {{ $statusBadge }} mx-auto">
-                                    <span class="w-1.5 h-1.5 rounded-full mr-2 {{ $request->status == 'pending' ? 'bg-amber-500 animate-pulse' : ($request->status == 'accepted' ? 'bg-emerald-500' : 'bg-rose-500') }}"></span>
-                                    {{ $statusLabel }}
-                                </span>
+                                <div class="flex flex-col items-center gap-1.5">
+                                    <span class="badge-status {{ $statusBadge }} mx-auto">
+                                        <span class="w-1.5 h-1.5 rounded-full mr-2 {{ $request->status == 'pending' ? 'bg-amber-500 animate-pulse' : ($request->status == 'accepted' ? 'bg-emerald-500' : 'bg-rose-500') }}"></span>
+                                        {{ $statusLabel }}
+                                    </span>
+                                    @if($request->status === 'rejected' && $request->rejection_reason)
+                                        <span class="text-[11px] font-bold text-rose-500/80 max-w-[150px] truncate" title="{{ $request->rejection_reason }}">
+                                            {{ $request->rejection_reason }}
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-10 py-7 text-start text-[14px] font-black text-[var(--text-muted)] font-mono text-start">
                                 {{ $request->created_at->format('Y/m/d') }}</td>
@@ -214,12 +221,8 @@
                                         <form id="reject-v-{{ $request->id }}" method="POST"
                                             action="{{ route('verification-requests.reject', $request->id) }}" class="text-start">
                                             @csrf
-                                            <button type="button" onclick="confirmAction('reject-v-{{ $request->id }}', {
-                                                            title: '{{ __('رفض التوثيق') }}',
-                                                            text: '{{ __('هل أنت متأكد من رفض طلب توثيق ' . $request->user->name . '؟') }}',
-                                                            icon: 'warning',
-                                                            isDanger: true
-                                                        })" class="btn-action btn-action-danger flex items-center justify-center text-start"
+                                            <input type="hidden" name="rejection_reason" id="rejection_reason_field_{{ $request->id }}">
+                                            <button type="button" onclick="promptVerificationRejection('reject-v-{{ $request->id }}', 'rejection_reason_field_{{ $request->id }}')" class="btn-action btn-action-danger flex items-center justify-center text-start"
                                                 title="{{ __('رفض') }}">
                                                 <svg class="w-5 h-5 flex items-center justify-center" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -337,6 +340,44 @@
                             grid: { display: false },
                             ticks: { font: { size: 9, family: 'Cairo', weight: 'bold' }, color: '#94a3b8' }
                         }
+                    }
+                }
+            });
+        }
+
+        function promptVerificationRejection(formId, fieldId) {
+            const isDark = document.documentElement.classList.contains('dark');
+
+            Swal.fire({
+                title: '{{ __('سبب رفض التوثيق') }}',
+                text: '{{ __('يرجى كتابة سبب الرفض لتوضيحه للمستخدم:') }}',
+                input: 'textarea',
+                inputPlaceholder: '{{ __('اكتب سبب الرفض هنا...') }}',
+                showCancelButton: true,
+                confirmButtonColor: '#e11d48',
+                confirmButtonText: '{{ __('تأكيد الرفض النهائي') }}',
+                cancelButtonText: '{{ __('إلغاء') }}',
+                background: isDark ? '#0f172a' : '#ffffff',
+                color: isDark ? '#f8fafc' : '#1e293b',
+                customClass: {
+                    popup: 'rounded-[2.5rem] border border-rose-500 shadow-2xl font-Cairo',
+                    title: 'font-black text-xl font-Cairo !text-inherit',
+                    input: 'font-bold text-sm font-Cairo rounded-2xl border-[var(--glass-border)] focus:ring-rose-500 focus:border-rose-500',
+                    confirmButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest font-Cairo shadow-lg shadow-rose-500/20',
+                    cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest font-Cairo'
+                },
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return '{{ __('يجب إدخال سبب الرفض!') }}';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    const form = document.getElementById(formId);
+                    const reasonField = document.getElementById(fieldId);
+                    if (form && reasonField) {
+                        reasonField.value = result.value.trim();
+                        form.submit();
                     }
                 }
             });
