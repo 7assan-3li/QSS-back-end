@@ -90,7 +90,7 @@ class RequestComplaintController extends Controller
 
     public function indexAdmin(\Illuminate\Http\Request $request)
     {
-        $this->authorize('view', RequestComplaint::class);
+        $this->authorize('viewAny', RequestComplaint::class);
         $status = $request->get('status');
         $days = (int) $request->get('days', 7);
 

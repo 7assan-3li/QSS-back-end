@@ -85,19 +85,28 @@ class RequestCommissionBondController extends Controller
         return back()->with('success', 'تم قبول السند وتحديث رصيد العمولة');
     }
 
-    public function reject(RequestCommissionBond $bond)
+    public function reject(Request $request, RequestCommissionBond $bond)
     {
-        $bond->update(['status' => 'rejected']);
+        $request->validate([
+            'rejection_reason' => 'required|string|max:255'
+        ], [
+            'rejection_reason.required' => 'يجب كتابة سبب الرفض لتوضيحه للمزود.'
+        ]);
 
-        // إشعار للمزود برفض سند العمولة
+        $bond->update([
+            'status' => 'rejected',
+            'rejection_reason' => $request->rejection_reason
+        ]);
+
+        // إشعار للمزود برفض سند العمولة مع إرسال سبب الرفض
         $this->notificationService->sendToUser(
             $bond->request->serviceProvider()->id,
             'تم رفض سند العمولة ❌',
-            'تم رفض سند دفع العمولة الخاص بالطلب #' . $bond->request->id . '. يرجى مراجعة الإدارة.',
+            'تم رفض سند دفع العمولة الخاص بالطلب #' . $bond->request->id . ' بسبب: ' . $request->rejection_reason,
             \App\Constants\NotificationType::ADMIN_MSG
         );
 
-        return back()->with('success', 'تم رفض السند');
+        return back()->with('success', 'تم رفض السند مع تسجيل سبب الرفض بنجاح.');
     }
 
     public function commissionSummary(Request $request)

@@ -106,9 +106,14 @@
                                 <span class="text-[12px] font-bold opacity-40 ml-1 italic">ر.ي</span>
                             </td>
                             <td class="px-10 py-7 text-center">
-                                <span class="px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-widest font-Cairo @if($bond->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20 @elseif($bond->status == 'approved') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif whitespace-nowrap inline-flex items-center justify-center">
-                                    {{ __($bond->status) }}
-                                </span>
+                                <div class="flex flex-col items-center gap-2">
+                                    <span class="px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-widest font-Cairo @if($bond->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20 @elseif($bond->status == 'approved') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif whitespace-nowrap inline-flex items-center justify-center">
+                                        {{ __($bond->status) }}
+                                    </span>
+                                    @if($bond->status == 'rejected' && $bond->rejection_reason)
+                                        <span class="text-[10px] font-bold text-rose-500 max-w-[150px] truncate" title="{{ $bond->rejection_reason }}">{{ $bond->rejection_reason }}</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-10 py-7 text-end">
                                 <div class="flex items-center justify-end gap-3">
@@ -135,12 +140,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <button type="button" 
-                                                onclick="confirmAction('reject-bond-{{ $bond->id }}', {
-                                                    title: '{{ __('رفض السند المالي') }}',
-                                                    text: '{{ __('هل أنت متأكد من عدم صحة هذا السند؟ سيتم إخطار الطرف الأخر بالرفض.') }}',
-                                                    icon: 'error',
-                                                    confirmButtonText: '{{ __('تأكيد الرفض') }}'
-                                                })" class="w-10 h-10 bg-rose-500/10 text-rose-600 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm" title="{{ __('رفض') }}">
+                                                onclick="rejectCommissionBond('reject-bond-{{ $bond->id }}')" class="w-10 h-10 bg-rose-500/10 text-rose-600 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm" title="{{ __('رفض') }}">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
                                         </form>
@@ -170,3 +170,53 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function rejectCommissionBond(formId) {
+        const isDark = document.documentElement.classList.contains('dark');
+        Swal.fire({
+            title: '{{ __('رفض السند المالي') }}',
+            text: '{{ __('يرجى كتابة سبب الرفض لتوضيحه لمزود الخدمة:') }}',
+            input: 'textarea',
+            inputPlaceholder: '{{ __('اكتب سبب الرفض هنا...') }}',
+            inputAttributes: {
+                'maxlength': '255',
+                'rows': '3'
+            },
+            showCancelButton: true,
+            confirmButtonText: '{{ __('تأكيد الرفض') }}',
+            cancelButtonText: '{{ __('إلغاء') }}',
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: isDark ? '#1e293b' : '#94a3b8',
+            background: isDark ? '#0f172a' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#1e293b',
+            customClass: {
+                popup: 'rounded-[2.5rem] border border-rose-500 shadow-rose-500/10 font-Cairo',
+                title: 'font-black text-2xl font-Cairo !text-inherit',
+                htmlContainer: 'font-bold text-sm font-Cairo opacity-60',
+                confirmButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 font-Cairo shadow-lg shadow-rose-500/20',
+                cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 font-Cairo',
+                input: 'font-Cairo rounded-xl border border-[var(--glass-border)] bg-[var(--main-bg)] text-sm !mx-6 !my-4'
+            },
+            inputValidator: (value) => {
+                if (!value || !value.trim()) {
+                    return '{{ __('يجب إدخال سبب الرفض!') }}';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                const form = document.getElementById(formId);
+                if (form) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'rejection_reason';
+                    input.value = result.value.trim();
+                    form.appendChild(input);
+                    form.submit();
+                }
+            }
+        });
+    }
+</script>
+@endpush

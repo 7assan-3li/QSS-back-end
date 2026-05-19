@@ -171,7 +171,7 @@
                     </a>
                 @endcan
 
-                @can('viewAny', \App\Models\VerificationRequest::class)
+                @can('adminViewAny', \App\Models\VerificationRequest::class)
                     <a href="{{ route('verification-requests.index') }}"
                         class="sidebar-item {{ Request::routeIs('verification-requests.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                         <div

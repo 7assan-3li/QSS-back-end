@@ -209,6 +209,12 @@
                                             {{ __($bond->status) }}
                                         </span>
                                     </div>
+                                    @if($bond->status === 'rejected' && $bond->rejection_reason)
+                                        <div class="flex flex-col gap-1.5 mt-2 bg-rose-500/5 border border-rose-500/10 p-4 rounded-2xl text-start">
+                                            <span class="text-[11px] font-black text-rose-500 uppercase tracking-wider font-Cairo">{{ __('سبب الرفض') }}:</span>
+                                            <p class="text-[13px] font-bold text-[var(--main-text)] font-Cairo leading-relaxed">{{ $bond->rejection_reason }}</p>
+                                        </div>
+                                    @endif
                                 </div>
                                 
                                 @if ($bond->status === 'pending')
@@ -228,12 +234,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <button type="button" 
-                                                onclick="confirmAction('reject-bond-{{ $bond->id }}', {
-                                                    title: '{{ __('رفض السند المالي') }}',
-                                                    text: '{{ __('هل أنت متأكد من عدم صحة هذا السند؟ سيتم إخطار الطرف الأخر بالرفض.') }}',
-                                                    icon: 'error',
-                                                    confirmButtonText: '{{ __('تأكيد الرفض') }}'
-                                                })" class="w-full py-4 bg-rose-500/10 text-rose-600 rounded-[1.2rem] text-[12px] font-black hover:bg-rose-500 hover:text-white transition-all font-Cairo shadow-sm">{{ __('رفــــــــض') }}</button>
+                                                onclick="rejectCommissionBond('reject-bond-{{ $bond->id }}')" class="w-full py-4 bg-rose-500/10 text-rose-600 rounded-[1.2rem] text-[12px] font-black hover:bg-rose-500 hover:text-white transition-all font-Cairo shadow-sm">{{ __('رفــــــــض') }}</button>
                                         </form>
                                     </div>
                                 @endif
@@ -260,6 +261,52 @@
                 text: '{{ __('هل تؤكد استلام مبلغ العمولة نقدياً أو بنكياً؟ سيتم تحديث حالة الطلب إلى -مدفوع- نهائياً.') }}',
                 icon: 'warning',
                 confirmButtonText: '{{ __('تأكيد التحصيل') }}'
+            });
+        }
+
+        function rejectCommissionBond(formId) {
+            const isDark = document.documentElement.classList.contains('dark');
+            Swal.fire({
+                title: '{{ __('رفض السند المالي') }}',
+                text: '{{ __('يرجى كتابة سبب الرفض لتوضيحه لمزود الخدمة:') }}',
+                input: 'textarea',
+                inputPlaceholder: '{{ __('اكتب سبب الرفض هنا...') }}',
+                inputAttributes: {
+                    'maxlength': '255',
+                    'rows': '3'
+                },
+                showCancelButton: true,
+                confirmButtonText: '{{ __('تأكيد الرفض') }}',
+                cancelButtonText: '{{ __('إلغاء') }}',
+                confirmButtonColor: '#e11d48',
+                cancelButtonColor: isDark ? '#1e293b' : '#94a3b8',
+                background: isDark ? '#0f172a' : '#ffffff',
+                color: isDark ? '#f8fafc' : '#1e293b',
+                customClass: {
+                    popup: 'rounded-[2.5rem] border border-rose-500 shadow-rose-500/10 font-Cairo',
+                    title: 'font-black text-2xl font-Cairo !text-inherit',
+                    htmlContainer: 'font-bold text-sm font-Cairo opacity-60',
+                    confirmButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 font-Cairo shadow-lg shadow-rose-500/20',
+                    cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-transform hover:scale-105 font-Cairo',
+                    input: 'font-Cairo rounded-xl border border-[var(--glass-border)] bg-[var(--main-bg)] text-sm !mx-6 !my-4'
+                },
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return '{{ __('يجب إدخال سبب الرفض!') }}';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    const form = document.getElementById(formId);
+                    if (form) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'rejection_reason';
+                        input.value = result.value.trim();
+                        form.appendChild(input);
+                        form.submit();
+                    }
+                }
             });
         }
     </script>

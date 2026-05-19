@@ -112,7 +112,7 @@ class SystemComplaintController extends Controller
 
     public function showAdmin(SystemComplaint $systemComplaint)
     {
-        $this->authorize('view', SystemComplaint::class);
+        $this->authorize('view', $systemComplaint);
         $statusSteps = [
             SystemComplaintStatus::PENDING,
             SystemComplaintStatus::IN_PROGRESS,
@@ -158,7 +158,7 @@ class SystemComplaintController extends Controller
 
     public function updateStatus(Request $request, SystemComplaint $systemComplaint)
     {
-        $this->authorize('updateStatus', SystemComplaint::class);
+        $this->authorize('updateStatus', $systemComplaint);
         $request->validate([
             'status' => 'required|in:' . implode(',', SystemComplaintStatus::all()),
         ]);
