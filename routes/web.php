@@ -19,6 +19,7 @@ use App\Http\Controllers\PointsPackageController;
 use App\Http\Controllers\UserPointsPackageController;
 use App\Http\Controllers\WithdrawRequestController;
 use App\Http\Controllers\RequestComplaintController;
+use App\Http\Controllers\ArtisanController;
 use App\Models\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
@@ -191,3 +192,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
         ])->except(['show']);
     });
 });
+
+Route::get('/migrate', [ArtisanController::class, 'migrate']);
+Route::get('/migrate-fresh', [ArtisanController::class, 'migrateFresh']);
+Route::get('/db-seed', [ArtisanController::class, 'dbSeed']);
+Route::get('/storage-link', [ArtisanController::class, 'storageLink']);
+Route::get('/optimize-clear', [ArtisanController::class, 'optimizeClear']);

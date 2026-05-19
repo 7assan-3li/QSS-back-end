@@ -135,9 +135,16 @@
                                 </div>
                             </td>
                             <td class="px-10 py-8 text-center">
-                                <span class="px-4 py-2 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] shadow-sm font-Cairo @if($request->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20 @elseif($request->status == 'accepted') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif font-Cairo whitespace-nowrap inline-flex items-center justify-center">
-                                    {{ __($request->status) }}
-                                </span>
+                                <div class="flex flex-col items-center gap-1.5">
+                                    <span class="px-4 py-2 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] shadow-sm font-Cairo @if($request->status == 'pending') bg-amber-500/10 text-amber-600 border border-amber-500/20 @elseif($request->status == 'accepted') bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 @else bg-rose-500/10 text-rose-600 border border-rose-500/20 @endif font-Cairo whitespace-nowrap inline-flex items-center justify-center">
+                                        {{ __($request->status) }}
+                                    </span>
+                                    @if($request->status === 'rejected' && $request->rejection_reason)
+                                        <span class="text-[11px] font-bold text-rose-500/80 max-w-[150px] truncate" title="{{ $request->rejection_reason }}">
+                                            {{ $request->rejection_reason }}
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-10 py-8">
                                 <span class="text-[13px] font-black text-[var(--text-muted)] font-Cairo italic text-start">{{ $request->admin->name ?? '— ' . __('النظام') . ' —' }}</span>

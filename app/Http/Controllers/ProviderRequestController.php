@@ -175,6 +175,7 @@ class ProviderRequestController extends Controller
 
         $validated = $request->validate([
             'status' => 'required|in:' . implode(',', ProviderRequestStatus::all()),
+            'rejection_reason' => 'required_if:status,' . ProviderRequestStatus::REJECTED . '|nullable|string|max:255',
         ]);
 
         $currentStatus = $providerRequest->status;
@@ -196,6 +197,9 @@ class ProviderRequestController extends Controller
 
         $providerRequest->status = $newStatus;
         $providerRequest->admin_id = Auth::id();
+        if ($newStatus === ProviderRequestStatus::REJECTED) {
+            $providerRequest->rejection_reason = $request->input('rejection_reason');
+        }
         $providerRequest->save();
 
         // إرسال إشعار للمستخدم بالنتجية
@@ -232,10 +236,11 @@ class ProviderRequestController extends Controller
                 $serviceService->createMeetingCustomSerivce($user->id);
             }
         } elseif ($newStatus === ProviderRequestStatus::REJECTED) {
+            $reason = $request->input('rejection_reason') ?? 'يرجى مراجعة البيانات والمحاولة لاحقاً بمستندات أوضح.';
             $this->notificationService->sendToUser(
                 $providerRequest->user_id,
                 'تم رفض طلب الانضمام ⚠️',
-                'للأسف، تم رفض طلبك للانضمام كمزود خدمة. يرجى مراجعة البيانات والمحاولة لاحقاً بمستندات أوضح.',
+                'للأسف، تم رفض طلبك للانضمام كمزود خدمة. السبب: ' . $reason,
                 \App\Constants\NotificationType::ADMIN_MSG
             );
         }

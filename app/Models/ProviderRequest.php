@@ -14,6 +14,7 @@ class ProviderRequest extends Model
         'requestContent',
         'id_card',
         'location',
+        'rejection_reason',
     ];
 
     public function user()

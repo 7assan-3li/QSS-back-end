@@ -84,6 +84,22 @@
                 </div>
             </div>
 
+            @if ($providerRequest->status === \App\constant\ProviderRequestStatus::REJECTED && $providerRequest->rejection_reason)
+                <!-- Rejection Reason Card -->
+                <div class="card-premium glass-panel p-14 rounded-[4.5rem] shadow-2xl relative border border-rose-500/20 overflow-hidden text-start font-Cairo bg-rose-50/10 dark:bg-rose-950/5">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-rose-500/[0.03] rounded-bl-[10rem] -mr-20 -mt-20 blur-3xl opacity-60"></div>
+                    <div class="flex items-center gap-5 mb-8 text-start font-Cairo">
+                        <span class="w-3 h-10 bg-rose-600 rounded-full shadow-lg shadow-rose-600/30"></span>
+                        <h4 class="text-2xl font-black text-rose-600 font-Cairo text-start italic">{{ __('سبب الرفض الإداري') }}</h4>
+                    </div>
+                    <div class="bg-rose-500/5 p-8 rounded-[2.5rem] border border-rose-500/10 text-start font-Cairo">
+                        <p class="text-sm font-bold text-rose-600 dark:text-rose-400 leading-relaxed font-Cairo">
+                            {{ $providerRequest->rejection_reason }}
+                        </p>
+                    </div>
+                </div>
+            @endif
+
             <!-- Application Rationale Card -->
             <div class="card-premium glass-panel p-14 rounded-[4.5rem] shadow-2xl relative border border-[var(--glass-border)] overflow-hidden text-start font-Cairo min-h-[350px]">
                 <div class="absolute inset-0 bg-gradient-to-br from-brand-primary/[0.03] to-transparent pointer-events-none"></div>
@@ -155,13 +171,9 @@
                             @csrf
                             @method('patch')
                             <input type="hidden" name="status" value="rejected">
+                            <input type="hidden" name="rejection_reason" id="rejection_reason_field">
                             <button type="button" 
-                                onclick="confirmAction('reject-form-{{ $providerRequest->id }}', {
-                                    title: '{{ __('رفض طلب الانضمام') }}',
-                                    text: '{{ __('هل أنت متأكد من رفض هذا الطلب؟ سيتم إخطار المتقدم بالرفض وإغلاق الملف.') }}',
-                                    icon: 'error',
-                                    confirmButtonText: '{{ __('تأكيد الرفض') }}'
-                                })" class="w-full py-6 bg-[var(--glass-bg)] text-rose-500 border border-[var(--glass-border)] rounded-[2rem] text-[14px] font-black hover:bg-rose-50 dark:hover:bg-rose-500/5 transition-all font-Cairo flex items-center justify-center gap-4 uppercase tracking-[0.3em] shadow-sm text-start font-Cairo">
+                                onclick="promptProviderRejection('reject-form-{{ $providerRequest->id }}')" class="w-full py-6 bg-[var(--glass-bg)] text-rose-500 border border-[var(--glass-border)] rounded-[2rem] text-[14px] font-black hover:bg-rose-50 dark:hover:bg-rose-500/5 transition-all font-Cairo flex items-center justify-center gap-4 uppercase tracking-[0.3em] shadow-sm text-start font-Cairo">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                                 {{ __('رفض الملف وإغلاق الطلب') }}
                             </button>
@@ -183,3 +195,45 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function promptProviderRejection(formId) {
+            const isDark = document.documentElement.classList.contains('dark');
+
+            Swal.fire({
+                title: '{{ __('سبب رفض طلب الانضمام') }}',
+                text: '{{ __('يرجى كتابة سبب الرفض لتوضيحه للمستخدم:') }}',
+                input: 'textarea',
+                inputPlaceholder: '{{ __('اكتب سبب الرفض هنا...') }}',
+                showCancelButton: true,
+                confirmButtonColor: '#e11d48',
+                confirmButtonText: '{{ __('تأكيد الرفض النهائي') }}',
+                cancelButtonText: '{{ __('إلغاء') }}',
+                background: isDark ? '#0f172a' : '#ffffff',
+                color: isDark ? '#f8fafc' : '#1e293b',
+                customClass: {
+                    popup: 'rounded-[2.5rem] border border-rose-500 shadow-2xl font-Cairo',
+                    title: 'font-black text-xl font-Cairo !text-inherit',
+                    input: 'font-bold text-sm font-Cairo rounded-2xl border-[var(--glass-border)] focus:ring-rose-500 focus:border-rose-500',
+                    confirmButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest font-Cairo shadow-lg shadow-rose-500/20',
+                    cancelButton: 'px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest font-Cairo'
+                },
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return '{{ __('يجب إدخال سبب الرفض!') }}';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    const form = document.getElementById(formId);
+                    const reasonField = document.getElementById('rejection_reason_field');
+                    if (form && reasonField) {
+                        reasonField.value = result.value.trim();
+                        form.submit();
+                    }
+                }
+            });
+        }
+    </script>
+@endpush
