@@ -330,6 +330,11 @@ class RequestController extends Controller
 
                     // 2. محاولة خصم العمولة آلياً من رصيد المزود
                     $this->pointsService->payCommissionFromPoints($requestModel->id);
+
+                    // 3. مسح الكاش الخاص بعدد العمولات غير المدفوعة للمزود لضمان تحديث حالة الحظر فوراً
+                    if ($provider = $requestModel->serviceProvider()) {
+                        \Illuminate\Support\Facades\Cache::forget('unpaid_commissions_count_' . $provider->id);
+                    }
                 }
             }
         );
@@ -499,6 +504,12 @@ class RequestController extends Controller
 
         try {
             $updatedRequest = $this->pointsService->payCommissionFromPoints($id);
+
+            // مسح كاش العمولات غير المدفوعة للمزود لضمان فك الحظر فوراً بعد السداد بالنقاط
+            if ($provider) {
+                \Illuminate\Support\Facades\Cache::forget('unpaid_commissions_count_' . $provider->id);
+            }
+
             return response()->json([
                 'message' => 'تمت عملية دفع العمولة بنجاح',
                 'request' => $updatedRequest

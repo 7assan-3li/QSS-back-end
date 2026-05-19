@@ -24,27 +24,28 @@ class CheckUnpaidCommissions
         // نتحقق إذا كان المستخدم مسجل دخول وهو مزود خدمة
         if ($user && $user->role === Role::PROVIDER) {
 
-            // استثناء المسارات الخاصة بالعمولات والشكاوى من الفحص
-            // حتى يتمكن المزود من الدفع أو رفع شكوى
-            $excludedPaths = [
-                'api/request-commission-bonds',
-                'api/request-commission-bonds/*',
-                'api/provider-commission-summary',
-                'api/request-complaints',
-                'api/request-complaints/*',
-                'api/system-complaints',
-                'api/system-complaints/*',
-                'api/notifications',
-                'api/notifications/*',
-                'api/requests/unpaid-commissions',
-                'api/requests/*/pay-commission',
-                'api/requests/*/payByPoints',
-                'api/requests/*/addAmountToMoneyPaid',
-                'api/requests/*/finish',
-                'api/requests/*/status',
-            ];
+            $isSensitiveAction = false;
 
-            if ($request->is(...$excludedPaths)) {
+            // 1. قبول طلب جديد أو البدء فيه (تحديث الحالة إلى مقبول مبدئياً أو حالات الدفع المتقدمة)
+            if ($request->is('api/requests/*/status') && $request->isMethod('patch')) {
+                $newStatus = $request->input('status');
+                if (in_array($newStatus, ['accepted_initial', 'accepted_partial_paid', 'accepted_full_paid'])) {
+                    $isSensitiveAction = true;
+                }
+            }
+
+            // 2. تحديد سعر طلب مخصص (والذي يعتبر قبولاً للطلب من طرف المزود)
+            if ($request->is('api/requests/custom/*/price') && $request->isMethod('patch')) {
+                $isSensitiveAction = true;
+            }
+
+            // 3. إنشاء أو تعديل الخدمات (إجراءات متعلقة بنشاط المزود)
+            if ($request->is('api/services*') && in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+                $isSensitiveAction = true;
+            }
+
+            // إذا لم تكن العملية حساسة، نتجاوز الفحص لتسريع الأداء وعدم تقييد المستخدم في التصفح والملف الشخصي
+            if (!$isSensitiveAction) {
                 return $next($request);
             }
 

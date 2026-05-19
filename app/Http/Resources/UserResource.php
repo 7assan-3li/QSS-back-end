@@ -30,6 +30,8 @@ class UserResource extends JsonResource
             'services' => $this->whenLoaded('services'),
             'rating_avg' => (float) ($this->rating_avg ?? 0),
             'is_verified' => $this->isVerified(),
+            'is_suspended_for_commissions' => $this->role === \App\constant\Role::PROVIDER ? ($this->getUnpaidCommissionsCount() >= 3) : false,
+            'suspended_message' => ($this->role === \App\constant\Role::PROVIDER && $this->getUnpaidCommissionsCount() >= 3) ? 'عذراً، لديك 3 عمولات أو أكثر غير مدفوعة. يرجى سداد العمولات المستحقة لتتمكن من استخدام كافة ميزات التطبيق.' : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
