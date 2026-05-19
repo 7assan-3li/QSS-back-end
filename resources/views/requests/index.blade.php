@@ -101,14 +101,31 @@
                     <span class="text-[13px] font-black text-[var(--text-muted)] bg-[var(--main-bg)] px-4 py-1.5 rounded-xl border border-[var(--glass-border)] font-mono whitespace-nowrap inline-flex items-center justify-center">ID: #{{ $request->id }}</span>
                 </div>
 
-                <!-- Client Details -->
-                <div class="flex items-center gap-5 mb-8 text-start">
-                    <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-indigo-600 rounded-[1.3rem] flex items-center justify-center text-white font-black text-base shadow-lg shadow-brand-primary/20 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
-                        {{ mb_substr($request->user->name, 0, 1) }}
+                <!-- Seeker & Provider Details -->
+                <div class="grid grid-cols-2 gap-4 mb-6 text-start border-b border-[var(--glass-border)] pb-6">
+                    <!-- Seeker (Client) -->
+                    <div class="flex items-center gap-3 text-start">
+                        <div class="w-11 h-11 bg-indigo-500/10 text-indigo-600 rounded-xl flex items-center justify-center font-black text-sm shadow-sm">
+                            {{ mb_substr($request->user->name, 0, 1) }}
+                        </div>
+                        <div class="flex flex-col text-start overflow-hidden">
+                            <h4 class="font-black text-sm leading-tight font-Cairo text-start truncate" title="{{ $request->user->name }}">{{ $request->user->name }}</h4>
+                            <span class="text-[10px] font-black text-[var(--text-muted)] mt-0.5 font-Cairo text-start">{{ __('العميل') }}</span>
+                        </div>
                     </div>
-                    <div class="flex flex-col text-start">
-                        <h4 class="font-black text-lg leading-tight font-Cairo text-start">{{ $request->user->name }}</h4>
-                        <span class="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mt-1 font-Cairo text-start">{{ __('صاحب الطلب (العميل)') }}</span>
+
+                    <!-- Provider -->
+                    @php
+                        $provider = $request->serviceProvider();
+                    @endphp
+                    <div class="flex items-center gap-3 text-start border-r border-[var(--glass-border)] pr-3">
+                        <div class="w-11 h-11 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center font-black text-sm shadow-sm">
+                            {{ $provider ? mb_substr($provider->name, 0, 1) : '?' }}
+                        </div>
+                        <div class="flex flex-col text-start overflow-hidden">
+                            <h4 class="font-black text-sm leading-tight font-Cairo text-start truncate" title="{{ $provider ? $provider->name : __('غير محدد') }}">{{ $provider ? $provider->name : __('غير محدد') }}</h4>
+                            <span class="text-[10px] font-black text-[var(--text-muted)] mt-0.5 font-Cairo text-start">{{ __('المزود') }}</span>
+                        </div>
                     </div>
                 </div>
 
