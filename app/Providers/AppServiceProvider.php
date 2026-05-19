@@ -28,11 +28,11 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
-        Gate::before(function ($user, $ability) {
-            if ($user->role === Role::ADMIN) {
-                return true;
-            }
-        });
+        // Gate::before(function ($user, $ability) {
+        //     if ($user->role === Role::ADMIN) {
+        //         return true;
+        //     }
+        // });
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(
