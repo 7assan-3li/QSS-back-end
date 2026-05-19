@@ -37,7 +37,7 @@
                         class="text-sm font-black italic tracking-tight font-Cairo opacity-100">{{ __('الرئيسية') }}</span>
                 </a>
 
-                @can('adminViewAny', \App\Models\User::class)
+                @can('viewAny', \App\Models\User::class)
                     <a href="{{ route('admin.financial.index') }}"
                         class="sidebar-item {{ Request::routeIs('admin.financial.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
                         <div

@@ -46,7 +46,7 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service): bool
     {
-        return ($user->role === Role::PROVIDER && $user->id === $service->provider_id) ;
+        return ($user->role === Role::PROVIDER && $user->id === $service->provider_id);
     }
 
     /**
@@ -67,7 +67,7 @@ class ServicePolicy
 
     public function adminView(User $user, Service $service): Response
     {
-        if( $user->role === Role::EMPLOYEE){
+        if ($user->role === Role::EMPLOYEE) {
             return Response::allow();
         }
         return Response::deny('لا يمكن الوصول');
@@ -75,7 +75,7 @@ class ServicePolicy
 
     public function adminViewAny(User $user): Response
     {
-        if( $user->role === Role::EMPLOYEE){
+        if ($user->role === Role::EMPLOYEE) {
             return Response::allow();
         }
         return Response::deny('لا يمكن الوصول');
@@ -83,14 +83,16 @@ class ServicePolicy
 
     public function adminUpdate(User $user, Service $service): Response
     {
-        if( $user->role === Role::EMPLOYEE){
+        return Response::deny('لا يمكن الوصول');
+
+        if ($user->role === Role::EMPLOYEE) {
             return Response::allow();
         }
         return Response::deny('لا يمكن الوصول');
     }
     public function adminDelete(User $user, Service $service): Response
     {
-        if( $user->role === Role::EMPLOYEE){
+        if ($user->role === Role::EMPLOYEE) {
             return Response::allow();
         }
         return Response::deny('لا يمكن الوصول');
