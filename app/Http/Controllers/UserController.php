@@ -13,6 +13,9 @@ use App\Jobs\SendEmailVerificationCode;
 use App\Models\EmailVerificationCode;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Http\Requests\RegisterProviderRequest;
+use App\Services\ProviderRegistrationService;
+
 class UserController extends Controller
 {
     use AuthorizesRequests;
@@ -112,6 +115,32 @@ class UserController extends Controller
             'email_verified' => false
         ], 201);
     }
+
+    public function apiProviderRegister(RegisterProviderRequest $request, ProviderRegistrationService $registrationService)
+    {
+        try {
+            $result = $registrationService->registerAndApply(
+                $request->validated(),
+                $request->file('id_card'),
+                $request->fcm_token,
+                $request->device_token
+            );
+
+            return response()->json([
+                'message' => 'تم إنشاء الحساب وإرسال طلب المزود بنجاح. يرجى توثيق بريدك الإلكتروني وانتظار موافقة الإدارة.',
+                'token' => $result['token'],
+                'user' => $result['user'],
+                'code' => $result['code'], // For testing
+                'email_verified' => $result['email_verified']
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 422);
+        }
+    }
+
     public function apiLogin(Request $request)
     {
         $request->validate([

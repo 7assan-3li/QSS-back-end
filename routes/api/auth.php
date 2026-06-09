@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [UserController::class, 'apiRegister']);
+Route::post('/register-provider', [UserController::class, 'apiProviderRegister']);
 Route::post('/login', [UserController::class, 'apiLogin']);
 
 // Email Verification Routes
