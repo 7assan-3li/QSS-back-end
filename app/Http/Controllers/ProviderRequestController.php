@@ -54,7 +54,23 @@ class ProviderRequestController extends Controller
             'id_card' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
+        // Generate hash of the uploaded image
+        $idCardFile = $request->file('id_card');
+        $idCardHash = hash_file('sha256', $idCardFile->path());
+
+        // Check if hash exists in users table for an approved provider
+        $isDuplicate = User::where('id_card_hash', $idCardHash)
+            ->where('role', Role::PROVIDER)
+            ->exists();
+
+        if ($isDuplicate) {
+            return response()->json([
+                'message' => 'عذراً، هذه الهوية مسجلة بالفعل لمزود خدمة معتمد.'
+            ], 422);
+        }
+
         $validated['user_id'] = Auth::id();
+        $validated['id_card_hash'] = $idCardHash;
 
         // رفع الصورة
         $validated['id_card'] = $request
@@ -221,6 +237,7 @@ class ProviderRequestController extends Controller
                 'role' => Role::PROVIDER,
                 'name' => $providerRequest->name,
                 'id_card' => $providerRequest->id_card,
+                'id_card_hash' => $providerRequest->id_card_hash,
             ]);
 
             // التحقق من وجود خدمة مقابلة وخدمة مخصصة بالفعل

@@ -13,6 +13,7 @@ class ProviderRequest extends Model
         'status',
         'requestContent',
         'id_card',
+        'id_card_hash',
         'location',
         'rejection_reason',
     ];
