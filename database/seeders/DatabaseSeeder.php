@@ -84,22 +84,75 @@ class DatabaseSeeder extends Seeder
             // 'خدمات طبية' => ['تمريض منزلي', 'علاج طبيعي'],
         ];
 
-        // foreach ($categories as $parentName => $children) {
-        //     $parent = Category::firstOrCreate(
-        //         ['name' => $parentName],
-        //         ['description' => "خدمات متخصصة في " . $parentName]
-        //     );
+        foreach ($categories as $parentName => $children) {
+            $parent = Category::firstOrCreate(
+                ['name' => $parentName],
+                ['description' => "خدمات متخصصة في " . $parentName]
+            );
 
-        //     foreach ($children as $childName) {
-        //         Category::firstOrCreate(
-        //             ['name' => $childName],
-        //             [
-        //                 'description' => "متخصصون في " . $childName,
-        //                 'category_id' => $parent->id
-        //             ]
-        //         );
-        //     }
-        // }
+            foreach ($children as $childName) {
+                Category::firstOrCreate(
+                    ['name' => $childName],
+                    [
+                        'description' => "متخصصون في " . $childName,
+                        'category_id' => $parent->id
+                    ]
+                );
+            }
+        }
+
+        // --- إعداد بيانات متكاملة لمزود الخدمة الافتراضي ---
+        $mainCategory = Category::where('name', 'صيانة منزلية')->first();
+        if ($mainCategory) {
+            // 1. منحه تصريح للقسم الرئيسي (صيانة منزلية)
+            \App\Models\ProviderCategory::updateOrCreate(
+                [
+                    'user_id' => $provider->id,
+                    'category_id' => $mainCategory->id,
+                ],
+                [
+                    'max_services' => 10,
+                    'is_active' => true,
+                ]
+            );
+
+            // 2. تحديث الملف الشخصي
+            $provider->profile()->update([
+                'bio' => 'أنا مزود خدمة محترف في مجال الصيانة المنزلية ولدي خبرة تفوق الـ 10 سنوات في تقديم أفضل الحلول.',
+                'job_title' => 'مهندس صيانة شاملة',
+                'latitude' => '24.7136',
+                'longitude' => '46.6753' // إحداثيات الرياض
+            ]);
+
+            // 3. إضافة رقم هاتف
+            if ($provider->profile->profilePhones()->count() == 0) {
+                \App\Models\ProfilePhone::create([
+                    'profile_id' => $provider->profile->id,
+                    'phone' => '0500000000',
+                    'country_code' => '+966',
+                    'is_active' => true,
+                    'is_primary' => true,
+                ]);
+            }
+
+            // 4. إضافة خدمة افتراضية
+            $childCategory = Category::where('name', 'سباكة')->first();
+            if ($childCategory && $provider->services()->count() == 0) {
+                \App\Models\Service::create([
+                    'name' => 'صيانة سباكة شاملة',
+                    'description' => 'إصلاح جميع تسربات المياه وتأسيس السباكة المنزلية باستخدام أحدث التقنيات وبأعلى جودة.',
+                    'price' => 150.00,
+                    'provider_id' => $provider->id,
+                    'category_id' => $childCategory->id,
+                    'type' => \App\constant\ServiceType::MAIN,
+                    'status' => 'available',
+                    'is_active' => true,
+                    'is_available' => true,
+                    'distance_based_price' => false,
+                    'required_partial_percentage' => 0
+                ]);
+            }
+        }
 
         // $allCategories = Category::all();
 
