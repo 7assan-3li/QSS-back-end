@@ -156,9 +156,11 @@ class ServiceController extends Controller
         $validated['provider_id'] = Auth::user()->id;
         $validated['type'] = ServiceType::MAIN;
 
-        // 1. Check if category is authorized
+        // 1. Check if category is authorized (hierarchically)
+        $parentIds = \App\Models\Category::getAllParentIds($validated['category_id']);
+        
         $providerCategory = \App\Models\ProviderCategory::where('user_id', $validated['provider_id'])
-            ->where('category_id', $validated['category_id'])
+            ->whereIn('category_id', $parentIds)
             ->where('is_active', true)
             ->first();
 
@@ -168,16 +170,18 @@ class ServiceController extends Controller
             ], 403);
         }
 
-        // 2. Check max services limit
+        // 2. Check max services limit (across all children of the authorized category)
+        $allowedCategoryIds = \App\Models\Category::getAllChildrenIds($providerCategory->category_id);
+        
         $currentServicesCount = Service::where('provider_id', $validated['provider_id'])
-            ->where('category_id', $validated['category_id'])
+            ->whereIn('category_id', $allowedCategoryIds)
             ->where('type', ServiceType::MAIN)
             ->whereNull('parent_service_id')
             ->count();
 
         if ($currentServicesCount >= $providerCategory->max_services) {
             return response()->json([
-                'message' => "لقد وصلت للحد الأقصى للخدمات المسموحة في هذا القسم ({$providerCategory->max_services} خدمات)."
+                'message' => "لقد وصلت للحد الأقصى للخدمات المسموحة في نطاق القسم المعتمد ({$providerCategory->max_services} خدمات)."
             ], 403);
         }
 
@@ -241,8 +245,10 @@ class ServiceController extends Controller
         ]);
 
         if (isset($validated['category_id']) && $validated['category_id'] != $service->category_id) {
+            $parentIds = \App\Models\Category::getAllParentIds($validated['category_id']);
+            
             $providerCategory = \App\Models\ProviderCategory::where('user_id', Auth::id())
-                ->where('category_id', $validated['category_id'])
+                ->whereIn('category_id', $parentIds)
                 ->where('is_active', true)
                 ->first();
 
@@ -250,14 +256,16 @@ class ServiceController extends Controller
                 return response()->json(['message' => 'عذراً، غير مصرح لك بالتبديل لهذا القسم.'], 403);
             }
 
+            $allowedCategoryIds = \App\Models\Category::getAllChildrenIds($providerCategory->category_id);
+
             $currentServicesCount = Service::where('provider_id', Auth::id())
-                ->where('category_id', $validated['category_id'])
+                ->whereIn('category_id', $allowedCategoryIds)
                 ->where('type', ServiceType::MAIN)
                 ->whereNull('parent_service_id')
                 ->count();
 
             if ($currentServicesCount >= $providerCategory->max_services) {
-                return response()->json(['message' => "لقد وصلت للحد الأقصى المسموح ({$providerCategory->max_services}) في القسم الجديد."], 403);
+                return response()->json(['message' => "لقد وصلت للحد الأقصى المسموح ({$providerCategory->max_services}) في نطاق القسم الجديد."], 403);
             }
         }
 

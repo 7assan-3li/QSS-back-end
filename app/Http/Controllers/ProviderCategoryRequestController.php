@@ -56,6 +56,19 @@ class ProviderCategoryRequestController extends Controller
     }
 
     /**
+     * Provider fetches their active authorized categories with children.
+     */
+    public function myCategories(Request $request)
+    {
+        $providerCategories = ProviderCategory::where('user_id', Auth::id())
+            ->where('is_active', true)
+            ->with(['category.childrenRecursive'])
+            ->get();
+
+        return response()->json($providerCategories);
+    }
+
+    /**
      * Admin lists all category requests.
      */
     public function index(Request $request)

@@ -5,6 +5,7 @@ use App\Http\Controllers\ProviderCategoryRequestController;
 
 Route::middleware('auth:sanctum')->group(function () {
     // Provider routes
+    Route::get('/my-authorized-categories', [ProviderCategoryRequestController::class, 'myCategories']);
     Route::post('/provider-category-requests', [ProviderCategoryRequestController::class, 'store']);
     
     // Admin routes

@@ -68,6 +68,20 @@ class Category extends Model
         });
     }
 
+    public static function getAllParentIds($categoryId)
+    {
+        return \Illuminate\Support\Facades\Cache::remember("category_parent_ids_{$categoryId}", now()->addDay(), function () use ($categoryId) {
+            $ids = [$categoryId];
+            $category = self::find($categoryId);
+            
+            if ($category && $category->category_id) {
+                $ids = array_merge($ids, self::getAllParentIds($category->category_id));
+            }
+            
+            return $ids;
+        });
+    }
+
     public static function clearHierarchyCache()
     {
         // This is a simple way, but in production with Redis you'd use tags.
