@@ -88,6 +88,7 @@ class ProviderRegistrationService
         // Create the Provider Request
         ProviderRequest::create([
             'user_id' => $user->id,
+            'category_id' => $validatedData['category_id'],
             'name' => $validatedData['name'],
             'location' => $validatedData['location'],
             'requestContent' => $validatedData['requestContent'],

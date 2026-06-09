@@ -48,6 +48,7 @@ class ProviderRequestController extends Controller
         }
 
         $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:150',
             'location' => 'required|string|max:150',
             'requestContent' => 'required|string|max:2000',
@@ -239,6 +240,16 @@ class ProviderRequestController extends Controller
                 'id_card' => $providerRequest->id_card,
                 'id_card_hash' => $providerRequest->id_card_hash,
             ]);
+
+            if ($providerRequest->category_id) {
+                \App\Models\ProviderCategory::firstOrCreate([
+                    'user_id' => $user->id,
+                    'category_id' => $providerRequest->category_id,
+                ], [
+                    'max_services' => 5,
+                    'is_active' => true,
+                ]);
+            }
 
             // التحقق من وجود خدمة مقابلة وخدمة مخصصة بالفعل
             $hasMeeting = \App\Models\Service::where('provider_id', $user->id)

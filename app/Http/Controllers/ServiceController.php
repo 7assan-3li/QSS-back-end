@@ -156,6 +156,31 @@ class ServiceController extends Controller
         $validated['provider_id'] = Auth::user()->id;
         $validated['type'] = ServiceType::MAIN;
 
+        // 1. Check if category is authorized
+        $providerCategory = \App\Models\ProviderCategory::where('user_id', $validated['provider_id'])
+            ->where('category_id', $validated['category_id'])
+            ->where('is_active', true)
+            ->first();
+
+        if (!$providerCategory) {
+            return response()->json([
+                'message' => 'عذراً، غير مصرح لك بإضافة خدمات في هذا القسم. يرجى تقديم طلب إضافة قسم من الإعدادات أولاً.'
+            ], 403);
+        }
+
+        // 2. Check max services limit
+        $currentServicesCount = Service::where('provider_id', $validated['provider_id'])
+            ->where('category_id', $validated['category_id'])
+            ->where('type', ServiceType::MAIN)
+            ->whereNull('parent_service_id')
+            ->count();
+
+        if ($currentServicesCount >= $providerCategory->max_services) {
+            return response()->json([
+                'message' => "لقد وصلت للحد الأقصى للخدمات المسموحة في هذا القسم ({$providerCategory->max_services} خدمات)."
+            ], 403);
+        }
+
         if ($request->hasFile('image_path')) {
             $validated['image_path'] = $request->file('image_path')
                 ->store('services', 'public');
@@ -214,6 +239,27 @@ class ServiceController extends Controller
             'price_per_km'                => 'required_if:distance_based_price,true|nullable|numeric|min:0',
             'required_partial_percentage' => 'sometimes|integer|min:0|max:100',
         ]);
+
+        if (isset($validated['category_id']) && $validated['category_id'] != $service->category_id) {
+            $providerCategory = \App\Models\ProviderCategory::where('user_id', Auth::id())
+                ->where('category_id', $validated['category_id'])
+                ->where('is_active', true)
+                ->first();
+
+            if (!$providerCategory) {
+                return response()->json(['message' => 'عذراً، غير مصرح لك بالتبديل لهذا القسم.'], 403);
+            }
+
+            $currentServicesCount = Service::where('provider_id', Auth::id())
+                ->where('category_id', $validated['category_id'])
+                ->where('type', ServiceType::MAIN)
+                ->whereNull('parent_service_id')
+                ->count();
+
+            if ($currentServicesCount >= $providerCategory->max_services) {
+                return response()->json(['message' => "لقد وصلت للحد الأقصى المسموح ({$providerCategory->max_services}) في القسم الجديد."], 403);
+            }
+        }
 
         if ($request->hasFile('image_path')) {
             if ($service->image_path) {

@@ -4,24 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProviderRequest extends Model
+class ProviderCategoryRequest extends Model
 {
     protected $fillable = [
-        'name',
         'user_id',
-        'admin_id',
         'category_id',
+        'description',
+        'document_path',
         'status',
-        'requestContent',
-        'id_card',
-        'id_card_hash',
-        'location',
         'rejection_reason',
+        'admin_id',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function admin()

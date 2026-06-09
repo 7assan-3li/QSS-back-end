@@ -34,6 +34,7 @@ require __DIR__ . '/api/policies.php';
 require __DIR__ . '/api/social_auth.php';
 require __DIR__ . '/api/notifications.php';
 require __DIR__ . '/api/provider_dashboard.php';
+require __DIR__ . '/api/provider_categories.php';
 Route::get('/advertisements', [\App\Http\Controllers\AdvertisementController::class, 'getAds']);
 Route::post('/advertisements/{advertisement}/click', [\App\Http\Controllers\AdvertisementController::class, 'trackClick']);
 Route::post('/advertisements/{advertisement}/view', [\App\Http\Controllers\AdvertisementController::class, 'trackView']);

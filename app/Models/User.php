@@ -126,6 +126,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Profile::class, 'user_id');
     }
 
+    public function authorizedCategories()
+    {
+        return $this->hasMany(ProviderCategory::class, 'user_id');
+    }
+
     public function verificationRequests()
     {
         return $this->hasMany(VerificationRequest::class, 'user_id');

@@ -25,6 +25,7 @@ class RegisterProviderRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
+            'category_id' => 'required|exists:categories,id',
             'location' => 'required|string|max:150',
             'requestContent' => 'required|string|max:2000',
             'id_card' => 'required|image|mimes:jpg,jpeg,png|max:10240',
