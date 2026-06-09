@@ -96,7 +96,7 @@ class UserController extends Controller
             \Illuminate\Support\Facades\Log::error('FCM Registration Notification failed: ' . $e->getMessage());
         }
 
-        // SendEmailVerificationCode::dispatch($user, $code);
+        SendEmailVerificationCode::dispatch($user, $code);
 
         $token = $user->createToken('api-token')->plainTextToken;
 
@@ -758,7 +758,7 @@ class UserController extends Controller
             \Illuminate\Support\Facades\Log::error('FCM Reset Password Notification failed: ' . $e->getMessage());
         }
 
-        // \App\Jobs\SendPasswordResetCode::dispatch($user, $code);
+        \App\Jobs\SendPasswordResetCode::dispatch($user, $code);
 
         return response()->json([
             'message' => 'تم إرسال رمز استعادة كلمة المرور إلى بريدك الإلكتروني أو الإشعارات',
