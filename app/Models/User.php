@@ -107,6 +107,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Request::class, 'user_id');
     }
+
+    public function hasExceededActiveRequestsLimit()
+    {
+        $activeCount = $this->requests()
+            ->whereNotIn('status', [
+                \App\constant\RequestStatus::COMPLETED,
+                \App\constant\RequestStatus::CANCELLED,
+                \App\constant\RequestStatus::REJECTED,
+            ])
+            ->count();
+            
+        return $activeCount >= 3;
+    }
     public function profile()
     {
         return $this->hasOne(Profile::class, 'user_id');

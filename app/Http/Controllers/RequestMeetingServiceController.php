@@ -59,6 +59,12 @@ class RequestMeetingServiceController extends Controller
 
     public function store(StoreRequestMeetingServiceRequest $request)
     {
+        if (auth()->user()->hasExceededActiveRequestsLimit()) {
+            return response()->json([
+                'message' => 'لقد وصلت للحد الأقصى المسموح به (3 طلبات غير مكتملة). يرجى انتظار اكتمال أحد طلباتك الحالية أو إلغائه قبل تقديم طلب جديد.'
+            ], 403);
+        }
+
         $data = $request->validated();
 
         try {

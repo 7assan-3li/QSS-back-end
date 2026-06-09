@@ -27,6 +27,12 @@ class RequestCustomServiceController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->hasExceededActiveRequestsLimit()) {
+            return response()->json([
+                'message' => 'لقد وصلت للحد الأقصى المسموح به (3 طلبات غير مكتملة). يرجى انتظار اكتمال أحد طلباتك الحالية أو إلغائه قبل تقديم طلب جديد.'
+            ], 403);
+        }
+
         $data = $request->validate([
             'provider_id' => 'required|exists:users,id',
             'message' => 'required|string', // For custom services, message is usually required to describe requirements
