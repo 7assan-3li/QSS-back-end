@@ -124,4 +124,67 @@ class ProviderCategoryRequestController extends Controller
             'request' => $categoryRequest
         ]);
     }
+    /**
+     * Admin views for Web Dashboard
+     */
+    public function adminIndex(Request $request)
+    {
+        $status = $request->query('status');
+        
+        $query = ProviderCategoryRequest::with(['user', 'category']);
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $requests = $query->latest()->get();
+
+        $stats = [
+            'total' => ProviderCategoryRequest::count(),
+            'pending' => ProviderCategoryRequest::where('status', ProviderRequestStatus::PENDING)->count(),
+            'accepted' => ProviderCategoryRequest::where('status', ProviderRequestStatus::ACCEPTED)->count(),
+            'rejected' => ProviderCategoryRequest::where('status', ProviderRequestStatus::REJECTED)->count(),
+        ];
+
+        return view('providerCategoryRequests.index', compact('requests', 'stats', 'status'));
+    }
+
+    public function adminShow($id)
+    {
+        $categoryRequest = ProviderCategoryRequest::with(['user', 'category', 'admin'])->findOrFail($id);
+        
+        return view('providerCategoryRequests.show', compact('categoryRequest'));
+    }
+
+    public function adminUpdateStatus(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:' . ProviderRequestStatus::ACCEPTED . ',' . ProviderRequestStatus::REJECTED,
+            'rejection_reason' => 'required_if:status,' . ProviderRequestStatus::REJECTED . '|string|nullable',
+            'max_services' => 'required_if:status,' . ProviderRequestStatus::ACCEPTED . '|integer|min:1',
+        ]);
+
+        $categoryRequest = ProviderCategoryRequest::findOrFail($id);
+
+        if ($categoryRequest->status !== ProviderRequestStatus::PENDING) {
+            return redirect()->back()->with('error', 'لا يمكن تغيير حالة الطلب لأنه ليس قيد الانتظار.');
+        }
+
+        $categoryRequest->update([
+            'status' => $validated['status'],
+            'rejection_reason' => $validated['status'] === ProviderRequestStatus::REJECTED ? $validated['rejection_reason'] : null,
+            'admin_id' => Auth::id(),
+        ]);
+
+        if ($validated['status'] === ProviderRequestStatus::ACCEPTED) {
+            ProviderCategory::firstOrCreate([
+                'user_id' => $categoryRequest->user_id,
+                'category_id' => $categoryRequest->category_id,
+            ], [
+                'max_services' => $validated['max_services'] ?? 5,
+                'is_active' => true,
+            ]);
+        }
+
+        return redirect()->route('provider-category-requests.index')->with('success', 'تم تحديث حالة الطلب بنجاح.');
+    }
 }

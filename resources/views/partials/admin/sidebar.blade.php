@@ -171,6 +171,22 @@
                     </a>
                 @endcan
 
+                @can('viewAny', \App\Models\ProviderRequest::class)
+                    <a href="{{ route('provider-category-requests.index') }}"
+                        class="sidebar-item {{ Request::routeIs('provider-category-requests.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">
+                        <div
+                            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 {{ Request::routeIs('provider-category-requests.*') ? 'bg-[var(--glass-bg)]/20 text-white' : 'bg-brand-primary/5 group-hover:bg-[var(--glass-bg)] dark:group-hover:bg-brand-primary opacity-60 group-hover:opacity-100' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                </path>
+                            </svg>
+                        </div>
+                        <span
+                            class="text-[13px] font-black italic tracking-tight font-Cairo opacity-100">{{ __('طلبات الأقسام الإضافية') }}</span>
+                    </a>
+                @endcan
+
                 @can('adminViewAny', \App\Models\VerificationRequest::class)
                     <a href="{{ route('verification-requests.index') }}"
                         class="sidebar-item {{ Request::routeIs('verification-requests.*') ? 'active' : '' }} group w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500">

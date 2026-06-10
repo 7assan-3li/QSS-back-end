@@ -87,17 +87,17 @@ class UserController extends Controller
         }
 
         // إرسال كود التحقق كإشعار للهاتف باستخدام Firebase
-        try {
-            $notificationService = app(\App\Services\NotificationService::class);
-            $notificationService->sendToUser(
-                $user->id,
-                'رمز تأكيد الحساب QSS',
-                "رمز التحقق الخاص بك هو: {$code}",
-                \App\Constants\NotificationType::GENERAL
-            );
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('FCM Registration Notification failed: ' . $e->getMessage());
-        }
+        // try {
+        //     $notificationService = app(\App\Services\NotificationService::class);
+        //     $notificationService->sendToUser(
+        //         $user->id,
+        //         'رمز تأكيد الحساب QSS',
+        //         "رمز التحقق الخاص بك هو: {$code}",
+        //         \App\Constants\NotificationType::GENERAL
+        //     );
+        // } catch (\Exception $e) {
+        //     \Illuminate\Support\Facades\Log::error('FCM Registration Notification failed: ' . $e->getMessage());
+        // }
 
         SendEmailVerificationCode::dispatch($user, $code);
 

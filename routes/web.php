@@ -8,6 +8,7 @@ use App\Http\Controllers\FinancialController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProviderRequestController;
+use App\Http\Controllers\ProviderCategoryRequestController;
 use App\Http\Controllers\RequestCommissionBondController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ServiceController;
@@ -93,6 +94,11 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/provider-requests', [ProviderRequestController::class, 'store'])->name('provider-requests.store');
     Route::get('/provider-requests/{providerRequest}', [ProviderRequestController::class, 'adminShow'])->name('provider-requests.show');
     Route::patch('/provider-requests/{providerRequest}/status', [ProviderRequestController::class, 'updateStatus'])->name('provider-requests.update.status');
+
+    // Provider Category Requests
+    Route::get('/provider-category-requests', [ProviderCategoryRequestController::class, 'adminIndex'])->name('provider-category-requests.index');
+    Route::get('/provider-category-requests/{id}', [ProviderCategoryRequestController::class, 'adminShow'])->name('provider-category-requests.show');
+    Route::patch('/provider-category-requests/{id}/status', [ProviderCategoryRequestController::class, 'adminUpdateStatus'])->name('provider-category-requests.update.status');
 
     //bank routes
     Route::get('/banks', [BankController::class, 'index'])->name('banks.index');
