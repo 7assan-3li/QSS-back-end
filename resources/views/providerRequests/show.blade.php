@@ -155,6 +155,10 @@
                             @csrf
                             @method('patch')
                             <input type="hidden" name="status" value="accepted">
+                            <div class="mb-4">
+                                <label for="max_services" class="block text-sm font-bold text-[var(--text-muted)] mb-2">{{ __('عدد الخدمات المسموح بها كحد أقصى للقسم الأساسي') }}</label>
+                                <input type="number" id="max_services" name="max_services" value="5" min="1" class="w-full bg-[var(--main-bg)] border border-[var(--glass-border)] rounded-xl px-4 py-3 text-[var(--main-text)] focus:outline-none focus:ring-2 focus:ring-brand-primary">
+                            </div>
                             <button type="button" 
                                 onclick="confirmAction('approve-form-{{ $providerRequest->id }}', {
                                     title: '{{ __('الموافقة على الانضمام') }}',

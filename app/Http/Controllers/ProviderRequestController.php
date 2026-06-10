@@ -193,6 +193,7 @@ class ProviderRequestController extends Controller
         $validated = $request->validate([
             'status' => 'required|in:' . implode(',', ProviderRequestStatus::all()),
             'rejection_reason' => 'required_if:status,' . ProviderRequestStatus::REJECTED . '|nullable|string|max:255',
+            'max_services' => 'nullable|integer|min:1',
         ]);
 
         $currentStatus = $providerRequest->status;
@@ -246,7 +247,7 @@ class ProviderRequestController extends Controller
                     'user_id' => $user->id,
                     'category_id' => $providerRequest->category_id,
                 ], [
-                    'max_services' => 5,
+                    'max_services' => $request->input('max_services', 5),
                     'is_active' => true,
                 ]);
             }
