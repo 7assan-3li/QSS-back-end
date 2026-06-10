@@ -119,7 +119,8 @@ class User extends Authenticatable implements MustVerifyEmail
             ])
             ->count();
             
-        return $activeCount >= 3;
+        $limit = \App\Models\Setting::getValue('max_active_requests_per_user', 3);
+        return $activeCount >= (int) $limit;
     }
     public function profile()
     {
